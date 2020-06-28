@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/tabListFragment">
+    <fragment
+        android:id="@+id/tabListFragment"
+        android:name="com.simplu.transcribetab.TabListFragment"
+        android:label="fragment_tab_list"
+        tools:layout="@layout/fragment_tab_list" >
+        <action
+            android:id="@+id/action_tabListFragment_to_songListFragment"
+            app:destination="@id/songListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTabFragment"
+        android:name="com.simplu.transcribetab.edittab.EditTabFragment"
+        android:label="EditTabFragment" >
+        <argument
+            android:name="songUri"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/songListFragment"
+        android:name="com.simplu.transcribetab.SongListFragment"
+        android:label="SongListFragment" >
+        <action
+            android:id="@+id/action_songListFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment" />
+    </fragment>
+</navigation>
