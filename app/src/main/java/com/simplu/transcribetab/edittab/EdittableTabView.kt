@@ -1,4 +1,4 @@
-package com.simplu.transcribetab.edittab.customviews
+package com.simplu.transcribetab.edittab
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,7 +8,6 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-
 
 class EdittableTabView @JvmOverloads constructor(
     context: Context,
@@ -67,8 +66,8 @@ class EdittableTabView @JvmOverloads constructor(
 
     }
 
-    lateinit var currentSelectedColumn: Column
-    val columnNotesList = ArrayList<Column>()
+    lateinit var currentSelectedColumn: DrawableColumns
+    val columnNotesList = ArrayList<DrawableColumns>()
     private var barNumberCount: Int = 0
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -112,11 +111,11 @@ class EdittableTabView @JvmOverloads constructor(
         }
     }
 
-    private fun drawNotes(canvas: Canvas, column: Column) {
-        for (note in column.notes) {
+    private fun drawNotes(canvas: Canvas, column: DrawableColumns) {
+        for (i in 0..5) {
 //            canvas.drawRect(note.bound, noteBorderPaint)
-            val noteVal = note.fingeringVal
-            val noteBound = note.bound
+            val noteVal = column.notes[i]
+            val noteBound = column.noteBound[i]
             drawCenterTextRect(canvas, noteVal, noteBound)
         }
     }
@@ -134,13 +133,13 @@ class EdittableTabView @JvmOverloads constructor(
         )
     }
 
-    private fun drawBar(canvas: Canvas, column: Column) {
+    private fun drawBar(canvas: Canvas, column: DrawableColumns) {
 
-        val notes = column.notes
-        val startX = notes[0].bound.exactCenterX()
+        val bounds = column.noteBound
+        val startX = bounds[0].exactCenterX()
         val endX = startX
-        val startY = notes[0].bound.exactCenterY()
-        val endY = notes[5].bound.exactCenterY();
+        val startY = bounds[0].exactCenterY()
+        val endY = bounds[5].exactCenterY();
 
         canvas.drawLine(startX, startY, endX, endY, linePaint)
 
@@ -184,7 +183,7 @@ class EdittableTabView @JvmOverloads constructor(
 
             val startingX = columnNotesList[firstColumnIndex].getNoteLeftBound() - HORIZONTAL_SPACE
             val endingX = columnNotesList[lastColumnIndex].getNoteRightBound() + HORIZONTAL_SPACE
-            val startingY = columnNotesList[firstColumnIndex].notes[i].bound.exactCenterY()
+            val startingY = columnNotesList[firstColumnIndex].noteBound[i].exactCenterY()
             val endingY = startingY
             canvas.drawLine(startingX.toFloat(), startingY, endingX.toFloat(), endingY, linePaint)
 
@@ -198,8 +197,8 @@ class EdittableTabView @JvmOverloads constructor(
         val lastStringIndex = NUMBER_OF_STRINGS - 1
 
         val firstColumnIndex = 0
-        val firstNoteBound = columnNotesList.get(firstColumnIndex).notes[0].bound
-        val lastNoteBound = columnNotesList.get(firstColumnIndex).notes[lastStringIndex].bound
+        val firstNoteBound = columnNotesList.get(firstColumnIndex).noteBound[0]
+        val lastNoteBound = columnNotesList.get(firstColumnIndex).noteBound[lastStringIndex]
         val x = firstNoteBound.left - HORIZONTAL_SPACE.toFloat()
         val startingY = firstNoteBound.exactCenterY()
         val endingY = lastNoteBound.exactCenterY()
@@ -218,8 +217,8 @@ class EdittableTabView @JvmOverloads constructor(
         val lastStringIndex = NUMBER_OF_STRINGS - 1
 
         val lastColumnIndex = columnNotesList.size - 1
-        val firstNoteBound = columnNotesList.get(lastColumnIndex).notes[0].bound
-        val lastNoteBound = columnNotesList.get(lastColumnIndex).notes[lastStringIndex].bound
+        val firstNoteBound = columnNotesList.get(lastColumnIndex).noteBound[0]
+        val lastNoteBound = columnNotesList.get(lastColumnIndex).noteBound[lastStringIndex]
 
         val x = firstNoteBound.right + HORIZONTAL_SPACE.toFloat()
         val startingY = firstNoteBound.exactCenterY()
@@ -244,10 +243,10 @@ class EdittableTabView @JvmOverloads constructor(
     }
 
     //Creates a column of notes with left and top as starting coordinates and returns it
-    private fun createColumnNotes(left: Int, top: Int): Column {
+    private fun createColumnNotes(left: Int, top: Int): DrawableColumns {
 
         var currentTop = top
-        val columnNotes = arrayOfNulls<Note>(NUMBER_OF_STRINGS)
+        val noteBounds = arrayOfNulls<Rect>(NUMBER_OF_STRINGS)
 
         //The note bounds
         for (i in 0 until NUMBER_OF_STRINGS) {
@@ -260,7 +259,7 @@ class EdittableTabView @JvmOverloads constructor(
             noteBorder.right = noteBorder.left + NOTE_BORDER_SIZE
             currentTop = noteBorder.bottom + VERTICAL_SPACE
 
-            columnNotes[i] = Note(bound = noteBorder)
+            noteBounds[i] = noteBorder
         }
 
         //The column bounds
@@ -271,10 +270,10 @@ class EdittableTabView @JvmOverloads constructor(
 
         val columnBounds =
             Rect(columnBoundLeft, columnBoundTop, columnBoundRight, columnBoundBottom)
-        return Column(
-            columnBound = columnBounds,
-            notes = columnNotes.requireNoNulls()
 
+        return DrawableColumns(
+            columnBound = columnBounds,
+            noteBound = noteBounds.requireNoNulls()
         )
 
     }
@@ -284,14 +283,14 @@ class EdittableTabView @JvmOverloads constructor(
         if (currentSelectedColumn.isBar) {
             currentSelectedColumn.isBar = false
         }
-        var currentVal = currentSelectedColumn.notes[string].fingeringVal
+        var currentVal = currentSelectedColumn.notes[string]
         var newVal = ""
         if (currentVal.length == 1) {
             newVal = currentVal + fingeringVal
         } else {
             newVal = fingeringVal
         }
-        currentSelectedColumn.notes[string].fingeringVal = newVal
+        currentSelectedColumn.notes[string] = newVal
         invalidate()
     }
 
@@ -301,7 +300,7 @@ class EdittableTabView @JvmOverloads constructor(
     }
 
     fun clearString(string: Int) {
-        currentSelectedColumn.notes[string].fingeringVal = ""
+        currentSelectedColumn.notes[string] = ""
         invalidate()
     }
 
@@ -321,7 +320,7 @@ class EdittableTabView @JvmOverloads constructor(
                 columnNotesList[column].isBar = true
                 columnNotesList[column - 1].clearColumn()
             } else {
-                val newNotes = columnNotesList[column - 1].getNoteValues()
+                val newNotes = columnNotesList[column - 1].notes
                 columnNotesList[column].setNoteValues(newNotes)
             }
         }
@@ -361,7 +360,7 @@ class EdittableTabView @JvmOverloads constructor(
                     columnToReplace.isBar = true
                 } else {
                     columnToReplace.isBar = false
-                    val newNotes = columnNotesList[column + 1].getNoteValues()
+                    val newNotes = columnNotesList[column + 1].notes
                     columnToReplace.setNoteValues(newNotes)
                 }
             }

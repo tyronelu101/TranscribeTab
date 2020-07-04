@@ -1,20 +1,18 @@
-package com.simplu.transcribetab.edittab.customviews
+package com.simplu.transcribetab.edittab
 
 import android.graphics.Rect
 
-//Simple data class a single note. Holds a string for fingering and rect for bound
-data class Note(var fingeringVal: String = "", var bound: Rect)
-
-open class Column(
+class DrawableColumns(
     var columnBound: Rect,
-    var notes: Array<Note>,
+    var noteBound: Array<Rect> = Array(6) { Rect(0, 0, 0, 0) },
+    var notes: Array<String> = Array(6) { "" },
     var isBar: Boolean = false,
     var barNumber: Int = -1,
     var time: Int = -1
 ) {
     //Sets the value of a string with a fingering val
     fun setNoteFingering(string: Int, fingering: String) {
-        notes[string].fingeringVal = fingering
+        notes[string] = fingering
     }
 
     fun inColumnBound(x: Float, y: Float): Boolean =
@@ -29,30 +27,25 @@ open class Column(
     }
 
     fun getNoteLeftBound(): Int {
-        return notes[0].bound.left
+        return noteBound[0].left
     }
 
     fun getNoteRightBound(): Int {
-        return notes[0].bound.right
+        return noteBound[0].right
     }
 
     fun clearColumn() {
         isBar = false
         barNumber = -1
         time = -1
-        for (string in notes) {
-            string.fingeringVal = ""
+        for (string in 0..5) {
+            notes[string] = ""
         }
-    }
-
-    fun getNoteValues(): Array<String> = Array<String>(6) { i ->
-        notes[i].fingeringVal
-
     }
 
     fun setNoteValues(newNotes: Array<String>) {
         for (string in 0..5) {
-            this.notes[string].fingeringVal = newNotes[string]
+            notes[string] = newNotes[string]
         }
     }
 }

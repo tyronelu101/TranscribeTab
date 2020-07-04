@@ -15,14 +15,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.R
+import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
-import com.simplu.transcribetab.edittab.customviews.EdittableTabView
 
 
 class EditTabFragment : Fragment() {
 
     private lateinit var binding: FragmentEditTabBinding
-    private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
+    private lateinit var editTabViewModel: EditTabViewModel
     private lateinit var editTabView: EdittableTabView
     private lateinit var mediaPlayer: MediaPlayer
 
@@ -42,9 +42,17 @@ class EditTabFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val application = requireNotNull(this.activity).application
+        val dataSource =
+            TablatureDatabase.getInstance(application).tablatureDatabaseDao
+
+        val viewModelFactory = EditTabViewModelFactory(dataSource)
+
+        editTabViewModel =
+            ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
+
         //Initialize our edit tab view
         editTabView = EdittableTabView(activity!!.applicationContext)
-        mediaPlayerViewModel = ViewModelProvider(this).get(MediaPlayerViewModel::class.java)
 
         //Initialize the media player with uri from args
         val args = EditTabFragmentArgs.fromBundle(arguments!!)
@@ -83,9 +91,9 @@ class EditTabFragment : Fragment() {
 
             //Current state of media player is paused so play it
             if (!mediaPlayer.isPlaying) {
-                mediaPlayerViewModel.onPlay()
+                editTabViewModel.onPlay()
             } else {
-                mediaPlayerViewModel.onPause()
+                editTabViewModel.onPause()
             }
         }
 
@@ -94,7 +102,7 @@ class EditTabFragment : Fragment() {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val current = seekBar?.progress ?: 0
-                mediaPlayerViewModel.updateTime(current.toLong())
+                editTabViewModel.updateTime(current.toLong())
 
             }
 
@@ -104,19 +112,18 @@ class EditTabFragment : Fragment() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 val seekTo = seekBar?.progress ?: 0
-                Log.v("EditTabFragment", "Seekbar stopped tracking + ${seekTo}")
-                mediaPlayerViewModel.updateTime(seekTo.toLong())
+                editTabViewModel.updateTime(seekTo.toLong())
                 mediaPlayer.seekTo(seekTo * 1000)
             }
 
         })
 
         binding.mediaPlayer.setSkipTo.setOnClickListener {
-            mediaPlayerViewModel.setSkipTo()
+            editTabViewModel.setSkipTo()
         }
 
         binding.mediaPlayer.goTo.setOnClickListener {
-            mediaPlayerViewModel.onGoTo()
+            editTabViewModel.onGoTo()
         }
         binding.deleteBtn.setOnClickListener {
             editTabView.deleteCol()
@@ -131,15 +138,15 @@ class EditTabFragment : Fragment() {
             }
         }
 
-        mediaPlayerViewModel.setDuration(mediaPlayer.duration / 1000L)
+        editTabViewModel.setDuration(mediaPlayer.duration / 1000L)
 
-        mediaPlayerViewModel.isPlaying.observe(this, Observer { play ->
+        editTabViewModel.isPlaying.observe(this, Observer { play ->
             if (play) {
                 mediaPlayer.start()
                 mHandler.post(runnable)
             }
         })
-        mediaPlayerViewModel.isPaused.observe(this, Observer { paused ->
+        editTabViewModel.isPaused.observe(this, Observer { paused ->
             if (paused) {
                 Log.v("EditTabView", "Paused")
                 mediaPlayer.pause()
@@ -147,15 +154,15 @@ class EditTabFragment : Fragment() {
             }
         })
 
-        mediaPlayerViewModel.currentTimeString.observe(this, Observer {
+        editTabViewModel.currentTimeString.observe(this, Observer {
             binding.mediaPlayer.songCurrentTime.text = it
         })
 
-        mediaPlayerViewModel.durationString.observe(this, Observer {
+        editTabViewModel.durationString.observe(this, Observer {
             binding.mediaPlayer.songDuration.text = it
         })
 
-        mediaPlayerViewModel.skipTo.observe(this, Observer {
+        editTabViewModel.skipTo.observe(this, Observer {
             binding.mediaPlayer.songSeekBar.progress = it.toInt()
             mediaPlayer.seekTo(it.toInt() * 1000)
         })
