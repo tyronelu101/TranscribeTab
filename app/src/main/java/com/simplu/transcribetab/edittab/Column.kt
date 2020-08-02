@@ -2,14 +2,18 @@ package com.simplu.transcribetab.edittab
 
 import android.graphics.Rect
 
-class DrawableColumns(
+open class Column(
+    var notes: Array<String> = Array(6) { "" }, var isBar: Boolean = false
+)
+
+class DrawableColumn(
     var columnBound: Rect,
     var noteBound: Array<Rect> = Array(6) { Rect(0, 0, 0, 0) },
-    var notes: Array<String> = Array(6) { "" },
-    var isBar: Boolean = false,
     var barNumber: Int = -1,
-    var time: Int = -1
-) {
+    var time: Int = -1,
+    notes: Array<String> = Array(6) { "" },
+    isBar: Boolean = false
+) : Column(notes, isBar) {
     //Sets the value of a string with a fingering val
     fun setNoteFingering(string: Int, fingering: String) {
         notes[string] = fingering

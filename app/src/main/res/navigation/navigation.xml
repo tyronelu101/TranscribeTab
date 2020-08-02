@@ -6,12 +6,15 @@
     app:startDestination="@id/tabListFragment">
     <fragment
         android:id="@+id/tabListFragment"
-        android:name="com.simplu.transcribetab.TabListFragment"
+        android:name="com.simplu.transcribetab.tablist.TabListFragment"
         android:label="fragment_tab_list"
         tools:layout="@layout/fragment_tab_list" >
         <action
             android:id="@+id/action_tabListFragment_to_songListFragment"
             app:destination="@id/songListFragment" />
+        <action
+            android:id="@+id/action_tabListFragment_to_tabFragment"
+            app:destination="@id/tabFragment" />
     </fragment>
     <fragment
         android:id="@+id/editTabFragment"
@@ -20,6 +23,9 @@
         <argument
             android:name="songUri"
             app:argType="string" />
+        <action
+            android:id="@+id/action_editTabFragment_to_tabFragment"
+            app:destination="@id/tabFragment" />
     </fragment>
     <fragment
         android:id="@+id/songListFragment"
@@ -28,5 +34,17 @@
         <action
             android:id="@+id/action_songListFragment_to_editTabFragment"
             app:destination="@id/editTabFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tabFragment"
+        android:name="com.simplu.transcribetab.tab.TabFragment"
+        android:label="fragment_tab"
+        tools:layout="@layout/fragment_tab" >
+        <action
+            android:id="@+id/action_tabFragment_to_editTabFragment2"
+            app:destination="@id/editTabFragment" />
+        <argument
+            android:name="tabId"
+            app:argType="long" />
     </fragment>
 </navigation>

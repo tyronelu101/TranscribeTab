@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.simplu.transcribetab.Column
+import com.simplu.transcribetab.edittab.Column
 import java.lang.reflect.Type
 
 
 class Converter {
 
     @TypeConverter
-    fun columnListToString(columns: ArrayList<Column>?): String {
+    fun columnListToString(columns: ArrayList<Column>): String {
         val gson = Gson()
         val type: Type = object : TypeToken<List<Column>?>() {}.type
         val json = gson.toJson(columns, type)

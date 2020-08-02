@@ -6,12 +6,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".TabListFragment">
+        tools:context=".tablist.TabListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tab_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"></androidx.recyclerview.widget.RecyclerView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_tab_btn"

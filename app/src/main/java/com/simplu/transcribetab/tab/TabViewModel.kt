@@ -1,4 +1,4 @@
-package com.simplu.transcribetab.edittab
+package com.simplu.transcribetab.tab
 
 import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
@@ -10,7 +10,10 @@ import com.simplu.transcribetab.database.TablatureDatabaseDao
 import kotlinx.coroutines.*
 
 
-class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
+class TabViewModel(val database: TablatureDatabaseDao, val tabId: Long) : ViewModel() {
+
+    private var _tablature: MutableLiveData<Tablature> = MutableLiveData()
+    val tablature: LiveData<Tablature> = _tablature
 
     private val _isPlaying = MutableLiveData<Boolean>()
     val isPlaying: LiveData<Boolean> = _isPlaying
@@ -46,22 +49,24 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         viewModelJob.cancel()
     }
 
-    fun onSave(tab: Tablature) {
-        uiScope.launch {
-            insert(tab)
-        }
-    }
-
-    private suspend fun insert(tab: Tablature) {
-        withContext(Dispatchers.IO) {
-            database.insert(tab)
-        }
-    }
 
     init {
         _currentTime.value = 0
         _duration.value = 0
         skipToVal = 0
+        initializeTablature()
+    }
+
+    private fun initializeTablature() {
+        uiScope.launch {
+            _tablature.value = getTablature()
+        }
+    }
+
+    private suspend fun getTablature(): Tablature {
+        return withContext(Dispatchers.IO) {
+            database.get(tabId)
+        }
     }
 
     public fun onPlay() {
