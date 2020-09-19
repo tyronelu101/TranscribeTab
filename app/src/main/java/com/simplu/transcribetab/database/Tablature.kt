@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "tablature_table")
 data class Tablature(
+
     @PrimaryKey(autoGenerate = true)
     var tabId: Long = 0L,
 

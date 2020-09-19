@@ -16,61 +16,65 @@ class EditTabView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    companion object {
+
+        val NUMBER_OF_COLUMNS = 10
+
+    }
+
     fun dpToPixel(dp: Int): Int {
         val px = (resources.displayMetrics.density * dp).toInt()
         return px
     }
 
-    val NUMBER_OF_COLUMNS = 9
-
-    val NUMBER_OF_STRINGS = 6
+    private val NUMBER_OF_STRINGS = 6
 
     //Starting coordinates to draw the first column
-    val STARTING_LEFT = dpToPixel(0)
-    val STARTING_TOP = dpToPixel(0)
+    private val STARTING_LEFT = dpToPixel(0)
+    private val STARTING_TOP = dpToPixel(0)
 
     //Vertical spacing of each note boundary
-    val VERTICAL_SPACE = dpToPixel(8)
+    private val VERTICAL_SPACE = dpToPixel(8)
 
     //Horizontal spacing between each column
-    val HORIZONTAL_SPACE = dpToPixel(12)
+    private val HORIZONTAL_SPACE = dpToPixel(12)
 
     //Size of each note boundary
-    val NOTE_BORDER_SIZE = dpToPixel(16)
+    private val NOTE_BORDER_SIZE = dpToPixel(16)
 
-    val PADDING = dpToPixel(16)
+    private val PADDING = dpToPixel(16)
 
     //width of column border
-    val COLUMN_BORDER_WIDTH = NOTE_BORDER_SIZE + HORIZONTAL_SPACE
-    val COLUMN_BORDER_HEIGHT =
+    private val COLUMN_BORDER_WIDTH = NOTE_BORDER_SIZE + HORIZONTAL_SPACE
+    private val COLUMN_BORDER_HEIGHT =
         (NUMBER_OF_STRINGS * NOTE_BORDER_SIZE) + ((NUMBER_OF_STRINGS - 1) * VERTICAL_SPACE) + (PADDING)
-    val BAR_NUMBER_PADDING = dpToPixel(8)
+    private val BAR_NUMBER_PADDING = dpToPixel(8)
 
     //Set up the objects for drawing
-    val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         style = Paint.Style.FILL
     }
 
-    val columnBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val columnBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         alpha = 50
     }
 
-    val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         textSize = 12f * resources.displayMetrics.scaledDensity
         textAlign = Paint.Align.CENTER
     }
 
-    val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         strokeWidth = 1.5f
 
     }
 
-    lateinit var currentSelectedColumn: DrawableColumn
-    val columnNotesList = ArrayList<DrawableColumn>()
+    private lateinit var currentSelectedColumn: DrawableColumn
+    private val columnNotesList = ArrayList<DrawableColumn>()
 
 
     init {
@@ -78,7 +82,6 @@ class EditTabView @JvmOverloads constructor(
         initializeColumns()
 
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -158,7 +161,7 @@ class EditTabView @JvmOverloads constructor(
         )
         currentSelectedColumn = column
         columnNotesList.add(column)
-        for (i in 0..NUMBER_OF_COLUMNS) {
+        for (i in 0 until NUMBER_OF_COLUMNS) {
             addColumnToEnd()
         }
     }
@@ -309,24 +312,13 @@ class EditTabView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    //Returns the value of all columns in array of array
-    public fun getColumnsValue(): Array<Array<String>> {
-
-        val columnsValue = Array(9) { Array(6) { "" } }
-        for (column in 0..9) {
-            columnsValue[column] = columnNotesList[column].notes
-        }
-
-        return columnsValue
-    }
-
     public fun getSelectedColumnNumber(): Int {
         return columnNotesList.indexOf(currentSelectedColumn);
     }
 
     public fun updateTablature(columnValues: ArrayList<Array<String>>) {
 
-        for (i in 0..9) {
+        for (i in 0..NUMBER_OF_COLUMNS) {
             columnNotesList[i].setNoteValues(columnValues[i])
         }
 

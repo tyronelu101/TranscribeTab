@@ -1,5 +1,6 @@
 package com.simplu.transcribetab.edittab
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,30 +11,28 @@ import kotlinx.coroutines.*
 
 class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
 
-    private val _currentSectionNum = MutableLiveData<Int>()
-    val currentSectionNum: LiveData<Int> = _currentSectionNum
+    private val _currentSectionObs = MutableLiveData<ArrayList<Array<String>>>()
+    val currentSectionObs: LiveData<ArrayList<Array<String>>> = _currentSectionObs
 
-    private val _currentSection = MutableLiveData<ArrayList<Array<String>>>()
-    val currentSection: LiveData<ArrayList<Array<String>>> = _currentSection
+    private val _currentSectionNumObs = MutableLiveData<Int>()
+    val currentSectionNumObs: LiveData<Int> = _currentSectionNumObs
 
-    private val _totalSections = MutableLiveData<Int>()
-    val totalSections: LiveData<Int> = _totalSections
+    private val _totalSectionsObs = MutableLiveData<Int>()
+    val totalSectionsObs: LiveData<Int> = _totalSectionsObs
 
     val sectionValuesMap = HashMap<Int, ArrayList<Array<String>>>()
+
+    private var currentSection = ArrayList<Array<String>>()
+    private var currentSectionNum = 1
+    private var totalSections = 1
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     init {
-        _currentSectionNum.value = 1
-        _totalSections.value = 1
-
-        val newArrayList = ArrayList<Array<String>>()
-        for (i in 0..9) {
-            val newColumn = Array<String>(6) { "" }
-            newArrayList.add(newColumn)
-        }
-        _currentSection.value = newArrayList
+        createNewSection()
+        _currentSectionNumObs.value = currentSectionNum
+        _totalSectionsObs.value = totalSections
     }
 
     override fun onCleared() {
@@ -41,19 +40,59 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         viewModelJob.cancel()
     }
 
+    public fun addSection() {
+        createNewSection()
+
+        ++totalSections
+        currentSectionNum = totalSections
+        _currentSectionNumObs.value = totalSections
+        _totalSectionsObs.value = totalSections
+    }
+
     private fun createNewSection() {
 
         val newArrayList = ArrayList<Array<String>>()
-        for (i in 0..9) {
+        for (i in 0..EditTabView.NUMBER_OF_COLUMNS) {
             val newColumn = Array<String>(6) { "" }
             newArrayList.add(newColumn)
         }
-        _currentSection.value = newArrayList
+        currentSection = newArrayList
+        _currentSectionObs.value = newArrayList
+        storeCurrentSection()
+
+        Log.v("ViewModel", "Size of map is ${sectionValuesMap.size}")
     }
 
+    public fun insertAt(column: Int, string: Int, value: String) {
+        currentSection.get(column)[string] = value
+        _currentSectionObs.value = currentSection
+    }
+
+    public fun nextSection() {
+        if (currentSectionNum < totalSections) {
+            Log.v("ViewMode", "Next Section")
+            storeCurrentSection()
+            _currentSectionNumObs.value = ++currentSectionNum
+            val nextSection = sectionValuesMap.get(currentSectionNum)
+            _currentSectionObs.value = nextSection
+        }
+    }
+
+    public fun previousSection() {
+        if (currentSectionNum > 1) {
+            storeCurrentSection()
+            _currentSectionNumObs.value = --currentSectionNum
+            val prevSection = sectionValuesMap.get(currentSectionNum)
+            _currentSectionObs.value = prevSection
+        }
+    }
+
+    private fun storeCurrentSection() {
+        sectionValuesMap.put(currentSectionNum, currentSection)
+    }
 
     fun onSave(tab: Tablature) {
-        storeCurrentSectionColumns()
+        storeCurrentSection()
         uiScope.launch {
             insert(tab)
         }
@@ -63,45 +102,5 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         withContext(Dispatchers.IO) {
             database.insert(tab)
         }
-    }
-
-    public fun insertAt(column: Int, string: Int, value: String) {
-        _currentSection.value!!.get(column)[string] = value
-        _currentSection.value = _currentSection.value
-    }
-
-    public fun nextSection() {
-        var sectionVal = currentSectionNum.value as Int
-        if (sectionVal < totalSections.value!!) {
-            storeCurrentSectionColumns()
-            _currentSectionNum.value = ++sectionVal
-            val nextSection = sectionValuesMap.get(sectionVal)!!
-            _currentSection.value = nextSection
-
-        }
-    }
-
-    public fun previousSection() {
-        var sectionVal = currentSectionNum.value as Int
-        if (sectionVal > 1) {
-            storeCurrentSectionColumns()
-            _currentSectionNum.value = --sectionVal
-            val prevSection = sectionValuesMap.get(sectionVal)!!
-            _currentSection.value = prevSection
-        }
-    }
-
-    public fun addSection() {
-
-        _currentSectionNum.value = totalSections.value!! + 1
-        _totalSections.value = _totalSections.value!! + 1
-        createNewSection()
-
-    }
-
-    private fun storeCurrentSectionColumns() {
-        val currentSection = _currentSectionNum.value!!
-        val tabSection = _currentSection.value!!
-        sectionValuesMap.put(currentSection, tabSection)
     }
 }

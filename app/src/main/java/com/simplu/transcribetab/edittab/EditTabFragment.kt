@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -76,7 +77,7 @@ class EditTabFragment : Fragment() {
     }
 
     private fun editTabViewInit() {
-        binding.addColBtn.setOnClickListener {
+        binding.addSectionBtn.setOnClickListener {
             editTabViewModel.addSection()
         }
 
@@ -92,7 +93,7 @@ class EditTabFragment : Fragment() {
 
         }
 
-        editTabViewModel.totalSections.observe(this, Observer {
+        editTabViewModel.totalSectionsObs.observe(this, Observer {
             binding.totalSectionNumber.text = "/" + Integer.toString(it)
         })
 
@@ -105,8 +106,12 @@ class EditTabFragment : Fragment() {
             }
         }
 
-        editTabViewModel.currentSection.observe(this, Observer {
+        editTabViewModel.currentSectionObs.observe(this, Observer {
             binding.editTablature.updateTablature(it)
+        })
+
+        editTabViewModel.currentSectionNumObs.observe(this, Observer {
+            binding.currentSectionNumber.setText(Integer.toString(it))
         })
     }
 

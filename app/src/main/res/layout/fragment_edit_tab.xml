@@ -144,7 +144,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/add_col_btn"
+                    android:id="@+id/add_section_btn"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:text="+"></Button>
