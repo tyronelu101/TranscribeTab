@@ -1,6 +1,7 @@
 package com.simplu.transcribetab.tab
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ class TabFragment : Fragment() {
 
     private lateinit var viewModel: TabViewModel
     private lateinit var binding: FragmentTabBinding
-    private lateinit var tabView: TablatureView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,8 +32,6 @@ class TabFragment : Fragment() {
 
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(TabViewModel::class.java)
-
-
     }
 
     override fun onCreateView(
@@ -47,14 +46,24 @@ class TabFragment : Fragment() {
             binding.artist.text = it.artist
             binding.arranger.text = it.arranger
             binding.tuning.text = it.tuning
-            tabView = TablatureView(it.columns, activity!!.applicationContext)
-            binding.tablatureContainer.addView(tabView)
+            val args = Bundle()
+            args.putString("song_uri", it.songUri)
 
         })
 
+        viewModel.topTabValues.observe(this, Observer {
+            binding.tab1.updateTablature(it)
+        })
+
+        viewModel.bottomTabValues.observe(this, Observer {
+            binding.tab2.updateTablature(it)
+        })
 
         // Inflate the layout for this fragment
         return binding.root
     }
 
+    public fun updateViews() {
+        Log.v("TabFragment", "Time to update")
+    }
 }

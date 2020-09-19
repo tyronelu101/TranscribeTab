@@ -53,16 +53,50 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/arranger"></EditText>
 
-        <HorizontalScrollView
-            android:id="@+id/tablature_container"
+        <com.simplu.transcribetab.edittab.EditTabView
+            android:id="@+id/edit_tablature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/input_container"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tuning">
 
-        </HorizontalScrollView>
+        </com.simplu.transcribetab.edittab.EditTabView>
+
+        <LinearLayout
+            android:id="@+id/section_number_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_tablature">
+
+            <Button
+                android:id="@+id/btn_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="l"></Button>
+
+            <EditText
+                android:id="@+id/current_section_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"></EditText>
+
+            <TextView
+                android:id="@+id/total_section_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/2"></TextView>
+
+            <Button
+                android:id="@+id/btn_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="r"></Button>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/input_container"
@@ -110,35 +144,23 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/insert_bar"
-                    android:layout_width="48dp"
-                    android:layout_height="wrap_content"
-                    android:text="|"></Button>
-
-                <Button
-                    android:id="@+id/clr_column"
-                    android:layout_width="48dp"
-                    android:layout_height="wrap_content"
-                    android:text="cl"></Button>
-
-                <Button
-                    android:id="@+id/insert"
-                    android:layout_width="48dp"
-                    android:layout_height="wrap_content"
-                    android:text="INS"></Button>
-
-                <Button
                     android:id="@+id/add_col_btn"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:text="+"></Button>
 
                 <Button
-                    android:id="@+id/delete_btn"
+                    android:id="@+id/btn_set_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="0dp"
-                    android:text="dl"></Button>
+                    android:text="time"></Button>
+
+                <Button
+                    android:id="@+id/btn_clr_column"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="clr"></Button>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -149,8 +171,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"></include>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

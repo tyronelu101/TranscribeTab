@@ -1,4 +1,4 @@
-package com.simplu.transcribetab.tab
+package com.simplu.transcribetab.edittab
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,12 +7,10 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
-import com.simplu.transcribetab.edittab.Column
-import com.simplu.transcribetab.edittab.DrawableColumn
 
-class TablatureView @JvmOverloads constructor(
-    private val columns: ArrayList<Column>? = null,
+class EditTabView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -22,6 +20,8 @@ class TablatureView @JvmOverloads constructor(
         val px = (resources.displayMetrics.density * dp).toInt()
         return px
     }
+
+    val NUMBER_OF_COLUMNS = 9
 
     val NUMBER_OF_STRINGS = 6
 
@@ -36,7 +36,7 @@ class TablatureView @JvmOverloads constructor(
     val HORIZONTAL_SPACE = dpToPixel(12)
 
     //Size of each note boundary
-    val NOTE_BORDER_SIZE = dpToPixel(20)
+    val NOTE_BORDER_SIZE = dpToPixel(16)
 
     val PADDING = dpToPixel(16)
 
@@ -69,17 +69,19 @@ class TablatureView @JvmOverloads constructor(
 
     }
 
+    lateinit var currentSelectedColumn: DrawableColumn
     val columnNotesList = ArrayList<DrawableColumn>()
 
-    private var barNumberCount: Int = 0
 
     init {
+        Log.v("EditTab", "Initializing edit tab")
         initializeColumns()
+
     }
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        Log.v("TablatureView", "onMeasure")
         var desiredWidth = 0
         var desiredHeight = COLUMN_BORDER_HEIGHT + PADDING
         //Width will change dynamically so recalculate the width
@@ -98,34 +100,24 @@ class TablatureView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        Log.v("TablatureView", "onDraw")
-
         drawLines(canvas)
-        drawTablature(canvas)
+        drawNotes(canvas)
+        drawSelectedColumn(canvas)
     }
 
-    private fun drawTablature(canvas: Canvas) {
+    private fun drawSelectedColumn(canvas: Canvas) {
+        canvas.drawRect(currentSelectedColumn?.columnBound, columnBorderPaint)
+    }
+
+    private fun drawNotes(canvas: Canvas) {
 
         for (column in columnNotesList) {
-            if (column.isBar) {
-                drawBar(canvas, column)
-                continue
-            } else
-                drawNotes(canvas, column)
-        }
-
-    }
-
-    private fun drawNotes(canvas: Canvas, column: DrawableColumn) {
-        for (i in 0..5) {
-            val noteVal = column.notes[i]
-            val noteBound = column.noteBound[i]
-            if (noteVal != "") {
-                canvas.drawRect(noteBound, noteBorderPaint)
+            for (i in 0..5) {
+//            canvas.drawRect(note.bound, noteBorderPaint)
+                val noteVal = column.notes[i]
+                val noteBound = column.noteBound[i]
+                drawCenterTextRect(canvas, noteVal, noteBound)
             }
-            drawCenterTextRect(canvas, noteVal, noteBound)
-            Log.v("TablatureView", "Drawing note")
         }
     }
 
@@ -154,28 +146,20 @@ class TablatureView @JvmOverloads constructor(
 
         val textX = column.columnBound.exactCenterX()
         val textY = BAR_NUMBER_PADDING + 30f
-        canvas.drawText(barNumberCount.toString(), textX, textY, textPaint)
-        ++barNumberCount
-
     }
 
-    //ToDo Load the columns from db. Creates a single column if column list is empty
     private fun initializeColumns() {
-        Log.v("TablatureView", "Initialize column")
 
-        if (columns != null) {
-            //Initialize the first column
-            val left = STARTING_LEFT + PADDING + HORIZONTAL_SPACE
-            val top = STARTING_TOP + PADDING
-
-            val column = createColumnNotes(
-                left, top, columns[0]
-            )
-            columnNotesList.add(column)
-
-            for (i in 1 until columns.size) {
-                addColumnToEnd(columns[i]);
-            }
+        val left = STARTING_LEFT + PADDING + HORIZONTAL_SPACE
+        val top = STARTING_TOP + PADDING
+        //Create a column of notes at starting coordinates
+        val column = createColumnNotes(
+            left, top
+        )
+        currentSelectedColumn = column
+        columnNotesList.add(column)
+        for (i in 0..NUMBER_OF_COLUMNS) {
+            addColumnToEnd()
         }
     }
 
@@ -217,11 +201,6 @@ class TablatureView @JvmOverloads constructor(
         val endingY = lastNoteBound.exactCenterY()
 
         canvas.drawLine(x, startingY, x, endingY, linePaint)
-
-        val textX = x
-        val textY = BAR_NUMBER_PADDING + 30f
-        canvas.drawText(barNumberCount.toString(), textX, textY, textPaint)
-        barNumberCount++
     }
 
     //Draw the last vertical line of tablature based on positioning of last column
@@ -239,8 +218,17 @@ class TablatureView @JvmOverloads constructor(
         canvas.drawLine(x, startingY, x, endingY, linePaint)
     }
 
+    //Adds a column to the end of tab
+    private fun addColumnToEnd() {
+        //Left and top of column
+        val top = STARTING_TOP + PADDING //Top will be same
+        val left = columnNotesList.last().getColumnRightBound() + HORIZONTAL_SPACE
+        val newColumn = createColumnNotes(left, top)
+        columnNotesList.add(newColumn)
+    }
+
     //Creates a column of notes with left and top as starting coordinates and returns it
-    private fun createColumnNotes(left: Int, top: Int, column: Column): DrawableColumn {
+    private fun createColumnNotes(left: Int, top: Int): DrawableColumn {
 
         var currentTop = top
         val noteBounds = arrayOfNulls<Rect>(NUMBER_OF_STRINGS)
@@ -270,20 +258,79 @@ class TablatureView @JvmOverloads constructor(
 
         return DrawableColumn(
             columnBound = columnBounds,
-            noteBound = noteBounds.requireNoNulls(),
-            isBar = column.isBar,
-            notes = column.notes
+            noteBound = noteBounds.requireNoNulls()
         )
 
     }
 
-    //Adds a column to the end of tab
-    fun addColumnToEnd(column: Column) {
-        //Left and top of column
-        val top = STARTING_TOP + PADDING //Top will be same
-        val left = columnNotesList.last().getColumnRightBound() + HORIZONTAL_SPACE
-        val newColumn = createColumnNotes(left, top, column)
-        columnNotesList.add(newColumn)
+    fun insertNote(string: Int, fingeringVal: String) {
 
+        var currentVal = currentSelectedColumn.notes[string]
+        var newVal = ""
+        if (currentVal.length == 1) {
+            newVal = currentVal + fingeringVal
+        } else {
+            newVal = fingeringVal
+        }
+        currentSelectedColumn.notes[string] = newVal
+        invalidate()
     }
+
+    fun clearColumn() {
+        currentSelectedColumn.clearColumn()
+        invalidate()
+    }
+
+    fun clearString(string: Int) {
+        currentSelectedColumn.notes[string] = ""
+        invalidate()
+    }
+
+    fun clearAll() {
+        for (column in columnNotesList) {
+            column.clearColumn()
+        }
+        invalidate()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        val x = event.x
+        val y = event.y
+
+        for (column in columnNotesList) {
+
+            if (column.inColumnBound(x, y)) {
+                currentSelectedColumn = column
+                invalidate()
+            }
+        }
+
+        return super.onTouchEvent(event)
+    }
+
+    //Returns the value of all columns in array of array
+    public fun getColumnsValue(): Array<Array<String>> {
+
+        val columnsValue = Array(9) { Array(6) { "" } }
+        for (column in 0..9) {
+            columnsValue[column] = columnNotesList[column].notes
+        }
+
+        return columnsValue
+    }
+
+    public fun getSelectedColumnNumber(): Int {
+        return columnNotesList.indexOf(currentSelectedColumn);
+    }
+
+    public fun updateTablature(columnValues: ArrayList<Array<String>>) {
+
+        for (i in 0..9) {
+            columnNotesList[i].setNoteValues(columnValues[i])
+        }
+
+        invalidate()
+    }
+
 }

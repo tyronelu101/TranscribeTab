@@ -1,19 +1,11 @@
 package com.simplu.transcribetab.edittab
 
 import android.graphics.Rect
-
-open class Column(
-    var notes: Array<String> = Array(6) { "" }, var isBar: Boolean = false
-)
-
 class DrawableColumn(
+    var notes: Array<String> = Array(6) { "" },
     var columnBound: Rect,
-    var noteBound: Array<Rect> = Array(6) { Rect(0, 0, 0, 0) },
-    var barNumber: Int = -1,
-    var time: Int = -1,
-    notes: Array<String> = Array(6) { "" },
-    isBar: Boolean = false
-) : Column(notes, isBar) {
+    var noteBound: Array<Rect> = Array(6) { Rect(0, 0, 0, 0) })  {
+
     //Sets the value of a string with a fingering val
     fun setNoteFingering(string: Int, fingering: String) {
         notes[string] = fingering
@@ -39,9 +31,6 @@ class DrawableColumn(
     }
 
     fun clearColumn() {
-        isBar = false
-        barNumber = -1
-        time = -1
         for (string in 0..5) {
             notes[string] = ""
         }

@@ -1,9 +1,7 @@
 package com.simplu.transcribetab.edittab
 
-import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabaseDao
@@ -12,41 +10,50 @@ import kotlinx.coroutines.*
 
 class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
 
-    private val _isPlaying = MutableLiveData<Boolean>()
-    val isPlaying: LiveData<Boolean> = _isPlaying
+    private val _currentSectionNum = MutableLiveData<Int>()
+    val currentSectionNum: LiveData<Int> = _currentSectionNum
 
-    val _isPaused = MutableLiveData<Boolean>()
-    val isPaused: LiveData<Boolean> = _isPaused
+    private val _currentSection = MutableLiveData<ArrayList<Array<String>>>()
+    val currentSection: LiveData<ArrayList<Array<String>>> = _currentSection
 
-    private val _currentTime = MutableLiveData<Long>()
-    val currentTime: LiveData<Long> = _currentTime
-    val currentTimeString: LiveData<String> = Transformations.map(currentTime) { time ->
+    private val _totalSections = MutableLiveData<Int>()
+    val totalSections: LiveData<Int> = _totalSections
 
-        //Remove range so format of string is 0:00 instead of 00:00
-        DateUtils.formatElapsedTime(time).removeRange(0, 1)
-    }
-
-    private val _duration = MutableLiveData<Long>()
-    val duration: LiveData<Long> = _duration
-    val durationString: LiveData<String> = Transformations.map(duration) { time ->
-        //Remove range so format of string is 0:00 instead of 00:00
-        DateUtils.formatElapsedTime(time).removeRange(0, 1)
-    }
-
-    private var skipToVal: Long
-
-    private val _skipTo = MutableLiveData<Long>()
-    val skipTo: LiveData<Long> = _skipTo
+    val sectionValuesMap = HashMap<Int, ArrayList<Array<String>>>()
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    init {
+        _currentSectionNum.value = 1
+        _totalSections.value = 1
+
+        val newArrayList = ArrayList<Array<String>>()
+        for (i in 0..9) {
+            val newColumn = Array<String>(6) { "" }
+            newArrayList.add(newColumn)
+        }
+        _currentSection.value = newArrayList
+    }
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
 
+    private fun createNewSection() {
+
+        val newArrayList = ArrayList<Array<String>>()
+        for (i in 0..9) {
+            val newColumn = Array<String>(6) { "" }
+            newArrayList.add(newColumn)
+        }
+        _currentSection.value = newArrayList
+    }
+
+
     fun onSave(tab: Tablature) {
+        storeCurrentSectionColumns()
         uiScope.launch {
             insert(tab)
         }
@@ -58,38 +65,43 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         }
     }
 
-    init {
-        _currentTime.value = 0
-        _duration.value = 0
-        skipToVal = 0
+    public fun insertAt(column: Int, string: Int, value: String) {
+        _currentSection.value!!.get(column)[string] = value
+        _currentSection.value = _currentSection.value
     }
 
-    public fun onPlay() {
-        _isPlaying.value = true
-        _isPaused.value = false
+    public fun nextSection() {
+        var sectionVal = currentSectionNum.value as Int
+        if (sectionVal < totalSections.value!!) {
+            storeCurrentSectionColumns()
+            _currentSectionNum.value = ++sectionVal
+            val nextSection = sectionValuesMap.get(sectionVal)!!
+            _currentSection.value = nextSection
+
+        }
     }
 
-    public fun onPause() {
-        _isPlaying.value = false
-        _isPaused.value = true
+    public fun previousSection() {
+        var sectionVal = currentSectionNum.value as Int
+        if (sectionVal > 1) {
+            storeCurrentSectionColumns()
+            _currentSectionNum.value = --sectionVal
+            val prevSection = sectionValuesMap.get(sectionVal)!!
+            _currentSection.value = prevSection
+        }
     }
 
-    public fun updateTime(newTime: Long) {
-        _currentTime.value = newTime
+    public fun addSection() {
+
+        _currentSectionNum.value = totalSections.value!! + 1
+        _totalSections.value = _totalSections.value!! + 1
+        createNewSection()
+
     }
 
-    public fun setDuration(duration: Long) {
-        _duration.value = duration
+    private fun storeCurrentSectionColumns() {
+        val currentSection = _currentSectionNum.value!!
+        val tabSection = _currentSection.value!!
+        sectionValuesMap.put(currentSection, tabSection)
     }
-
-    public fun setSkipTo() {
-        skipToVal = currentTime?.value ?: 0L
-    }
-
-    public fun onGoTo() {
-        _currentTime.value = skipToVal
-        _skipTo.value = skipToVal
-    }
-
-
 }

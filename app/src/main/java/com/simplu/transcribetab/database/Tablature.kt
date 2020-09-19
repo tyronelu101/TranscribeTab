@@ -3,7 +3,6 @@ package com.simplu.transcribetab.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.simplu.transcribetab.edittab.Column
 
 @Entity(tableName = "tablature_table")
 data class Tablature(
@@ -22,8 +21,8 @@ data class Tablature(
     @ColumnInfo(name = "tuning")
     var tuning: String = "",
 
-    @ColumnInfo(name = "tab_columns")
-    var columns: ArrayList<Column>,
+    @ColumnInfo(name = "section_columns")
+    var columns: HashMap<Int, ArrayList<Array<String>>>,
 
     @ColumnInfo(name = "song_uri")
     var songUri: String = ""
