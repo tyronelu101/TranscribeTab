@@ -41,10 +41,11 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
     }
 
     public fun addSection() {
+        Log.v("Test", "Adding section.")
+        storeCurrentSection()
         createNewSection()
 
-        ++totalSections
-        currentSectionNum = totalSections
+        currentSectionNum = ++totalSections
         _currentSectionNumObs.value = totalSections
         _totalSectionsObs.value = totalSections
     }
@@ -58,7 +59,6 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         }
         currentSection = newArrayList
         _currentSectionObs.value = newArrayList
-        storeCurrentSection()
 
         Log.v("ViewModel", "Size of map is ${sectionValuesMap.size}")
     }
@@ -70,11 +70,15 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
 
     public fun nextSection() {
         if (currentSectionNum < totalSections) {
-            Log.v("ViewMode", "Next Section")
             storeCurrentSection()
             _currentSectionNumObs.value = ++currentSectionNum
+            Log.v("Test", "next section: ${currentSectionNum}")
+
             val nextSection = sectionValuesMap.get(currentSectionNum)
-            _currentSectionObs.value = nextSection
+            if (nextSection != null) {
+                currentSection = nextSection
+                _currentSectionObs.value = nextSection
+            }
         }
     }
 
@@ -82,12 +86,17 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         if (currentSectionNum > 1) {
             storeCurrentSection()
             _currentSectionNumObs.value = --currentSectionNum
-            val prevSection = sectionValuesMap.get(currentSectionNum)
-            _currentSectionObs.value = prevSection
+            Log.v("Test", "prev section: ${currentSectionNum}")
+            val prevSection = sectionValuesMap[currentSectionNum]
+            if (prevSection != null) {
+                currentSection = prevSection
+                _currentSectionObs.value = prevSection
+            }
         }
     }
 
     private fun storeCurrentSection() {
+        Log.v("Test", "Storing ${currentSectionNum} with ${currentSection}")
         sectionValuesMap.put(currentSectionNum, currentSection)
     }
 
