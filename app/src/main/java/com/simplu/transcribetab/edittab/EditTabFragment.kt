@@ -90,11 +90,17 @@ class EditTabFragment : Fragment() {
         }
 
         binding.btnSetTime.setOnClickListener {
-
+            Log.v("Test", "SetTimeBtnClicked")
+            editTabViewModel.onSetTime(mediaPlayer.currentPosition/1000)
         }
 
         editTabViewModel.totalSectionsObs.observe(this, Observer {
             binding.totalSectionNumber.text = "/" + Integer.toString(it)
+        })
+
+        editTabViewModel.sectionTimeRangeString.observe(this, Observer {
+            Log.v("EditTab", "Range time string is ${it}")
+            binding.sectionTimeText.text = it
         })
 
         for (view in binding.stringInputContainer.children.iterator()) {
