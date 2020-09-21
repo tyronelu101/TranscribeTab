@@ -25,6 +25,9 @@ data class Tablature(
     @ColumnInfo(name = "section_columns")
     var columns: HashMap<Int, ArrayList<Array<String>>>,
 
+    @ColumnInfo(name = "section_time_range")
+    var timeRanges: HashMap<Int, Pair<Int, Int?>>,
+
     @ColumnInfo(name = "song_uri")
     var songUri: String = ""
 

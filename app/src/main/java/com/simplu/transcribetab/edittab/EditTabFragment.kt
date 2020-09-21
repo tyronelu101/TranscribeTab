@@ -199,6 +199,7 @@ class EditTabFragment : Fragment() {
                     arranger = tabArranger,
                     tuning = tuning,
                     columns = editTabViewModel.sectionValuesMap,
+                    timeRanges = editTabViewModel.sectionTimeMap,
                     songUri = songUri
                 )
 

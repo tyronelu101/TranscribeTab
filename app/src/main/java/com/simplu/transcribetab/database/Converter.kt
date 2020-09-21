@@ -23,4 +23,20 @@ class Converter {
         val columns: HashMap<Int, ArrayList<Array<String>>> = gson.fromJson(columnString, type)
         return columns
     }
+
+    @TypeConverter
+    fun timeRangeMapToString(timeRange: HashMap<Int, Pair<Int, Int?>>): String {
+        val gson = Gson()
+        val type: Type = object : TypeToken<HashMap<Int, Pair<Int, Int?>>>() {}.type
+        val json = gson.toJson(timeRange, type)
+        return json
+    }
+
+    @TypeConverter
+    fun stringToTimeRangeMap(timeRangeMapString: String): HashMap<Int, Pair<Int, Int?>> {
+        val gson = Gson()
+        val type: Type = object : TypeToken<HashMap<Int, Pair<Int, Int?>>>() {}.type
+        val timeRangeMap: HashMap<Int, Pair<Int, Int?>> = gson.fromJson(timeRangeMapString, type)
+        return timeRangeMap
+    }
 }
