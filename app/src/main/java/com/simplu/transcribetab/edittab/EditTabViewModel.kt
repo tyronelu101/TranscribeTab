@@ -87,8 +87,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
 
             _currentSectionNumObs.value = totalSections
             _totalSectionsObs.value = totalSections
-        }
-        else {
+        } else {
             Log.v("EditTabViewModel", "Set an end time for this section.")
         }
 
@@ -178,6 +177,13 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
             val newRange = Pair(start, end)
             sectionTimeMap.put(currentSectionNum, newRange)
             _currentSectionTimeRange.value = newRange
+        }
+    }
+
+    fun onSkipTo() {
+        val skipToTime = sectionTimeMap.get(currentSectionNum)
+        if (skipToTime != null) {
+            _skipToVal.value = skipToTime.first
         }
     }
 

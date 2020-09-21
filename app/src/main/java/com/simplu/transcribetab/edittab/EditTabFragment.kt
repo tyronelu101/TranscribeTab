@@ -4,7 +4,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -91,9 +90,17 @@ class EditTabFragment : Fragment() {
 
         binding.btnSetTime.setOnClickListener {
             Log.v("Test", "SetTimeBtnClicked")
-            editTabViewModel.onSetTime(mediaPlayer.currentPosition/1000)
+            editTabViewModel.onSetTime(mediaPlayer.currentPosition / 1000)
         }
 
+        binding.sectionTimeText.setOnClickListener {
+            editTabViewModel.onSkipTo()
+        }
+
+        editTabViewModel.skipToVal.observe(this, Observer {
+            binding.mediaPlayer.songSeekBar.progress = it
+            mediaPlayer?.seekTo(it * 1000)
+        })
         editTabViewModel.totalSectionsObs.observe(this, Observer {
             binding.totalSectionNumber.text = "/" + Integer.toString(it)
         })
@@ -217,7 +224,6 @@ class EditTabFragment : Fragment() {
 
             mediaPlayerViewModel.updateTime(progress.toLong())
             currentProgress = progress
-
 
         }
 
