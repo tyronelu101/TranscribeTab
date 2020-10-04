@@ -3,7 +3,6 @@ package com.simplu.transcribetab.edittab
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -15,10 +14,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.simplu.transcribetab.MediaPlayerViewModel
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
+import kotlinx.coroutines.*
 
 class EditTabFragment : Fragment() {
 
@@ -27,17 +28,18 @@ class EditTabFragment : Fragment() {
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
     private lateinit var mediaPlayer: MediaPlayer
 
-    val mHandler = Handler()
-    private val runnable: Runnable = object : Runnable {
+    private val mediaPlayerJob = Job()
+    private val scope = CoroutineScope(mediaPlayerJob + Dispatchers.Main)
 
-        override fun run() {
-
-            // Current position is in milliseconds so convert to seconds
-            val currentPosition = (mediaPlayer.currentPosition) / 1000
-            binding.mediaPlayer.songSeekBar.progress = (currentPosition)
-            mHandler.postDelayed(this, 1000)
-
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.stop()
+            }
+            mediaPlayer.release()
         }
+        mediaPlayerJob.cancel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,12 +62,22 @@ class EditTabFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (mediaPlayer != null && mediaPlayer.isPlaying) {
+            mediaPlayer.pause()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_tab, container, false)
+        binding.editTabViewModel = editTabViewModel
+        binding.mediaPlayerViewModel = mediaPlayerViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         setHasOptionsMenu(true)
         editTabViewInit()
@@ -76,9 +88,6 @@ class EditTabFragment : Fragment() {
     }
 
     private fun editTabViewInit() {
-        binding.addSectionBtn.setOnClickListener {
-            editTabViewModel.addSection()
-        }
 
         binding.btnLeft.setOnClickListener {
             editTabViewModel.previousSection()
@@ -89,7 +98,6 @@ class EditTabFragment : Fragment() {
         }
 
         binding.btnSetTime.setOnClickListener {
-            Log.v("Test", "SetTimeBtnClicked")
             editTabViewModel.onSetTime(mediaPlayer.currentPosition / 1000)
         }
 
@@ -101,7 +109,7 @@ class EditTabFragment : Fragment() {
             binding.mediaPlayer.songSeekBar.progress = it
             mediaPlayer?.seekTo(it * 1000)
         })
-        editTabViewModel.totalSectionsObs.observe(this, Observer {
+        editTabViewModel.totalSectionsNum.observe(this, Observer {
             binding.totalSectionNumber.text = "/" + Integer.toString(it)
         })
 
@@ -119,11 +127,11 @@ class EditTabFragment : Fragment() {
             }
         }
 
-        editTabViewModel.currentSectionObs.observe(this, Observer {
+        editTabViewModel.currentSectionColumns.observe(this, Observer {
             binding.editTablature.updateTablature(it)
         })
 
-        editTabViewModel.currentSectionNumObs.observe(this, Observer {
+        editTabViewModel.currentSectionNum.observe(this, Observer {
             binding.currentSectionNumber.setText(Integer.toString(it))
         })
     }
@@ -131,7 +139,7 @@ class EditTabFragment : Fragment() {
     private fun mediaPlayerViewInit() {
 
         binding.mediaPlayer.songSeekBar.max = mediaPlayer.duration / 1000
-        binding.mediaPlayer.songSeekBar.setOnSeekBarChangeListener(seekBarOnChangeListner())
+        binding.mediaPlayer.songSeekBar.setOnSeekBarChangeListener(seekBarOnChangeListener())
 
         binding.mediaPlayer.setSkipTo.setOnClickListener {
             mediaPlayerViewModel.setSkipTo()
@@ -159,23 +167,32 @@ class EditTabFragment : Fragment() {
             binding.mediaPlayer.songDuration.text = it
         })
 
-        mediaPlayerViewModel.isPlaying.observe(this, Observer {
-            if (it) {
+        mediaPlayerViewModel.isPlaying.observe(this, Observer { play ->
+            if (play) {
                 mediaPlayer.start()
-                startSeekbarUpdate()
+                observeMedia()
             }
         })
 
-        mediaPlayerViewModel.isPaused.observe(this, Observer {
-            if (it) {
+        mediaPlayerViewModel.isPaused.observe(this, Observer { pause ->
+            if (pause) {
                 mediaPlayer.pause()
-                stopSeekbarUpdate()
             }
         })
 
         mediaPlayerViewModel.skipTo.observe(this, Observer {
             mediaPlayer?.seekTo(it.toInt() * 1000)
         })
+    }
+
+    private fun observeMedia() {
+        scope.launch {
+            while (mediaPlayer.isPlaying) {
+                val currentPosition = (mediaPlayer.currentPosition) / 1000
+                binding.mediaPlayer.songSeekBar.progress = (currentPosition)
+                delay(500)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -199,7 +216,8 @@ class EditTabFragment : Fragment() {
                     arranger = tabArranger,
                     tuning = tuning,
                     columns = editTabViewModel.sectionValuesMap,
-                    timeRanges = editTabViewModel.sectionTimeMap,
+                    sectionToTimeMap = editTabViewModel.sectionTimeMap,
+                    timeToSectionMap = editTabViewModel.timeToSectionMap,
                     songUri = songUri
                 )
 
@@ -210,15 +228,7 @@ class EditTabFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun startSeekbarUpdate() {
-        mHandler.postDelayed(runnable, 0)
-    }
-
-    private fun stopSeekbarUpdate() {
-        mHandler.removeCallbacks(runnable)
-    }
-
-    inner class seekBarOnChangeListner : SeekBar.OnSeekBarChangeListener {
+    inner class seekBarOnChangeListener : SeekBar.OnSeekBarChangeListener {
         var currentProgress = 0
 
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -279,14 +289,11 @@ class EditTabFragment : Fragment() {
                         R.id.input_row_3 -> if (isSwipeUp) 4 else 5
                         else -> -1
                     }
-                    Log.v("Touch", "Note is ${note}")
+                    val columnToUpdate = binding.editTablature.getSelectedColumnNumber()
                     if (note.equals("c", ignoreCase = true)) {
-                        val columnToUpdate = binding.editTablature.getSelectedColumnNumber()
                         editTabViewModel.insertAt(columnToUpdate, stringToUpdate, "")
                     } else {
-                        val columnToUpdate = binding.editTablature.getSelectedColumnNumber()
                         editTabViewModel.insertAt(columnToUpdate, stringToUpdate, note)
-                        false
                     }
                     false
                 }

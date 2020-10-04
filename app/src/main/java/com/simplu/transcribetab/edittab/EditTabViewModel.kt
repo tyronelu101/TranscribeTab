@@ -13,18 +13,17 @@ import kotlinx.coroutines.*
 
 class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
 
-    private val _currentSectionObs = MutableLiveData<ArrayList<Array<String>>>()
-    val currentSectionObs: LiveData<ArrayList<Array<String>>> = _currentSectionObs
+    private val _currentSectionColumns = MutableLiveData<ArrayList<Array<String>>>()
+    val currentSectionColumns: LiveData<ArrayList<Array<String>>> = _currentSectionColumns
 
-    private val _currentSectionNumObs = MutableLiveData<Int>()
-    val currentSectionNumObs: LiveData<Int> = _currentSectionNumObs
+    private val _currentSectionNum = MutableLiveData<Int>()
+    val currentSectionNum: LiveData<Int> = _currentSectionNum
 
-    private val _totalSectionsObs = MutableLiveData<Int>()
-    val totalSectionsObs: LiveData<Int> = _totalSectionsObs
+    private val _totalSectionNum = MutableLiveData<Int>()
+    val totalSectionsNum: LiveData<Int> = _totalSectionNum
 
-    private val _currentSectionTimeRange = MutableLiveData<Pair<Int, Int?>>()
-    val currentSectionTimeRange: LiveData<Pair<Int, Int?>> = _currentSectionTimeRange
-
+    private val _currentSectionTimeRange = MutableLiveData<Pair<Int, Int>>()
+    val currentSectionTimeRange: LiveData<Pair<Int, Int>> = _currentSectionTimeRange
     val sectionTimeRangeString: LiveData<String> = Transformations.map(currentSectionTimeRange) {
 
         val beginningTime = it.first
@@ -35,7 +34,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
                 "[" + DateUtils.formatElapsedTime(beginningTime.toLong()).removeRange(0, 1) + "-"
             )
 
-        if (endTime != null) {
+        if (endTime != -1) {
             timeStringSb.append(
                 DateUtils.formatElapsedTime(endTime.toLong()).removeRange(0, 1) + "]"
             )
@@ -46,28 +45,38 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         timeStringSb.toString()
     }
 
-
     private val _skipToVal = MutableLiveData<Int>()
     val skipToVal: LiveData<Int> = _skipToVal
 
     val sectionValuesMap = HashMap<Int, ArrayList<Array<String>>>()
-    val sectionTimeMap = HashMap<Int, Pair<Int, Int?>>()
-
-    private var currentSection = ArrayList<Array<String>>()
-    private var currentSectionNum = 1
-    private var totalSections = 1
+    val sectionTimeMap = HashMap<Int, Pair<Int, Int>>()
+    val timeToSectionMap = HashMap<Int, Int>()
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     init {
         createNewSection()
-        _currentSectionNumObs.value = currentSectionNum
-        _totalSectionsObs.value = totalSections
+        _currentSectionNum.value = 1
+        _totalSectionNum.value = 1
 
-        val initTimeRange = Pair(0, null)
-        sectionTimeMap.put(currentSectionNum, initTimeRange)
+        val initTimeRange = Pair(0, -1)
         _currentSectionTimeRange.value = initTimeRange
+        sectionTimeMap.put(currentSectionNum.value!!, initTimeRange)
+
+        storeCurrentSection()
+
+    }
+
+    private fun createNewSection() {
+
+        val newSectionColumns = ArrayList<Array<String>>()
+
+        for (i in 0..EditTabView.NUMBER_OF_COLUMNS) {
+            val column = Array<String>(6) { "" }
+            newSectionColumns.add(column)
+        }
+        _currentSectionColumns.value = newSectionColumns
 
     }
 
@@ -76,17 +85,20 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         viewModelJob.cancel()
     }
 
-    public fun addSection() {
+    fun addSection() {
+
+        val totalSections = totalSectionsNum.value
+
         //Only add new section if current section has a ending time range set
         if (sectionTimeMap[totalSections]?.second != null) {
             storeCurrentSection()
             createNewSection()
 
-            currentSectionNum = ++totalSections
+            _currentSectionNum.value = currentSectionNum.value?.plus(1)
             createNewSectionRange()
 
-            _currentSectionNumObs.value = totalSections
-            _totalSectionsObs.value = totalSections
+            _currentSectionNum.value = totalSections?.plus(1)
+            _totalSectionNum.value = totalSections?.plus(1)
         } else {
             Log.v("EditTabViewModel", "Set an end time for this section.")
         }
@@ -95,59 +107,53 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
 
     private fun createNewSectionRange() {
 
-        if (currentSectionNum > 1) {
+        val currentSectionNumVal = currentSectionNum.value
 
-            val prevRange = sectionTimeMap.get(currentSectionNum - 1)
-            if (prevRange?.second != null) {
-                val newRange = Pair(prevRange.second!!, null)
+        if (currentSectionNumVal != null && currentSectionNumVal > 1) {
+
+            val prevRange = sectionTimeMap.get(currentSectionNumVal - 1)
+            if (prevRange != null) {
+                val newRange = Pair(prevRange.second, -1)
                 _currentSectionTimeRange.value = newRange
-                sectionTimeMap.put(currentSectionNum, newRange)
+                sectionTimeMap.put(currentSectionNumVal, newRange)
             }
         }
     }
 
-    private fun createNewSection() {
+    fun insertAt(column: Int, string: Int, value: String) {
 
-        val newArrayList = ArrayList<Array<String>>()
-        for (i in 0..EditTabView.NUMBER_OF_COLUMNS) {
-            val newColumn = Array<String>(6) { "" }
-            newArrayList.add(newColumn)
+        val updatedColumn = _currentSectionColumns.value
+
+        if (updatedColumn != null) {
+            updatedColumn.get(column)[string] = value
+            _currentSectionColumns.value = updatedColumn
         }
-        currentSection = newArrayList
-        _currentSectionObs.value = newArrayList
-
-        Log.v("ViewModel", "Size of map is ${sectionValuesMap.size}")
-    }
-
-    public fun insertAt(column: Int, string: Int, value: String) {
-        currentSection.get(column)[string] = value
-        _currentSectionObs.value = currentSection
     }
 
     public fun nextSection() {
-        if (currentSectionNum < totalSections) {
-            storeCurrentSection()
-            _currentSectionNumObs.value = ++currentSectionNum
-            Log.v("Test", "next section: ${currentSectionNum}")
 
-            val nextSection = sectionValuesMap.get(currentSectionNum)
+        if (currentSectionNum.value!! < totalSectionsNum.value!!) {
+            storeCurrentSection()
+
+            _currentSectionNum.value = currentSectionNum.value?.plus(1)
+
+            val nextSection = sectionValuesMap.get(currentSectionNum.value!!)
             if (nextSection != null) {
-                currentSection = nextSection
-                _currentSectionObs.value = nextSection
+                _currentSectionColumns.value = nextSection
             }
             updateSectionRange()
         }
     }
 
     public fun previousSection() {
-        if (currentSectionNum > 1) {
+
+        if (currentSectionNum.value!! > 1) {
             storeCurrentSection()
-            _currentSectionNumObs.value = --currentSectionNum
-            Log.v("Test", "prev section: ${currentSectionNum}")
-            val prevSection = sectionValuesMap[currentSectionNum]
+            _currentSectionNum.value = currentSectionNum.value?.minus(1)
+            val prevSection = sectionValuesMap[currentSectionNum.value!!]
+
             if (prevSection != null) {
-                currentSection = prevSection
-                _currentSectionObs.value = prevSection
+                _currentSectionColumns.value = prevSection
             }
             updateSectionRange()
 
@@ -155,33 +161,38 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
     }
 
     private fun updateSectionRange() {
-        val currentTimeRange = sectionTimeMap.get(currentSectionNum)
+        val currentTimeRange = sectionTimeMap.get(currentSectionNum.value)
         if (currentTimeRange != null) {
             _currentSectionTimeRange.value = currentTimeRange
         }
     }
 
     private fun storeCurrentSection() {
-        Log.v("Test", "Storing ${currentSectionNum} with ${currentSection}")
-        sectionValuesMap.put(currentSectionNum, currentSection)
+        val currentSectionNumber = currentSectionNum.value
+        val currentSectionColumns = currentSectionColumns.value
+
+        if (currentSectionNumber != null && currentSectionColumns != null) {
+            sectionValuesMap.put(currentSectionNumber, currentSectionColumns)
+        }
     }
 
     fun onSetTime(time: Int) {
-        Log.v("Test", "Time is ${time}")
-        val currentRange = sectionTimeMap.get(currentSectionNum)
-        if (currentRange != null) {
-            Log.v("Test", "ViewModel onSetTime")
 
+        val currentRange = sectionTimeMap.get(currentSectionNum.value!!)
+        Log.v("EditTabViewModel", "onSetTime() ${currentRange}")
+
+        if (currentRange != null) {
+            Log.v("EditTabViewModel", "onSetTimes()")
             val start = currentRange.first
             val end = time
             val newRange = Pair(start, end)
-            sectionTimeMap.put(currentSectionNum, newRange)
+            sectionTimeMap.put(currentSectionNum.value!!, newRange)
             _currentSectionTimeRange.value = newRange
         }
     }
 
     fun onSkipTo() {
-        val skipToTime = sectionTimeMap.get(currentSectionNum)
+        val skipToTime = sectionTimeMap.get(currentSectionNum.value!!)
         if (skipToTime != null) {
             _skipToVal.value = skipToTime.first
         }

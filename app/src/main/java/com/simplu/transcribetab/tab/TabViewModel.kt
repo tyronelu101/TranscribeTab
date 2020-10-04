@@ -19,10 +19,12 @@ class TabViewModel(val database: TablatureDatabaseDao, val tabId: Long) : ViewMo
     private var _tablature: MutableLiveData<Tablature> = MutableLiveData()
     val tablature: LiveData<Tablature> = _tablature
 
-    var sectionMap: HashMap<Int, ArrayList<Array<String>>>? = null
+    var sectionValuesMap = HashMap<Int, ArrayList<Array<String>>>()
+    var sectionTimeMap = HashMap<Int, Pair<Int, Int>>()
 
-    private var nextTabSectionIndex = 3
-    var timeToWatch = 30
+    private var currentTab = 1
+    private var _timeToWatch = MutableLiveData<Int?>()
+    var timeToWatch: LiveData<Int?> = _timeToWatch
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -38,13 +40,19 @@ class TabViewModel(val database: TablatureDatabaseDao, val tabId: Long) : ViewMo
 
     private fun initializeTablature() {
         uiScope.launch {
-            _tablature.value = getTablature()
-            sectionMap = _tablature?.value?.columns
+            val tablature = getTablature()
+            _tablature.value = tablature
+
+            sectionValuesMap = tablature.columns
+            sectionTimeMap = tablature.sectionToTimeMap
 
             //Initialize the first 2 sections
-            if (sectionMap != null) {
-                _topTabValues.value = sectionMap?.get(1)
-                _bottomTabValues.value = sectionMap?.get(2)
+            if (sectionValuesMap != null) {
+                _topTabValues.value = sectionValuesMap.get(1)
+                _bottomTabValues.value = sectionValuesMap.get(2)
+            }
+            if (sectionTimeMap != null) {
+                _timeToWatch.value = sectionTimeMap.get(currentTab)?.second;
             }
         }
     }
@@ -53,6 +61,24 @@ class TabViewModel(val database: TablatureDatabaseDao, val tabId: Long) : ViewMo
         return withContext(Dispatchers.IO) {
             database.get(tabId)
         }
+    }
+
+    fun update() {
+        val nextSectionIndex = currentTab + 2
+        val nextSectionTab = sectionValuesMap[nextSectionIndex]
+        val nextTimeToWatch = sectionTimeMap[++currentTab]
+        if (nextSectionTab != null) {
+            _timeToWatch.value = nextTimeToWatch?.second
+            //Even replace bottom
+            if (currentTab % 2 == 0) {
+                _topTabValues.value = nextSectionTab
+            }
+            //Odd replace top
+            else {
+                _bottomTabValues.value = nextSectionTab
+            }
+        }
+
     }
 
 }

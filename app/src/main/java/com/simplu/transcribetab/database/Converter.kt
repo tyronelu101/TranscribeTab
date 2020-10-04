@@ -25,18 +25,34 @@ class Converter {
     }
 
     @TypeConverter
-    fun timeRangeMapToString(timeRange: HashMap<Int, Pair<Int, Int?>>): String {
+    fun timeRangeMapToString(timeRange: HashMap<Int, Pair<Int, Int>>): String {
         val gson = Gson()
-        val type: Type = object : TypeToken<HashMap<Int, Pair<Int, Int?>>>() {}.type
+        val type: Type = object : TypeToken<HashMap<Int, Pair<Int, Int>>>() {}.type
         val json = gson.toJson(timeRange, type)
         return json
     }
 
     @TypeConverter
-    fun stringToTimeRangeMap(timeRangeMapString: String): HashMap<Int, Pair<Int, Int?>> {
+    fun stringToTimeRangeMap(timeRangeMapString: String): HashMap<Int, Pair<Int, Int>> {
         val gson = Gson()
-        val type: Type = object : TypeToken<HashMap<Int, Pair<Int, Int?>>>() {}.type
-        val timeRangeMap: HashMap<Int, Pair<Int, Int?>> = gson.fromJson(timeRangeMapString, type)
+        val type: Type = object : TypeToken<HashMap<Int, Pair<Int, Int>>>() {}.type
+        val timeRangeMap: HashMap<Int, Pair<Int, Int>> = gson.fromJson(timeRangeMapString, type)
+        return timeRangeMap
+    }
+
+    @TypeConverter
+    fun sectionToTimeMapString(sectionToTime: HashMap<Int, Int>): String {
+        val gson = Gson()
+        val type: Type = object : TypeToken<HashMap<Int, Int>>() {}.type
+        val json = gson.toJson(sectionToTime, type)
+        return json
+    }
+
+    @TypeConverter
+    fun stringToSectionTimeMap(sectionToTimeString: String): HashMap<Int, Int> {
+        val gson = Gson()
+        val type: Type = object : TypeToken<HashMap<Int, Int>>() {}.type
+        val timeRangeMap: HashMap<Int, Int> = gson.fromJson(sectionToTimeString, type)
         return timeRangeMap
     }
 }

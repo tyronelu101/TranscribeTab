@@ -6,11 +6,6 @@ class DrawableColumn(
     var columnBound: Rect,
     var noteBound: Array<Rect> = Array(6) { Rect(0, 0, 0, 0) })  {
 
-    //Sets the value of a string with a fingering val
-    fun setNoteFingering(string: Int, fingering: String) {
-        notes[string] = fingering
-    }
-
     fun inColumnBound(x: Float, y: Float): Boolean =
         (x > columnBound.left && x < columnBound.right && y > columnBound.top && y < columnBound.bottom)
 

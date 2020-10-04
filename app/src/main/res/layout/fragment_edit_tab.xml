@@ -4,6 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".EditTabFragment">
 
+    <data>
+        <variable
+            name="editTabViewModel"
+            type="com.simplu.transcribetab.edittab.EditTabViewModel" />
+        <variable
+            name="mediaPlayerViewModel"
+            type="com.simplu.transcribetab.MediaPlayerViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -163,7 +172,8 @@
                     android:id="@+id/add_section_btn"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
-                    android:text="+"></Button>
+                    android:text="+"
+                    android:onClick="@{() -> editTabViewModel.addSection()}"></Button>
 
                 <Button
                     android:id="@+id/btn_set_time"

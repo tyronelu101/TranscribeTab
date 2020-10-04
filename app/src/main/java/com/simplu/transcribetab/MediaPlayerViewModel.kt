@@ -1,10 +1,13 @@
-package com.simplu.transcribetab.edittab
+package com.simplu.transcribetab
 
 import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
 class MediaPlayerViewModel(): ViewModel() {
 
@@ -37,12 +40,18 @@ class MediaPlayerViewModel(): ViewModel() {
     private val _skipTo = MutableLiveData<Long>()
     val skipTo: LiveData<Long> = _skipTo
 
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
     init {
         skipToVal = 0
         _currentTime.value = 0
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
     public fun onPlay() {
         _isPlaying.value = true
         _isPaused.value = false
@@ -70,5 +79,8 @@ class MediaPlayerViewModel(): ViewModel() {
         _skipTo.value = skipToVal
     }
 
+    public fun setUri(uri: String) {
+        _songUri.value = uri
+    }
 
 }
