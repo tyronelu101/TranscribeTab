@@ -10,7 +10,6 @@ import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabaseDao
 import kotlinx.coroutines.*
 
-
 class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
 
     private val _currentSectionColumns = MutableLiveData<ArrayList<Array<String>>>()
@@ -48,9 +47,8 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
     private val _skipToVal = MutableLiveData<Int>()
     val skipToVal: LiveData<Int> = _skipToVal
 
-    val sectionValuesMap = HashMap<Int, ArrayList<Array<String>>>()
+    val sectionMap = HashMap<Int, ArrayList<Array<String>>>()
     val sectionTimeMap = HashMap<Int, Pair<Int, Int>>()
-    val timeToSectionMap = HashMap<Int, Int>()
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -90,7 +88,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         val totalSections = totalSectionsNum.value
 
         //Only add new section if current section has a ending time range set
-        if (sectionTimeMap[totalSections]?.second != null) {
+        if (sectionTimeMap[totalSections]?.second != -1) {
             storeCurrentSection()
             createNewSection()
 
@@ -130,14 +128,14 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         }
     }
 
-    public fun nextSection() {
+    fun nextSection() {
 
         if (currentSectionNum.value!! < totalSectionsNum.value!!) {
             storeCurrentSection()
 
             _currentSectionNum.value = currentSectionNum.value?.plus(1)
 
-            val nextSection = sectionValuesMap.get(currentSectionNum.value!!)
+            val nextSection = sectionMap.get(currentSectionNum.value!!)
             if (nextSection != null) {
                 _currentSectionColumns.value = nextSection
             }
@@ -150,13 +148,12 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         if (currentSectionNum.value!! > 1) {
             storeCurrentSection()
             _currentSectionNum.value = currentSectionNum.value?.minus(1)
-            val prevSection = sectionValuesMap[currentSectionNum.value!!]
+            val prevSection = sectionMap[currentSectionNum.value!!]
 
             if (prevSection != null) {
                 _currentSectionColumns.value = prevSection
             }
             updateSectionRange()
-
         }
     }
 
@@ -172,7 +169,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         val currentSectionColumns = currentSectionColumns.value
 
         if (currentSectionNumber != null && currentSectionColumns != null) {
-            sectionValuesMap.put(currentSectionNumber, currentSectionColumns)
+            sectionMap.put(currentSectionNumber, currentSectionColumns)
         }
     }
 

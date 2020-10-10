@@ -5,9 +5,11 @@
     tools:context=".EditTabFragment">
 
     <data>
+
         <variable
             name="editTabViewModel"
             type="com.simplu.transcribetab.edittab.EditTabViewModel" />
+
         <variable
             name="mediaPlayerViewModel"
             type="com.simplu.transcribetab.MediaPlayerViewModel" />
@@ -82,27 +84,32 @@
             app:layout_constraintTop_toBottomOf="@id/edit_tablature">
 
             <Button
-                android:id="@+id/btn_left"
+                android:id="@+id/btn_prev_section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> editTabViewModel.previousSection()}"
                 android:text="l"></Button>
 
             <EditText
                 android:id="@+id/current_section_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"></EditText>
+                android:text="@{editTabViewModel.currentSectionNum.toString()}"
+                android:textSize="18sp"
+                android:textStyle="bold"></EditText>
 
             <TextView
                 android:id="@+id/total_section_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="/2"></TextView>
+                android:text="@{editTabViewModel.totalSectionsNum.toString()}"
+                android:textSize="12sp"></TextView>
 
             <Button
-                android:id="@+id/btn_right"
+                android:id="@+id/btn_next_section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> editTabViewModel.nextSection()}"
                 android:text="r"></Button>
 
         </LinearLayout>
@@ -116,10 +123,11 @@
             app:layout_constraintTop_toBottomOf="@+id/section_number_container">
 
             <TextView
-                android:id="@+id/section_time_text"
+                android:id="@+id/txt_section_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""></TextView>
+                android:onClick="@{() -> editTabViewModel.onSkipTo()}"
+                android:text="@{editTabViewModel.sectionTimeRangeString}"></TextView>
 
         </LinearLayout>
 
@@ -172,8 +180,8 @@
                     android:id="@+id/add_section_btn"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
-                    android:text="+"
-                    android:onClick="@{() -> editTabViewModel.addSection()}"></Button>
+                    android:onClick="@{() -> editTabViewModel.addSection()}"
+                    android:text="+"></Button>
 
                 <Button
                     android:id="@+id/btn_set_time"
@@ -191,14 +199,13 @@
 
         </LinearLayout>
 
-        <include
+        <FrameLayout
             android:id="@+id/media_player"
-            layout="@layout/media_player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"></FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

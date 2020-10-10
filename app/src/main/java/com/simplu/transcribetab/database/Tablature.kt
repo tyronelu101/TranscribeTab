@@ -23,13 +23,10 @@ data class Tablature(
     var tuning: String = "",
 
     @ColumnInfo(name = "section_columns")
-    var columns: HashMap<Int, ArrayList<Array<String>>>,
+    var sections: HashMap<Int, ArrayList<Array<String>>>,
 
     @ColumnInfo(name = "section_time_range")
     var sectionToTimeMap: HashMap<Int, Pair<Int, Int>>,
-
-    @ColumnInfo(name = "time_to_section")
-    var timeToSectionMap: HashMap<Int, Int>,
 
     @ColumnInfo(name = "song_uri")
     var songUri: String = ""

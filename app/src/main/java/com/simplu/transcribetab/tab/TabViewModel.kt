@@ -43,7 +43,7 @@ class TabViewModel(val database: TablatureDatabaseDao, val tabId: Long) : ViewMo
             val tablature = getTablature()
             _tablature.value = tablature
 
-            sectionValuesMap = tablature.columns
+            sectionValuesMap = tablature.sections
             sectionTimeMap = tablature.sectionToTimeMap
 
             //Initialize the first 2 sections
@@ -64,20 +64,6 @@ class TabViewModel(val database: TablatureDatabaseDao, val tabId: Long) : ViewMo
     }
 
     fun update() {
-        val nextSectionIndex = currentTab + 2
-        val nextSectionTab = sectionValuesMap[nextSectionIndex]
-        val nextTimeToWatch = sectionTimeMap[++currentTab]
-        if (nextSectionTab != null) {
-            _timeToWatch.value = nextTimeToWatch?.second
-            //Even replace bottom
-            if (currentTab % 2 == 0) {
-                _topTabValues.value = nextSectionTab
-            }
-            //Odd replace top
-            else {
-                _bottomTabValues.value = nextSectionTab
-            }
-        }
 
     }
 

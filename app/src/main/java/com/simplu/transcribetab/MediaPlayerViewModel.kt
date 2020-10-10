@@ -52,34 +52,34 @@ class MediaPlayerViewModel(): ViewModel() {
         super.onCleared()
         viewModelJob.cancel()
     }
-    public fun onPlay() {
+    fun onPlay() {
         _isPlaying.value = true
         _isPaused.value = false
     }
 
-    public fun onPause() {
+    fun onPause() {
         _isPlaying.value = false
         _isPaused.value = true
     }
 
-    public fun updateTime(newTime: Long) {
+    fun updateTime(newTime: Long) {
         _currentTime.value = newTime
     }
 
-    public fun setDuration(duration: Long) {
+    fun setDuration(duration: Long) {
         _duration.value = duration
     }
 
-    public fun setSkipTo() {
+    fun setSkipTo() {
         skipToVal = currentTime?.value ?: 0L
     }
 
-    public fun onGoTo() {
+    fun onGoTo() {
         _currentTime.value = skipToVal
         _skipTo.value = skipToVal
     }
 
-    public fun setUri(uri: String) {
+    fun setUri(uri: String) {
         _songUri.value = uri
     }
 

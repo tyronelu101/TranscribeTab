@@ -86,9 +86,8 @@
             </com.simplu.transcribetab.tab.TabView>
         </LinearLayout>
 
-        <include
+        <FrameLayout
             android:id="@+id/media_player"
-            layout="@layout/media_player"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

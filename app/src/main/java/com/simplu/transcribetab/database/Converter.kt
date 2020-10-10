@@ -39,20 +39,20 @@ class Converter {
         val timeRangeMap: HashMap<Int, Pair<Int, Int>> = gson.fromJson(timeRangeMapString, type)
         return timeRangeMap
     }
-
-    @TypeConverter
-    fun sectionToTimeMapString(sectionToTime: HashMap<Int, Int>): String {
-        val gson = Gson()
-        val type: Type = object : TypeToken<HashMap<Int, Int>>() {}.type
-        val json = gson.toJson(sectionToTime, type)
-        return json
-    }
-
-    @TypeConverter
-    fun stringToSectionTimeMap(sectionToTimeString: String): HashMap<Int, Int> {
-        val gson = Gson()
-        val type: Type = object : TypeToken<HashMap<Int, Int>>() {}.type
-        val timeRangeMap: HashMap<Int, Int> = gson.fromJson(sectionToTimeString, type)
-        return timeRangeMap
-    }
+//
+//    @TypeConverter
+//    fun sectionToTimeMapString(sectionToTime: HashMap<Int, Int>): String {
+//        val gson = Gson()
+//        val type: Type = object : TypeToken<HashMap<Int, Int>>() {}.type
+//        val json = gson.toJson(sectionToTime, type)
+//        return json
+//    }
+//
+//    @TypeConverter
+//    fun stringToSectionTimeMap(sectionToTimeString: String): HashMap<Int, Int> {
+//        val gson = Gson()
+//        val type: Type = object : TypeToken<HashMap<Int, Int>>() {}.type
+//        val timeRangeMap: HashMap<Int, Int> = gson.fromJson(sectionToTimeString, type)
+//        return timeRangeMap
+//    }
 }

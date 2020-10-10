@@ -296,6 +296,22 @@ class EditTabView @JvmOverloads constructor(
         invalidate()
     }
 
+    fun nextColumn() {
+        val currentColIndex = columnNotesList.indexOf(currentSelectedColumn)
+        if (currentColIndex < NUMBER_OF_COLUMNS) {
+            val nextColumn = columnNotesList[currentColIndex + 1]
+            currentSelectedColumn = nextColumn
+        }
+    }
+
+    fun prevColumn() {
+        val currentColIndex = columnNotesList.indexOf(currentSelectedColumn)
+        if (currentColIndex > 0) {
+            val prevColumn = columnNotesList[currentColIndex - 1]
+            currentSelectedColumn = prevColumn
+        }
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
 
         val x = event.x
