@@ -9,16 +9,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
-class MediaPlayerViewModel(): ViewModel() {
+class MediaPlayerViewModel() : ViewModel() {
 
     private val _songUri = MutableLiveData<String>()
-    val songUri:LiveData<String> = _songUri
+    val songUri: LiveData<String> = _songUri
 
     private val _isPlaying = MutableLiveData<Boolean>()
     val isPlaying: LiveData<Boolean> = _isPlaying
-
-    val _isPaused = MutableLiveData<Boolean>()
-    val isPaused: LiveData<Boolean> = _isPaused
 
     private val _currentTime = MutableLiveData<Long>()
     val currentTime: LiveData<Long> = _currentTime
@@ -46,20 +43,17 @@ class MediaPlayerViewModel(): ViewModel() {
     init {
         skipToVal = 0
         _currentTime.value = 0
+        _duration.value = 0
+        _isPlaying.value = false
     }
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
-    fun onPlay() {
-        _isPlaying.value = true
-        _isPaused.value = false
-    }
 
-    fun onPause() {
-        _isPlaying.value = false
-        _isPaused.value = true
+    fun onTogglePlayPause() {
+        _isPlaying.value = isPlaying.value != true
     }
 
     fun updateTime(newTime: Long) {

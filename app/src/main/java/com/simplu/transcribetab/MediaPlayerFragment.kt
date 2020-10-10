@@ -11,7 +11,6 @@ import android.widget.SeekBar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
 import kotlinx.coroutines.*
@@ -50,6 +49,8 @@ class MediaPlayerFragment : Fragment() {
     ): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_media_player, container, false)
+        binding.mediaPlayerViewModel = mediaPlayerViewModel
+        binding.lifecycleOwner = this
 
         mediaPlayerViewInit()
 
@@ -62,22 +63,6 @@ class MediaPlayerFragment : Fragment() {
         binding.songSeekBar.max = mediaPlayer.duration / 1000
         binding.songSeekBar.setOnSeekBarChangeListener(seekBarOnChangeListener())
 
-        binding.setSkipTo.setOnClickListener {
-            mediaPlayerViewModel.setSkipTo()
-        }
-
-        binding.goTo.setOnClickListener {
-            mediaPlayerViewModel.onGoTo()
-        }
-
-        binding.playPauseBtn.setOnClickListener {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayerViewModel.onPause()
-            } else {
-                mediaPlayerViewModel.onPlay()
-            }
-        }
-
         mediaPlayerViewModel.setDuration(mediaPlayer.duration / 1000L)
 
         mediaPlayerViewModel.currentTimeString.observe(this, Observer {
@@ -89,14 +74,12 @@ class MediaPlayerFragment : Fragment() {
         })
 
         mediaPlayerViewModel.isPlaying.observe(this, Observer { play ->
+            Log.v("MediaPlayerFragment", "Media play status updated")
             if (play) {
                 mediaPlayer.start()
                 observeMedia()
             }
-        })
-
-        mediaPlayerViewModel.isPaused.observe(this, Observer { pause ->
-            if (pause) {
+            else {
                 mediaPlayer.pause()
             }
         })
@@ -104,6 +87,8 @@ class MediaPlayerFragment : Fragment() {
         mediaPlayerViewModel.skipTo.observe(this, Observer {
             mediaPlayer?.seekTo(it.toInt() * 1000)
         })
+
+        mediaPlayer.start()
     }
 
     private fun observeMedia() {

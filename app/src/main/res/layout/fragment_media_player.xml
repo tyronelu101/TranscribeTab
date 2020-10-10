@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="mediaPlayerViewModel"
+            type="com.simplu.transcribetab.MediaPlayerViewModel" />
 
     </data>
 
@@ -30,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="0:00"></TextView>
+                android:text="@{mediaPlayerViewModel.currentTimeString}"></TextView>
 
             <SeekBar
                 android:id="@+id/song_seek_bar"
@@ -43,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="-:--"></TextView>
+                android:text="@{mediaPlayerViewModel.durationString}"></TextView>
 
         </LinearLayout>
 
@@ -57,18 +60,21 @@
                 android:id="@+id/play_pause_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> mediaPlayerViewModel.onTogglePlayPause()}"
                 android:text="P"></Button>
 
             <Button
                 android:id="@+id/set_skip_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> mediaPlayerViewModel.setSkipTo()}"
                 android:text="S"></Button>
 
             <Button
                 android:id="@+id/go_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> mediaPlayerViewModel.onGoTo()}"
                 android:text="Go"></Button>
         </LinearLayout>
     </LinearLayout>
