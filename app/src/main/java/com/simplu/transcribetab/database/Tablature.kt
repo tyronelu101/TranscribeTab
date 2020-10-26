@@ -1,10 +1,13 @@
 package com.simplu.transcribetab.database
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "tablature_table")
+@Parcelize
 data class Tablature(
 
     @PrimaryKey(autoGenerate = true)
@@ -26,10 +29,10 @@ data class Tablature(
     var sections: HashMap<Int, ArrayList<Array<String>>>,
 
     @ColumnInfo(name = "section_time_range")
-    var sectionToTimeMap: HashMap<Int, Pair<Int, Int>>,
+    var sectionToTimeMap: LinkedHashMap<Int, Pair<Int, Int>>,
 
     @ColumnInfo(name = "song_uri")
     var songUri: String = ""
 
-)
+) : Parcelable
 

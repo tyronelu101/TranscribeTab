@@ -8,4 +8,11 @@
         android:title="save"
         android:visible="true"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/confirm"
+        android:icon="@drawable/ic_check_black_24dp"
+        android:title="confirm"
+        android:visible="false"
+        app:showAsAction="always" />
 </menu>

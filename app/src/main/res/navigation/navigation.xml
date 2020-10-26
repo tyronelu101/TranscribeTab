@@ -25,7 +25,16 @@
             app:argType="string" />
         <action
             android:id="@+id/action_editTabFragment_to_tabFragment"
-            app:destination="@id/tabFragment" />
+            app:destination="@id/tabFragment"
+            app:popUpTo="@id/tabListFragment" />
+        <argument
+            android:name="tab: "
+            app:argType="com.simplu.transcribetab.database.Tablature"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_editTabFragment_to_tabListFragment"
+            app:destination="@id/tabListFragment"
+            app:popUpTo="@id/tabListFragment" />
     </fragment>
     <fragment
         android:id="@+id/songListFragment"
@@ -33,7 +42,8 @@
         android:label="SongListFragment" >
         <action
             android:id="@+id/action_songListFragment_to_editTabFragment"
-            app:destination="@id/editTabFragment" />
+            app:destination="@id/editTabFragment"
+            app:popUpTo="@id/tabListFragment" />
     </fragment>
     <fragment
         android:id="@+id/tabFragment"
@@ -41,10 +51,15 @@
         android:label="fragment_tab"
         tools:layout="@layout/fragment_tab" >
         <action
-            android:id="@+id/action_tabFragment_to_editTabFragment2"
-            app:destination="@id/editTabFragment" />
+            android:id="@+id/action_tabFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment"
+            app:popUpTo="@id/tabListFragment"
+            app:popUpToInclusive="false" >
+            <argument
+                android:name="songUri" />
+        </action>
         <argument
-            android:name="tabId"
-            app:argType="long" />
+            android:name="tablature"
+            app:argType="com.simplu.transcribetab.database.Tablature" />
     </fragment>
 </navigation>

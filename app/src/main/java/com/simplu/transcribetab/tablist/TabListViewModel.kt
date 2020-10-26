@@ -8,7 +8,4 @@ class TabListViewModel(dataSource: TablatureDatabaseDao): ViewModel() {
 
     val tabs = dataSource.getAllTabs()
 
-
-
-
 }

@@ -47,10 +47,8 @@ class TablatureDiffUtilCallback : DiffUtil.ItemCallback<Tablature>() {
     override fun areItemsTheSame(oldItem: Tablature, newItem: Tablature): Boolean {
         return oldItem == newItem
     }
-
-
 }
 
-class TablatureListener(val clickListener: (tabId: Long) -> Unit) {
-    fun onClick(tab: Tablature) = clickListener(tab.tabId)
+class TablatureListener(val clickListener: (tab: Tablature) -> Unit) {
+    fun onClick(tab: Tablature) = clickListener(tab)
 }

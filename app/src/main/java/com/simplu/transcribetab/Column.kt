@@ -1,4 +1,4 @@
-package com.simplu.transcribetab.edittab
+package com.simplu.transcribetab
 
 import android.graphics.Rect
 class DrawableColumn(

@@ -21,7 +21,12 @@ class TabListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val application = requireNotNull(this.activity).application
+        val dataSource = TablatureDatabase.getInstance(application).tablatureDatabaseDao
+        val viewModelFactory =
+            TabListViewModelFactory(dataSource)
+        tabListViewModel =
+            ViewModelProvider(this, viewModelFactory).get(TabListViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -34,16 +39,9 @@ class TabListFragment : Fragment() {
         binding.addTabBtn.setOnClickListener { view ->
             view.findNavController().navigate(R.id.action_tabListFragment_to_songListFragment)
         }
-        val application = requireNotNull(this.activity).application
-        val dataSource = TablatureDatabase.getInstance(application).tablatureDatabaseDao
-        val viewModelFactory =
-            TabListViewModelFactory(dataSource)
 
-        tabListViewModel =
-            ViewModelProvider(this, viewModelFactory).get(TabListViewModel::class.java)
-
-        val adapter = TablatureAdapter(TablatureListener {tabId ->
-            findNavController().navigate(TabListFragmentDirections.actionTabListFragmentToTabFragment(tabId))
+        val adapter = TablatureAdapter(TablatureListener {tab ->
+            findNavController().navigate(TabListFragmentDirections.actionTabListFragmentToTabFragment(tab))
         })
 
         binding.tabList.adapter = adapter
@@ -56,6 +54,4 @@ class TabListFragment : Fragment() {
 
         return binding.root
     }
-
-
 }

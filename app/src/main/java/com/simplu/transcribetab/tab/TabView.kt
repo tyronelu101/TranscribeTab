@@ -8,7 +8,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 
 import android.view.View
-import com.simplu.transcribetab.edittab.DrawableColumn
+import com.simplu.transcribetab.DrawableColumn
 
 class TabView @JvmOverloads constructor(
     context: Context,

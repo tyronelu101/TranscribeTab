@@ -11,17 +11,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.simplu.transcribetab.MediaPlayerFragment
+import androidx.navigation.findNavController
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
+import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 
 class EditTabFragment : Fragment() {
 
     private lateinit var binding: FragmentEditTabBinding
     private lateinit var editTabViewModel: EditTabViewModel
     private lateinit var mediaPlayerFragment: MediaPlayerFragment
+
+    private var tabId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +33,8 @@ class EditTabFragment : Fragment() {
         val dataSource =
             TablatureDatabase.getInstance(application).tablatureDatabaseDao
 
-        val viewModelFactory = EditTabViewModelFactory(dataSource)
+        val viewModelFactory =
+            EditTabViewModelFactory(dataSource, EditTabFragmentArgs.fromBundle(arguments!!).tab)
         editTabViewModel =
             ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
     }
@@ -43,21 +47,30 @@ class EditTabFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_tab, container, false)
         binding.editTabViewModel = editTabViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-
         setHasOptionsMenu(true)
-        initMediaPlayerFragment()
-        initEditTabView()
+
+        var songUri = ""
+        val tab = EditTabFragmentArgs.fromBundle(arguments!!).tab
+        if (tab != null) {
+            songUri = tab.songUri
+            tabId = tab.tabId
+        } else {
+            songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
+        }
+
+        initMediaPlayerFragment(songUri)
+        initEditTabView(tab)
 
         // Inflate the layout for this fragment
         return binding.root
     }
 
-    private fun initMediaPlayerFragment() {
-        val songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
+    private fun initMediaPlayerFragment(songUri: String) {
 
         val fragmentManager = getFragmentManager()
         val fragmentTransaction = fragmentManager?.beginTransaction()
-        mediaPlayerFragment = MediaPlayerFragment()
+        mediaPlayerFragment =
+            MediaPlayerFragment()
         val args = Bundle()
         args.putString("songUri", songUri)
         mediaPlayerFragment.setArguments(args)
@@ -65,16 +78,22 @@ class EditTabFragment : Fragment() {
         fragmentTransaction?.commit()
     }
 
-    private fun initEditTabView() {
+    private fun initEditTabView(tab: Tablature?) {
 
-//        binding.btnSetTime.setOnClickListener {
-//            editTabViewModel.onSetTime(mediaPlayer.currentPosition / 1000)
-//        }
+        if (tab != null) {
+            binding.title.setText(tab.title)
+            binding.artist.setText(tab.artist)
+            binding.arranger.setText(tab.arranger)
+            binding.tuning.setText(tab.tuning)
+        }
 
-//        editTabViewModel.skipToVal.observe(this, Observer {
-//            binding.mediaPlayer.songSeekBar.progress = it
-//            mediaPlayer?.seekTo(it * 1000)
-//        })
+        binding.btnSetTime.setOnClickListener {
+            editTabViewModel.onSetTime(mediaPlayerFragment.getTime())
+        }
+
+        editTabViewModel.skipToVal.observe(this, Observer {
+            mediaPlayerFragment.skipTo(it * 1000)
+        })
 
         for (view in binding.stringInputContainer.children.iterator()) {
             //Get the current row as linearlayout
@@ -93,37 +112,69 @@ class EditTabFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.edittab_menu, menu)
+        //If tabId is -1, means creating tab
+        if (tabId != -1L) {
+            val confirmItem = menu?.findItem(R.id.confirm)
+            confirmItem?.isVisible = true
+        }
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val tabTitle = binding.title.text.toString()
+        val tabArtist = binding.artist.text.toString()
+        val tabArranger = binding.arranger.text.toString()
+        val tuning = binding.tuning.text.toString()
+        val songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
+        val tab = Tablature(
+            tabId = this.tabId,
+            title = tabTitle,
+            artist = tabArtist,
+            arranger = tabArranger,
+            tuning = tuning,
+            sections = editTabViewModel.sectionMap,
+            sectionToTimeMap = editTabViewModel.sectionTimeMap,
+            songUri = songUri
+        )
+
         when (item?.itemId) {
 
             R.id.save -> {
-                val tabTitle = binding.title.text.toString()
-                val tabArtist = binding.artist.text.toString()
-                val tabArranger = binding.arranger.text.toString()
-                val tuning = binding.tuning.text.toString()
-                val songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
-                val tab = Tablature(
-                    title = tabTitle,
-                    artist = tabArtist,
-                    arranger = tabArranger,
-                    tuning = tuning,
-                    sections = editTabViewModel.sectionMap,
-                    sectionToTimeMap = editTabViewModel.sectionTimeMap,
-                    songUri = songUri
-                )
+                Log.v("Saving", "Title is ${tabTitle}")
+                if (editTabViewModel.sectionMap.size < 2) {
+                    Toast.makeText(
+                        context,
+                        "Please create at least two sections before saving.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    false
+                }
 
-                editTabViewModel.onSave(tab)
-                Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
+
+                if (this.tabId != -1L) {
+                    editTabViewModel.onUpdate(tab)
+                    Toast.makeText(context, "Tablature updated", Toast.LENGTH_SHORT).show()
+
+                } else {
+                    editTabViewModel.onSave(tab)
+                    Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
+                    view?.findNavController()
+                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabListFragment())
+                }
+                false
+            }
+
+            R.id.confirm -> {
+                if (tab != null) {
+                    Log.v("OnConfirm", "Going back.")
+                    view?.findNavController()
+                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabFragment(tab))
+
+
+                }
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    fun test() {
-        Toast.makeText(context, "Testing", Toast.LENGTH_SHORT).show()
     }
 
     inner class tabInputOnTouchListener : View.OnTouchListener {
@@ -180,5 +231,6 @@ class EditTabFragment : Fragment() {
             return false
         }
     }
+
 }
 

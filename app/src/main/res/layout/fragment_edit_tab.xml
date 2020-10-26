@@ -12,7 +12,7 @@
 
         <variable
             name="mediaPlayerViewModel"
-            type="com.simplu.transcribetab.MediaPlayerViewModel" />
+            type="com.simplu.transcribetab.mediaplayer.MediaPlayerViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

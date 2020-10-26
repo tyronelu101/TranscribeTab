@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.simplu.transcribetab.DrawableColumn
 
 class EditTabView @JvmOverloads constructor(
     context: Context,

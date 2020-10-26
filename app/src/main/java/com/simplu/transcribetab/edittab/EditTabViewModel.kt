@@ -10,7 +10,8 @@ import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabaseDao
 import kotlinx.coroutines.*
 
-class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
+class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablature? = null) :
+    ViewModel() {
 
     private val _currentSectionColumns = MutableLiveData<ArrayList<Array<String>>>()
     val currentSectionColumns: LiveData<ArrayList<Array<String>>> = _currentSectionColumns
@@ -47,23 +48,39 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
     private val _skipToVal = MutableLiveData<Int>()
     val skipToVal: LiveData<Int> = _skipToVal
 
-    val sectionMap = HashMap<Int, ArrayList<Array<String>>>()
-    val sectionTimeMap = HashMap<Int, Pair<Int, Int>>()
+    var sectionMap = HashMap<Int, ArrayList<Array<String>>>()
+    var sectionTimeMap = LinkedHashMap<Int, Pair<Int, Int>>()
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     init {
-        createNewSection()
-        _currentSectionNum.value = 1
-        _totalSectionNum.value = 1
+        initializeTablature()
+    }
 
-        val initTimeRange = Pair(0, -1)
-        _currentSectionTimeRange.value = initTimeRange
-        sectionTimeMap.put(currentSectionNum.value!!, initTimeRange)
+    private fun initializeTablature() {
+        //Editting tablature
+        if (tablature != null) {
+            sectionMap = tablature!!.sections
+            sectionTimeMap = tablature!!.sectionToTimeMap
 
-        storeCurrentSection()
+            _currentSectionNum.value = 1
+            _totalSectionNum.value = tablature!!.sections.size
+            _currentSectionColumns.value = sectionMap[currentSectionNum.value]
+            _currentSectionTimeRange.value = sectionTimeMap[currentSectionNum.value]
+        }
+        //Creating new tablature
+        else {
+            createNewSection()
+            _currentSectionNum.value = 1
+            _totalSectionNum.value = 1
 
+            val initTimeRange = Pair(0, -1)
+            _currentSectionTimeRange.value = initTimeRange
+            sectionTimeMap.put(currentSectionNum.value!!, initTimeRange)
+
+            storeCurrentSection()
+        }
     }
 
     private fun createNewSection() {
@@ -123,7 +140,11 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
         val updatedColumn = _currentSectionColumns.value
 
         if (updatedColumn != null) {
-            updatedColumn.get(column)[string] = value
+            var sb = StringBuilder(updatedColumn.get(column)[string])
+            if (sb.toString().length == 2) {
+                sb = StringBuilder("")
+            }
+            updatedColumn.get(column)[string] = sb.append(value).toString()
             _currentSectionColumns.value = updatedColumn
         }
     }
@@ -205,6 +226,18 @@ class EditTabViewModel(val database: TablatureDatabaseDao) : ViewModel() {
     private suspend fun insert(tab: Tablature) {
         withContext(Dispatchers.IO) {
             database.insert(tab)
+        }
+    }
+
+    fun onUpdate(tab: Tablature) {
+        uiScope.launch {
+            update(tab)
+        }
+    }
+
+    private suspend fun update(tab: Tablature) {
+        withContext(Dispatchers.IO) {
+            database.update(tab)
         }
     }
 }

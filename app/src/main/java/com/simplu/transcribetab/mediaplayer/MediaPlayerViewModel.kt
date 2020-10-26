@@ -1,4 +1,4 @@
-package com.simplu.transcribetab
+package com.simplu.transcribetab.mediaplayer
 
 import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
-class MediaPlayerViewModel() : ViewModel() {
+class MediaPlayerViewModel : ViewModel() {
 
     private val _songUri = MutableLiveData<String>()
     val songUri: LiveData<String> = _songUri
@@ -71,10 +71,6 @@ class MediaPlayerViewModel() : ViewModel() {
     fun onGoTo() {
         _currentTime.value = skipToVal
         _skipTo.value = skipToVal
-    }
-
-    fun setUri(uri: String) {
-        _songUri.value = uri
     }
 
 }

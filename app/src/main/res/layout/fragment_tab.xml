@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:padding="0dp"
-            android:text="@string/title"
+            android:text="@{viewModel.tablature.title}"
+            tools:text="Title"
             android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -33,7 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="0dp"
-            android:text="@string/artist"
+            android:text="@{viewModel.tablature.artist}"
+            tools:text="Artist"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -44,7 +46,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="0dp"
-            android:text="Arranged By"
+            android:text="@{viewModel.tablature.arranger}"
+            tools:text="Arranger"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -56,34 +59,52 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="tuning"
+            android:text="@{viewModel.tablature.tuning}"
+            tools:text="tuning"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/arranger"></TextView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/tuning">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
             <com.simplu.transcribetab.tab.TabView
-                android:id="@+id/tab1"
+                android:id="@+id/tab_section1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tuning"></com.simplu.transcribetab.tab.TabView>
 
+            <TextView
+                android:id="@+id/tab_section1_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.topSectionNum.toString()}"></TextView>
+
             <com.simplu.transcribetab.tab.TabView
-                android:id="@+id/tab2"
+                android:id="@+id/tab_section2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tuning">
+                app:layout_constraintTop_toBottomOf="@id/tuning"></com.simplu.transcribetab.tab.TabView>
 
-            </com.simplu.transcribetab.tab.TabView>
+            <TextView
+                android:id="@+id/tab_section_2_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.bottomSectionNum.toString()}"></TextView>
         </LinearLayout>
 
         <FrameLayout
