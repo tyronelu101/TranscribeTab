@@ -112,8 +112,11 @@ class EditTabFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.edittab_menu, menu)
+
+        Log.v("EditTabFragment", "Creating menu ${tabId}")
         //If tabId is -1, means creating tab
         if (tabId != -1L) {
+            Log.v("EditTabFragment", "Making confirm item visible ${tabId}")
             val confirmItem = menu?.findItem(R.id.confirm)
             confirmItem?.isVisible = true
         }
@@ -127,7 +130,6 @@ class EditTabFragment : Fragment() {
         val tuning = binding.tuning.text.toString()
         val songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
         val tab = Tablature(
-            tabId = this.tabId,
             title = tabTitle,
             artist = tabArtist,
             arranger = tabArranger,
@@ -152,6 +154,7 @@ class EditTabFragment : Fragment() {
 
 
                 if (this.tabId != -1L) {
+                    tab.tabId = tabId
                     editTabViewModel.onUpdate(tab)
                     Toast.makeText(context, "Tablature updated", Toast.LENGTH_SHORT).show()
 

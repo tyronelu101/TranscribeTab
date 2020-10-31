@@ -59,7 +59,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
     }
 
     private fun initializeTablature() {
-        //Editting tablature
+        //Editting existing tablature
         if (tablature != null) {
             sectionMap = tablature!!.sections
             sectionTimeMap = tablature!!.sectionToTimeMap
@@ -104,16 +104,15 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
 
         val totalSections = totalSectionsNum.value
 
-        //Only add new section if current section has a ending time range set
+        //Only add new section if last section has a ending time range set
         if (sectionTimeMap[totalSections]?.second != -1) {
             storeCurrentSection()
             createNewSection()
-
-            _currentSectionNum.value = currentSectionNum.value?.plus(1)
             createNewSectionRange()
 
             _currentSectionNum.value = totalSections?.plus(1)
             _totalSectionNum.value = totalSections?.plus(1)
+            Log.i(javaClass.simpleName, "CurrentSection ${currentSectionNum.value} Total sections ${totalSectionsNum.value}")
         } else {
             Log.v("EditTabViewModel", "Set an end time for this section.")
         }
@@ -122,15 +121,25 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
 
     private fun createNewSectionRange() {
 
-        val currentSectionNumVal = currentSectionNum.value
+        val lastSectionNum = totalSectionsNum.value
 
-        if (currentSectionNumVal != null && currentSectionNumVal > 1) {
+        if (lastSectionNum != null && lastSectionNum > 1) {
 
-            val prevRange = sectionTimeMap.get(currentSectionNumVal - 1)
+            val prevRange = sectionTimeMap.get(lastSectionNum - 1)
             if (prevRange != null) {
+                Log.v("Range val","Prev range is ${prevRange.second}. Section num is ${lastSectionNum}")
+
                 val newRange = Pair(prevRange.second, -1)
                 _currentSectionTimeRange.value = newRange
-                sectionTimeMap.put(currentSectionNumVal, newRange)
+                sectionTimeMap.put(lastSectionNum+1, newRange)
+            }
+        }
+        else if (lastSectionNum != null  && lastSectionNum == 1) {
+            val currentRange = currentSectionTimeRange.value
+            if(currentRange != null) {
+                val newRange = Pair(currentRange.second, -1)
+                _currentSectionTimeRange.value = newRange
+                sectionTimeMap.put(lastSectionNum+1, newRange)
             }
         }
     }

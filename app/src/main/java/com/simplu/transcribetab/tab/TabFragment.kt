@@ -80,7 +80,7 @@ class TabFragment : Fragment(),
                 val tablature = TabFragmentArgs.fromBundle(
                     arguments!!
                 ).tablature
-
+                Log.v("TabFragment", "Tablature id is ${tablature.tabId}")
                 view?.findNavController()?.navigate(
                     TabFragmentDirections.actionTabFragmentToEditTabFragment(
                         tablature.songUri,

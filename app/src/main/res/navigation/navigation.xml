@@ -14,7 +14,8 @@
             app:destination="@id/songListFragment" />
         <action
             android:id="@+id/action_tabListFragment_to_tabFragment"
-            app:destination="@id/tabFragment" />
+            app:destination="@id/tabFragment"
+            app:popUpTo="@id/tabListFragment" />
     </fragment>
     <fragment
         android:id="@+id/editTabFragment"
@@ -54,9 +55,8 @@
             android:id="@+id/action_tabFragment_to_editTabFragment"
             app:destination="@id/editTabFragment"
             app:popUpTo="@id/tabListFragment"
-            app:popUpToInclusive="false" >
-            <argument
-                android:name="songUri" />
+            app:popUpToInclusive="false">
+            <argument android:name="songUri" />
         </action>
         <argument
             android:name="tablature"

@@ -1,6 +1,7 @@
 package com.simplu.transcribetab.tablist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,7 @@ class TabListFragment : Fragment() {
         }
 
         val adapter = TablatureAdapter(TablatureListener {tab ->
+            Log.v("TabListFragment", "Clicking tab ${tab.tabId}")
             findNavController().navigate(TabListFragmentDirections.actionTabListFragmentToTabFragment(tab))
         })
 
