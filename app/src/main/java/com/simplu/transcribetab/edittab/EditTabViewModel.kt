@@ -30,7 +30,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
     private val _skipToVal = MutableLiveData<Int>()
     val skipToVal: LiveData<Int> = _skipToVal
 
-    var sectionMap = HashMap<Int, TabSection>()
+    var sectionMap = LinkedHashMap<Int, TabSection>()
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.IO + viewModelJob)

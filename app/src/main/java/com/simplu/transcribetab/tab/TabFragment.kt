@@ -121,21 +121,13 @@ class TabFragment : Fragment(),
     }
 
     override fun updateSection() {
-        TODO("Not yet implemented")
+        tabViewModel.updateSection()
     }
 
+    //time is retrieved from mediaplayerfragment.
+    //Check to see what section we have to jump to
     override fun updateSectionTo(time: Int) {
-        TODO("Not yet implemented")
+        tabViewModel.updateSectionTo(time)
     }
-
-//    override fun updateSection() {
-//        tabViewModel.updateSection()
-//    }
-//
-//    //time is retrieved from mediaplayerfragment.
-//    //Check to see what section we have to jump to
-//    override fun updateSectionTo(time: Int) {
-//        tabViewModel.updateSectionTo(time)
-//    }
 
 }

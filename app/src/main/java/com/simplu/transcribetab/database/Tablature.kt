@@ -28,7 +28,7 @@ data class Tablature(
     var tuning: String = "",
 
     @ColumnInfo(name = "section_columns")
-    var sections: HashMap<Int, @RawValue TabSection>,
+    var sections: LinkedHashMap<Int, @RawValue TabSection>,
 
     @ColumnInfo(name = "song_uri")
     var songUri: String = ""
