@@ -135,15 +135,6 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         if (mediaPlayer != null && mediaPlayer.isPlaying) {
             mediaPlayer.pause()
         }
-        mediaPlayerJob.cancel()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (mediaPlayer != null && mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-
-        }
     }
 
     override fun onDestroy() {

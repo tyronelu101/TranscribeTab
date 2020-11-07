@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
@@ -132,59 +134,57 @@ class EditTabFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        val tabTitle = binding.title.text.toString()
-//        val tabArtist = binding.artist.text.toString()
-//        val tabArranger = binding.arranger.text.toString()
-//        val tuning = binding.tuning.text.toString()
-//        val songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
-//        val tab = Tablature(
-//            title = tabTitle,
-//            artist = tabArtist,
-//            arranger = tabArranger,
-//            tuning = tuning,
-//            sections = editTabViewModel.sectionMap,
-//            sectionToTimeMap = editTabViewModel.sectionTimeMap,
-//            songUri = songUri
-//        )
-//
-//        when (item?.itemId) {
-//
-//            R.id.save -> {
-//                Log.v("Saving", "Title is ${tabTitle}")
-//                if (editTabViewModel.sectionMap.size < 2) {
-//                    Toast.makeText(
-//                        context,
-//                        "Please create at least two sections before saving.",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    false
-//                }
-//
-//
-//                if (this.tabId != -1L) {
-//                    tab.tabId = tabId
-//                    editTabViewModel.onUpdate(tab)
-//                    Toast.makeText(context, "Tablature updated", Toast.LENGTH_SHORT).show()
-//
-//                } else {
-//                    editTabViewModel.onSave(tab)
-//                    Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
-//                    view?.findNavController()
-//                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabListFragment())
-//                }
-//                false
-//            }
-//
-//            R.id.confirm -> {
-//                if (tab != null) {
-//                    Log.v("OnConfirm", "Going back.")
-//                    view?.findNavController()
-//                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabFragment(tab))
-//
-//
-//                }
-//            }
-//        }
+        val tabTitle = binding.title.text.toString()
+        val tabArtist = binding.artist.text.toString()
+        val tabArranger = binding.arranger.text.toString()
+        val tuning = binding.tuning.text.toString()
+        val songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
+        val tab = Tablature(
+            title = tabTitle,
+            artist = tabArtist,
+            arranger = tabArranger,
+            tuning = tuning,
+            sections = editTabViewModel.sectionMap,
+            songUri = songUri
+        )
+
+        when (item?.itemId) {
+
+            R.id.save -> {
+                Log.v("Saving", "Title is ${tabTitle}")
+                if (editTabViewModel.sectionMap.size < 2) {
+                    Toast.makeText(
+                        context,
+                        "Please create at least two sections before saving.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    false
+                }
+
+
+                if (this.tabId != -1L) {
+                    tab.tabId = tabId
+                    editTabViewModel.onUpdate(tab)
+                    Toast.makeText(context, "Tablature updated", Toast.LENGTH_SHORT).show()
+
+                } else {
+                    editTabViewModel.onSave(tab)
+                    Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
+                    view?.findNavController()
+                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabListFragment())
+                }
+                false
+            }
+
+            R.id.confirm -> {
+                if (tab != null) {
+                    view?.findNavController()
+                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabFragment(tab))
+
+
+                }
+            }
+        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -204,7 +204,6 @@ class EditTabFragment : Fragment() {
             when (event?.action) {
                 MotionEvent.ACTION_DOWN -> {
                     initialY = event.y
-                    Log.v("touch", "Initial ${initialY}")
                     true
                 }
 

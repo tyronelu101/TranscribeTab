@@ -52,7 +52,6 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
             _totalSectionNum.value = 1
             _currentSection.value = section
             sectionMap.put(section.sectionNum, section)
-
         }
     }
 
@@ -135,10 +134,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
     }
 
     fun onSkipTo() {
-//        val skipToTime = sectionTimeMap.get(currentSectionNum.value!!)
-//        if (skipToTime != null) {
-//            _skipToVal.value = skipToTime.first
-//        }
+        _skipToVal.value = currentSection.value?.sectionTime
     }
 
     fun onSave(tab: Tablature) {
