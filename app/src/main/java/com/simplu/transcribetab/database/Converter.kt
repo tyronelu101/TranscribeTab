@@ -3,24 +3,25 @@ package com.simplu.transcribetab.database
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.simplu.transcribetab.TabSection
 import java.lang.reflect.Type
 
 
 class Converter {
 
     @TypeConverter
-    fun columnListToString(columns: HashMap<Int, ArrayList<Array<String>>>): String {
+    fun columnListToString(columns: HashMap<Int, TabSection>): String {
         val gson = Gson()
-        val type: Type = object : TypeToken<HashMap<Int, ArrayList<Array<String>>>>() {}.type
+        val type: Type = object : TypeToken<HashMap<Int, TabSection>>() {}.type
         val json = gson.toJson(columns, type)
         return json
     }
 
     @TypeConverter
-    fun stringToColumnList(columnString: String): HashMap<Int, ArrayList<Array<String>>> {
+    fun stringToColumnList(columnString: String): HashMap<Int, TabSection> {
         val gson = Gson()
-        val type: Type = object : TypeToken<HashMap<Int, ArrayList<Array<String>>>>() {}.type
-        val columns: HashMap<Int, ArrayList<Array<String>>> = gson.fromJson(columnString, type)
+        val type: Type = object : TypeToken<HashMap<Int, TabSection>>() {}.type
+        val columns: HashMap<Int, TabSection> = gson.fromJson(columnString, type)
         return columns
     }
 

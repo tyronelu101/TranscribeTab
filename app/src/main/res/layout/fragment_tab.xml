@@ -90,7 +90,7 @@
                 android:id="@+id/tab_section1_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.topSectionNum.toString()}"></TextView>
+                ></TextView>
 
             <com.simplu.transcribetab.tab.TabView
                 android:id="@+id/tab_section2"
@@ -103,8 +103,7 @@
             <TextView
                 android:id="@+id/tab_section_2_num"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.bottomSectionNum.toString()}"></TextView>
+                android:layout_height="wrap_content"></TextView>
         </LinearLayout>
 
         <FrameLayout

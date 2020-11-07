@@ -94,8 +94,8 @@
                 android:id="@+id/current_section_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{editTabViewModel.currentSectionNum.toString()}"
                 android:textSize="18sp"
+                android:text="@{editTabViewModel.currentSectionNum}"
                 android:textStyle="bold"></EditText>
 
             <TextView
@@ -126,8 +126,9 @@
                 android:id="@+id/txt_section_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> editTabViewModel.onSkipTo()}"
-                android:text="@{editTabViewModel.sectionTimeRangeString}"></TextView>
+                android:text="@{editTabViewModel.currentSectionTime}"
+                android:onClick="@{() -> editTabViewModel.onSkipTo()}">
+            </TextView>
 
         </LinearLayout>
 
@@ -180,7 +181,6 @@
                     android:id="@+id/add_section_btn"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> editTabViewModel.addSection()}"
                     android:text="+"></Button>
 
                 <Button
