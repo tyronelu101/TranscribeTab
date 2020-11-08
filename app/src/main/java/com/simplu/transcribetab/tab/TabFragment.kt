@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentTabBinding
 import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
+import kotlinx.android.synthetic.main.fragment_tab.*
 
 class TabFragment : Fragment(),
     SectionUpdater {
@@ -52,17 +53,17 @@ class TabFragment : Fragment(),
         binding.lifecycleOwner = this
         setHasOptionsMenu(true)
 
-//        tabViewModel.topSection.observe(this, Observer {
-//            binding.tabSection1.updateTablature(it)
-//        })
-//
-//        tabViewModel.bottomSection.observe(this, Observer {
-//            binding.tabSection2.updateTablature(it)
-//        })
-//
-//        tabViewModel.sectionUpdateTime.observe(this, Observer {
-//            mediaPlayerFragment.setSectionUpdateTime(it)
-//        })
+        tabViewModel.topSection.observe(this, Observer {
+            binding.tabSection1.updateTablature(it.sectionCol)
+        })
+
+        tabViewModel.bottomSection.observe(this, Observer {
+            binding.tabSection2.updateTablature(it.sectionCol)
+        })
+
+        tabViewModel.sectionUpdateTime.observe(this, Observer {
+            mediaPlayerFragment.setSectionUpdateTime(it)
+        })
 
         // Inflate the layout for this fragment
         return binding.root

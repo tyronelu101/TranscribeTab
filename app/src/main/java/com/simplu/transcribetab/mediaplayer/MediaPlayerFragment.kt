@@ -3,6 +3,7 @@ package com.simplu.transcribetab.mediaplayer
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -150,11 +151,13 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
 
     inner class seekBarOnChangeListener : SeekBar.OnSeekBarChangeListener {
         var currentProgress = 0
+        var wasPlaying = false
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
             if (fromUser) {
-                var wasPlaying = false
-                if (mediaPlayer.isPlaying) {
+                Log.v("MediaPlayerFragment", "Was playing ${wasPlaying}")
+
+                if(mediaPlayer.isPlaying) {
                     wasPlaying = true
                     mediaPlayer.pause()
                 }
@@ -162,10 +165,6 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
                 currentProgress = progress
                 sectionUpdater?.updateSectionTo(currentProgress)
 
-                if (wasPlaying) {
-                    mediaPlayer.start()
-                    observeMedia()
-                }
             }
             mediaPlayerViewModel.updateTime(progress.toLong())
         }
@@ -174,6 +173,10 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            if(wasPlaying) {
+                mediaPlayer.start()
+                wasPlaying = false
+            }
             mediaPlayer?.seekTo(currentProgress * 1000)
         }
 

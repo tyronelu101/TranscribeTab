@@ -123,14 +123,27 @@ class EditTabFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.edittab_menu, menu)
 
-        Log.v("EditTabFragment", "Creating menu ${tabId}")
         //If tabId is -1, means creating tab
         if (tabId != -1L) {
-            Log.v("EditTabFragment", "Making confirm item visible ${tabId}")
             val confirmItem = menu?.findItem(R.id.confirm)
             confirmItem?.isVisible = true
         }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayerFragment.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mediaPlayerFragment.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayerFragment.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -151,7 +164,6 @@ class EditTabFragment : Fragment() {
         when (item?.itemId) {
 
             R.id.save -> {
-                Log.v("Saving", "Title is ${tabTitle}")
                 if (editTabViewModel.sectionMap.size < 2) {
                     Toast.makeText(
                         context,
@@ -197,7 +209,7 @@ class EditTabFragment : Fragment() {
             val parent = button.parent as LinearLayout
 
             val note = button.text.toString()
-            var stringToUpdate = -1;
+            var stringToUpdate: Int
 
             var isSwipeUp = false
 

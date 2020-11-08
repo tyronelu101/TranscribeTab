@@ -1,5 +1,6 @@
 package com.simplu.transcribetab.tab
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,28 +30,27 @@ class TabViewModel(val tablature: Tablature) : ViewModel() {
 
     private fun initializeTablature() {
         //Initialize the first 2 sections
-        if (tablature != null && tablature.sections != null) {
-            val nextSectionNum = currentPlayingSectionNum + 1
+        if (tablature != null) {
 
             _topSection.value = tablature.sections.get(currentPlayingSectionNum)
-            _bottomSection.value = tablature.sections.get(nextSectionNum)
+            _bottomSection.value = tablature.sections.get(currentPlayingSectionNum + 1)
 
-            setSectionUpdateTime()
             initTimeToSectionMap()
+            setSectionUpdateTime()
         }
     }
 
     private fun initTimeToSectionMap() {
         val sectionsMap = tablature.sections
-        for(section in sectionsMap.values) {
+        for (section in sectionsMap.values) {
             timeToSectionMap[section.sectionTime] = section.sectionNum
         }
     }
 
     private fun setSectionUpdateTime() {
-        val nextTabSection = tablature.sections.get(currentPlayingSectionNum + 2)
-        if (nextTabSection != null) {
-            _sectionUpdateTime.value = nextTabSection.sectionTime
+        val sectionsTimeToWatch = tablature.sections.get(currentPlayingSectionNum + 1)
+        if (sectionsTimeToWatch != null) {
+            _sectionUpdateTime.value = sectionsTimeToWatch.sectionTime
         }
     }
 
@@ -73,7 +73,7 @@ class TabViewModel(val tablature: Tablature) : ViewModel() {
                 else {
                     _topSection.value = tablature.sections.get(nextSectionNum)
                 }
-                updateSection()
+                setSectionUpdateTime()
             }
 
         }
@@ -103,6 +103,8 @@ class TabViewModel(val tablature: Tablature) : ViewModel() {
                 _bottomSection.value = tablature.sections[currentSection + 1]
             }
         }
+
+        setSectionUpdateTime()
     }
 
     private fun getNearestSectionBelow(timeFromMedia: Int): Int {

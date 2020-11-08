@@ -37,19 +37,11 @@ class MediaPlayerViewModel : ViewModel() {
     private val _skipTo = MutableLiveData<Long>()
     val skipTo: LiveData<Long> = _skipTo
 
-    private var viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
     init {
         skipToVal = 0
         _currentTime.value = 0
         _duration.value = 0
         _isPlaying.value = false
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 
     fun onTogglePlayPause() {
