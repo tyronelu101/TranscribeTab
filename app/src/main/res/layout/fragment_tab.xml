@@ -27,7 +27,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Title"></TextView>
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/artist"
@@ -39,7 +39,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="Artist"></TextView>
+            tools:text="Artist" />
 
         <TextView
             android:id="@+id/arranger"
@@ -51,7 +51,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/artist"
-            tools:text="Arranger"></TextView>
+            tools:text="Arranger" />
 
         <TextView
             android:id="@+id/tuning"
@@ -63,7 +63,7 @@
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/arranger"
-            tools:text="tuning"></TextView>
+            tools:text="tuning" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,25 +72,38 @@
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/tuning">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </LinearLayout>
-
             <com.simplu.transcribetab.tab.TabView
                 android:id="@+id/tab_section1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tuning"></com.simplu.transcribetab.tab.TabView>
+                app:layout_constraintTop_toBottomOf="@id/tuning" />
 
-            <TextView
-                android:id="@+id/tab_section1_num"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{Integer.toString(viewModel.topSection.sectionNum)}"></TextView>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tab_section1_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@{Integer.toString(viewModel.topSection.sectionNum)}"
+                    android:textStyle="bold"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/tab_section1_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="6dp"
+                    android:text="@{viewModel.topSectionTime}"
+                    tools:text="0:00" />
+
+            </LinearLayout>
 
             <com.simplu.transcribetab.tab.TabView
                 android:id="@+id/tab_section2"
@@ -98,13 +111,30 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tuning"></com.simplu.transcribetab.tab.TabView>
+                app:layout_constraintTop_toBottomOf="@id/tuning" />
 
-            <TextView
-                android:id="@+id/tab_section_2_num"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{Integer.toString(viewModel.bottomSection.sectionNum)}"></TextView>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tab_section2_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@{Integer.toString(viewModel.bottomSection.sectionNum)}"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/tab_section2_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.bottomSectionTime}"
+                    tools:text="1:56" />
+
+
+            </LinearLayout>
         </LinearLayout>
 
         <FrameLayout

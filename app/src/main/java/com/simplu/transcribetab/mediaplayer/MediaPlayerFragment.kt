@@ -32,7 +32,6 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val bundle = arguments
         var songUri = ""
         if (bundle != null) {
@@ -101,7 +100,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
 
     private fun observeMedia() {
         mediaPlayerScope.launch {
-            while (mediaPlayer.isPlaying) {
+            while (mediaPlayerJob.isActive && mediaPlayer.isPlaying) {
                 val currentPosition = (mediaPlayer.currentPosition) / 1000
                 binding.songSeekBar.progress = (currentPosition)
                 if (sectionUpdater != null) {

@@ -1,8 +1,9 @@
 package com.simplu.transcribetab.tab
 
-import android.util.Log
+import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.simplu.transcribetab.TabSection
 import com.simplu.transcribetab.database.Tablature
@@ -13,8 +14,17 @@ class TabViewModel(val tablature: Tablature) : ViewModel() {
     private val _topSection: MutableLiveData<TabSection> = MutableLiveData()
     val topSection: LiveData<TabSection> = _topSection
 
+    val topSectionTime = Transformations.map(topSection){
+         DateUtils.formatElapsedTime(it.sectionTime.toLong()).removeRange(0, 1)
+    }
+
     private val _bottomSection: MutableLiveData<TabSection> = MutableLiveData()
     val bottomSection: LiveData<TabSection> = _bottomSection
+
+    val bottomSectionTime = Transformations.map(bottomSection){
+        DateUtils.formatElapsedTime(it.sectionTime.toLong()).removeRange(0, 1)
+    }
+
 
     private var _sectionUpdateTime = MutableLiveData<Int>()
     var sectionUpdateTime: LiveData<Int> = _sectionUpdateTime
