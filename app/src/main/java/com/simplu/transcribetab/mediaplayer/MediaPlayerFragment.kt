@@ -38,7 +38,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
             songUri = bundle.getString("songUri")
         }
         mediaPlayerViewModel = ViewModelProvider(this).get(MediaPlayerViewModel::class.java)
-
+        Log.v("MediaPlayerFragment", "MediaPlayerFragment created")
         val uri = Uri.parse(songUri)
         mediaPlayer = MediaPlayer().apply {
             setDataSource(context, uri)
@@ -84,8 +84,6 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
             if (play) {
                 mediaPlayer.start()
                 observeMedia()
-
-
             } else {
                 mediaPlayer.pause()
             }
@@ -101,6 +99,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
     private fun observeMedia() {
         mediaPlayerScope.launch {
             while (mediaPlayerJob.isActive && mediaPlayer.isPlaying) {
+                Log.v("MediaPlayerFragment", "Coroutine is running")
                 val currentPosition = (mediaPlayer.currentPosition) / 1000
                 binding.songSeekBar.progress = (currentPosition)
                 if (sectionUpdater != null) {
@@ -132,19 +131,27 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
 
     override fun onPause() {
         super.onPause()
-        if (mediaPlayer != null && mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
+        Log.v("MediaPlayerFragment", "On pause media player is playing${mediaPlayer.isPlaying}")
+        if (mediaPlayer.isPlaying) {
+            mediaPlayerViewModel.setIsPlaying(false)
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.v("MediaPlayerFragment", "On stop")
+
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
-        if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.stop()
-            }
-            mediaPlayer.release()
+        Log.v("MediaPlayerFragment", "Media player released")
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
         }
+        mediaPlayerJob.cancel()
+        mediaPlayer.release()
+
+        super.onDestroy()
     }
 
 
@@ -156,7 +163,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
             if (fromUser) {
                 Log.v("MediaPlayerFragment", "Was playing ${wasPlaying}")
 
-                if(mediaPlayer.isPlaying) {
+                if (mediaPlayer.isPlaying) {
                     wasPlaying = true
                     mediaPlayer.pause()
                 }
@@ -172,7 +179,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            if(wasPlaying) {
+            if (wasPlaying) {
                 mediaPlayer.start()
                 wasPlaying = false
             }

@@ -11,7 +11,6 @@ import androidx.navigation.findNavController
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentTabBinding
 import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
-import kotlinx.android.synthetic.main.fragment_tab.*
 
 class TabFragment : Fragment(),
     SectionUpdater {
@@ -26,10 +25,14 @@ class TabFragment : Fragment(),
         val tablature = TabFragmentArgs.fromBundle(
             arguments!!
         ).tablature
-        val viewModelFactory = TabViewModelFactory(tablature)
 
-        tabViewModel =
-            ViewModelProvider(this, viewModelFactory).get(TabViewModel::class.java)
+        tablature.let {
+            val viewModelFactory = TabViewModelFactory(tablature)
+            tabViewModel =
+                ViewModelProvider(this, viewModelFactory).get(TabViewModel::class.java)
+
+            initMediaPlayerFragment(it.songUri)
+        }
 
 
     }
@@ -42,10 +45,6 @@ class TabFragment : Fragment(),
         val tablature = TabFragmentArgs.fromBundle(
             arguments!!
         ).tablature
-
-        tablature.let {
-            initMediaPlayerFragment(it.songUri)
-        }
 
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab, container, false)
@@ -94,6 +93,15 @@ class TabFragment : Fragment(),
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(javaClass.simpleName, "TabFragment destroyed")
+
+        val fragmentManager = getFragmentManager()
+        val fragmentTransaction = fragmentManager?.beginTransaction()
+        fragmentTransaction?.remove(mediaPlayerFragment)?.commit()
+    }
+
     private fun initMediaPlayerFragment(songUri: String) {
         val fragmentManager = getFragmentManager()
         val fragmentTransaction = fragmentManager?.beginTransaction()
@@ -102,23 +110,8 @@ class TabFragment : Fragment(),
         val args = Bundle()
         args.putString("songUri", songUri)
         mediaPlayerFragment.setArguments(args)
-        fragmentTransaction?.add(R.id.media_player, mediaPlayerFragment)
+        fragmentTransaction?.add(R.id.media_player, mediaPlayerFragment, "MediaPlayerFragment")
         fragmentTransaction?.commit()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mediaPlayerFragment.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mediaPlayerFragment.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayerFragment.onDestroy()
     }
 
     override fun updateSection() {

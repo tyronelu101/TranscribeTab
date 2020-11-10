@@ -48,6 +48,9 @@ class MediaPlayerViewModel : ViewModel() {
         _isPlaying.value = isPlaying.value != true
     }
 
+    fun setIsPlaying(isPlaying: Boolean) {
+        _isPlaying.value = isPlaying
+    }
     fun updateTime(newTime: Long) {
         _currentTime.value = newTime
     }
