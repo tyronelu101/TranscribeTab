@@ -26,6 +26,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
     private val mediaPlayerJob = Job()
     private val mediaPlayerScope = CoroutineScope(mediaPlayerJob + Dispatchers.Main)
 
+    private var isObserveMedia: Boolean = false
     //Time to watch where next section update occurs
     //Only use in tab fragment
     private var sectionUpdateTime: Int? = null
@@ -83,9 +84,12 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         mediaPlayerViewModel.isPlaying.observe(this, Observer { play ->
             if (play) {
                 mediaPlayer.start()
+                isObserveMedia = true
                 observeMedia()
+
             } else {
                 mediaPlayer.pause()
+                isObserveMedia = false
             }
         })
 
@@ -98,7 +102,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
 
     private fun observeMedia() {
         mediaPlayerScope.launch {
-            while (mediaPlayerJob.isActive && mediaPlayer.isPlaying) {
+            while (isObserveMedia) {
                 Log.v("MediaPlayerFragment", "Coroutine is running")
                 val currentPosition = (mediaPlayer.currentPosition) / 1000
                 binding.songSeekBar.progress = (currentPosition)
@@ -129,22 +133,24 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         this.sectionUpdateTime = time
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.v("Lifecycle", "MediaPlayer onresume")
+    }
     override fun onPause() {
         super.onPause()
-        Log.v("MediaPlayerFragment", "On pause media player is playing${mediaPlayer.isPlaying}")
+        Log.v("Lifecycle", "MediaPlayer On pause")
         if (mediaPlayer.isPlaying) {
             mediaPlayerViewModel.setIsPlaying(false)
         }
     }
-
     override fun onStop() {
         super.onStop()
-        Log.v("MediaPlayerFragment", "On stop")
-
+        Log.v("Lifecycle", "MediaPlayer On stop")
     }
 
     override fun onDestroy() {
-        Log.v("MediaPlayerFragment", "Media player released")
+        Log.v("Lifecycle", "Media player onDestoroy")
         if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
         }

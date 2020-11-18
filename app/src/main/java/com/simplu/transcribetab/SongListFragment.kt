@@ -55,7 +55,7 @@ class SongListFragment : Fragment() {
                     ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, ID)
                         .toString()
 
-                view?.findNavController()?.navigate(SongListFragmentDirections.actionSongListFragmentToEditTabFragment(uri, null))
+                view?.findNavController()?.navigate(SongListFragmentDirections.actionSongListFragmentToEditTabParentFragment(uri, null))
             }
         }
 

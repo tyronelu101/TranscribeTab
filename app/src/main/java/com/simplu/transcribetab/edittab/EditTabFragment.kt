@@ -34,8 +34,12 @@ class EditTabFragment : Fragment() {
         val dataSource =
             TablatureDatabase.getInstance(application).tablatureDatabaseDao
 
+        val bundle = arguments
+        var tab = bundle?.getParcelable<Tablature>("tab")
+
+
         val viewModelFactory =
-            EditTabViewModelFactory(dataSource, EditTabFragmentArgs.fromBundle(arguments!!).tab)
+            EditTabViewModelFactory(dataSource, null)
         editTabViewModel =
             ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
     }
@@ -58,30 +62,13 @@ class EditTabFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var songUri = ""
-        val tab = EditTabFragmentArgs.fromBundle(arguments!!).tab
+        val tab = arguments?.getParcelable<Tablature>("tab")
         if (tab != null) {
-            songUri = tab.songUri
             tabId = tab.tabId
-        } else {
-            songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
         }
-
-        initMediaPlayerFragment(songUri)
 
         initEditTabView(tab)
 
-    }
-    private fun initMediaPlayerFragment(songUri: String) {
-
-        val fragmentManager = getFragmentManager()
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-        mediaPlayerFragment =
-            MediaPlayerFragment()
-        val args = Bundle()
-        args.putString("songUri", songUri)
-        mediaPlayerFragment.setArguments(args)
-        fragmentTransaction?.add(R.id.media_player, mediaPlayerFragment)
-        fragmentTransaction?.commit()
     }
 
     private fun initEditTabView(tab: Tablature?) {
@@ -131,18 +118,24 @@ class EditTabFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.v("Lifecycle", "EditTab onresume")
+    }
+
     override fun onPause() {
         super.onPause()
-        mediaPlayerFragment.onPause()
+        Log.v("Lifecycle", "EditTab onPause")
     }
 
     override fun onStop() {
         super.onStop()
-        mediaPlayerFragment.onStop()
+        Log.v("Lifecycle", "EditTab onStop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.v("Lifecycle", "EditTab onDestroy")
         mediaPlayerFragment.onDestroy()
     }
 

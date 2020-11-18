@@ -93,9 +93,22 @@ class TabFragment : Fragment(),
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.v("Lifecycle", "TabFragment onresume")
+    }
+    override fun onPause() {
+        super.onPause()
+        Log.v("Lifecycle", "TagFragment On pause")
+    }
+    override fun onStop() {
+        super.onStop()
+        Log.v("Lifecycle", "TagFragment On stop")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(javaClass.simpleName, "TabFragment destroyed")
+        Log.i("Lifecycle", "TabFragment destroyed")
 
         val fragmentManager = getFragmentManager()
         val fragmentTransaction = fragmentManager?.beginTransaction()

@@ -141,7 +141,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="8dp"
-            app:layout_constraintBottom_toTopOf="@id/media_player"
+            app:layout_constraintTop_toBottomOf="@id/time_container"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
@@ -192,14 +192,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/media_player"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"></FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
