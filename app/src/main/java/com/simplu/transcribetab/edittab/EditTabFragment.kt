@@ -1,7 +1,6 @@
 package com.simplu.transcribetab.edittab
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.LinearLayout
@@ -11,20 +10,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
-import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 import kotlinx.android.synthetic.main.fragment_edit_tab.*
 
 class EditTabFragment : Fragment() {
 
+    interface OnAddSectionListener {
+        fun getMediaTime(): Int
+    }
+
     private lateinit var binding: FragmentEditTabBinding
     private lateinit var editTabViewModel: EditTabViewModel
-    private lateinit var mediaPlayerFragment: MediaPlayerFragment
 
+    lateinit var addSectionListener: OnAddSectionListener
+    //This is now referenced in the parent fragment
     private var tabId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +39,8 @@ class EditTabFragment : Fragment() {
         val bundle = arguments
         var tab = bundle?.getParcelable<Tablature>("tab")
 
-
         val viewModelFactory =
-            EditTabViewModelFactory(dataSource, null)
+            EditTabViewModelFactory(dataSource, tab)
         editTabViewModel =
             ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
     }
@@ -61,7 +62,6 @@ class EditTabFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var songUri = ""
         val tab = arguments?.getParcelable<Tablature>("tab")
         if (tab != null) {
             tabId = tab.tabId
@@ -81,7 +81,7 @@ class EditTabFragment : Fragment() {
         }
 
         editTabViewModel.skipToVal.observe(this, Observer {
-            mediaPlayerFragment.skipTo(it * 1000)
+//            mediaPlayerFragment.skipTo(it * 1000)
         })
 
         for (view in binding.stringInputContainer.children.iterator()) {
@@ -97,12 +97,13 @@ class EditTabFragment : Fragment() {
             edit_tablature.updateTablature(it.sectionCol)
         })
 
+
         add_section_btn.setOnClickListener {
-            editTabViewModel.addSection(mediaPlayerFragment.getTime())
+            editTabViewModel.addSection(addSectionListener.getMediaTime())
         }
 
         btn_set_time.setOnClickListener {
-            editTabViewModel.onSetTime(mediaPlayerFragment.getTime())
+            editTabViewModel.onSetTime(addSectionListener.getMediaTime())
         }
     }
 
@@ -118,33 +119,12 @@ class EditTabFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.v("Lifecycle", "EditTab onresume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.v("Lifecycle", "EditTab onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.v("Lifecycle", "EditTab onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.v("Lifecycle", "EditTab onDestroy")
-        mediaPlayerFragment.onDestroy()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val tabTitle = binding.title.text.toString()
         val tabArtist = binding.artist.text.toString()
         val tabArranger = binding.arranger.text.toString()
         val tuning = binding.tuning.text.toString()
-        val songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
+        val songUri = arguments!!.getString("songUri")
         val tab = Tablature(
             title = tabTitle,
             artist = tabArtist,
@@ -175,17 +155,12 @@ class EditTabFragment : Fragment() {
                 } else {
                     editTabViewModel.onSave(tab)
                     Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
-                    view?.findNavController()
-                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabListFragment())
                 }
                 false
             }
 
             R.id.confirm -> {
                 if (tab != null) {
-                    view?.findNavController()
-                        ?.navigate(EditTabFragmentDirections.actionEditTabFragmentToTabFragment(tab))
-
 
                 }
             }
@@ -193,7 +168,7 @@ class EditTabFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    inner class tabInputOnTouchListener : View.OnTouchListener {
+    private inner class tabInputOnTouchListener : View.OnTouchListener {
 
         var initialY = 0f
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {

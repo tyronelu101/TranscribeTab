@@ -24,8 +24,10 @@ class EditTabParentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         addFragments()
+
+        editTabFragment.addSectionListener = mediaPlayerFragment
+
     }
 
     private fun addFragments() {
@@ -42,15 +44,17 @@ class EditTabParentFragment : Fragment() {
         val fragmentManager = getFragmentManager()
         val fragmentTransaction = fragmentManager?.beginTransaction()
 
-        val args = Bundle()
-        args.putString("songUri", songUri)
-        mediaPlayerFragment.setArguments(args)
+        val mediaArgs = Bundle()
+        mediaArgs.putString("songUri", songUri)
+        mediaPlayerFragment.arguments = mediaArgs
 
         val tabArgs = Bundle()
         tabArgs.putParcelable("tab", tab)
+        tabArgs.putString("songUri", songUri)
+        editTabFragment.arguments = tabArgs
 
-        fragmentTransaction?.add(R.id.edit_tab_fragment_container, editTabFragment)
-        fragmentTransaction?.add(R.id.edit_media_fragment_container, mediaPlayerFragment)
+        fragmentTransaction?.replace(R.id.edit_tab_fragment_container, editTabFragment)
+        fragmentTransaction?.replace(R.id.edit_media_fragment_container, mediaPlayerFragment)
         fragmentTransaction?.commit()
 
     }

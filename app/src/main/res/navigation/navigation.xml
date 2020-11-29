@@ -13,60 +13,17 @@
             android:id="@+id/action_tabListFragment_to_songListFragment"
             app:destination="@id/songListFragment" />
         <action
-            android:id="@+id/action_tabListFragment_to_tabFragment"
-            app:destination="@id/tabFragment"
-            app:popUpTo="@id/tabListFragment" />
-        <action
-            android:id="@+id/action_tabListFragment_to_editTabParentFragment"
-            app:destination="@id/editTabParentFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/editTabFragment"
-        android:name="com.simplu.transcribetab.edittab.EditTabFragment"
-        android:label="EditTabFragment" >
-        <argument
-            android:name="songUri"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_editTabFragment_to_tabFragment"
-            app:destination="@id/tabFragment"
-            app:popUpTo="@id/tabListFragment" />
-        <argument
-            android:name="tab: "
-            app:argType="com.simplu.transcribetab.database.Tablature"
-            app:nullable="true" />
-        <action
-            android:id="@+id/action_editTabFragment_to_tabListFragment"
-            app:destination="@id/tabListFragment"
-            app:popUpTo="@id/tabListFragment" />
+            android:id="@+id/action_tabListFragment_to_tabParentFragment"
+            app:destination="@id/tabParentFragment" />
     </fragment>
     <fragment
         android:id="@+id/songListFragment"
         android:name="com.simplu.transcribetab.SongListFragment"
         android:label="SongListFragment" >
         <action
-            android:id="@+id/action_songListFragment_to_editTabFragment"
-            app:destination="@id/editTabFragment"
-            app:popUpTo="@id/tabListFragment" />
-        <action
             android:id="@+id/action_songListFragment_to_editTabParentFragment"
-            app:destination="@id/editTabParentFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/tabFragment"
-        android:name="com.simplu.transcribetab.tab.TabFragment"
-        android:label="fragment_tab"
-        tools:layout="@layout/fragment_tab" >
-        <action
-            android:id="@+id/action_tabFragment_to_editTabFragment"
-            app:destination="@id/editTabFragment"
-            app:popUpTo="@id/tabListFragment"
-            app:popUpToInclusive="false">
-            <argument android:name="songUri" />
-        </action>
-        <argument
-            android:name="tablature"
-            app:argType="com.simplu.transcribetab.database.Tablature" />
+            app:destination="@id/editTabParentFragment"
+            app:popUpTo="@id/tabListFragment" />
     </fragment>
     <fragment
         android:id="@+id/editTabParentFragment"
@@ -80,5 +37,20 @@
             android:name="tab"
             app:argType="com.simplu.transcribetab.database.Tablature"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_editTabParentFragment_to_tabParentFragment"
+            app:destination="@id/tabParentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tabParentFragment"
+        android:name="com.simplu.transcribetab.tab.TabParentFragment"
+        android:label="fragment_tab_parent"
+        tools:layout="@layout/fragment_tab_parent" >
+        <action
+            android:id="@+id/action_tabParentFragment_to_editTabParentFragment"
+            app:destination="@id/editTabParentFragment" />
+        <argument
+            android:name="tab"
+            app:argType="com.simplu.transcribetab.database.Tablature" />
     </fragment>
 </navigation>

@@ -42,8 +42,7 @@ class TabListFragment : Fragment() {
         }
 
         val adapter = TablatureAdapter(TablatureListener {tab ->
-            Log.v("TabListFragment", "Clicking tab ${tab.tabId}")
-            findNavController().navigate(TabListFragmentDirections.actionTabListFragmentToTabFragment(tab))
+            findNavController().navigate(TabListFragmentDirections.actionTabListFragmentToTabParentFragment(tab))
         })
 
         binding.tabList.adapter = adapter

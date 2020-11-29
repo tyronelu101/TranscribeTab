@@ -14,10 +14,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
+import com.simplu.transcribetab.edittab.EditTabFragment
 import com.simplu.transcribetab.tab.SectionUpdater
 import kotlinx.coroutines.*
 
-class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment() {
+class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment(), EditTabFragment.OnAddSectionListener {
 
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
     private lateinit var mediaPlayer: MediaPlayer
@@ -27,6 +28,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
     private val mediaPlayerScope = CoroutineScope(mediaPlayerJob + Dispatchers.Main)
 
     private var isObserveMedia: Boolean = false
+
     //Time to watch where next section update occurs
     //Only use in tab fragment
     private var sectionUpdateTime: Int? = null
@@ -137,6 +139,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         super.onResume()
         Log.v("Lifecycle", "MediaPlayer onresume")
     }
+
     override fun onPause() {
         super.onPause()
         Log.v("Lifecycle", "MediaPlayer On pause")
@@ -144,6 +147,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
             mediaPlayerViewModel.setIsPlaying(false)
         }
     }
+
     override fun onStop() {
         super.onStop()
         Log.v("Lifecycle", "MediaPlayer On stop")
@@ -193,5 +197,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         }
 
     }
+
+    override fun getMediaTime(): Int = mediaPlayer.currentPosition / 1000
 
 }
