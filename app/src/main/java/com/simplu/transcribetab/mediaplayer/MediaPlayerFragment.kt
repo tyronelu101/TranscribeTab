@@ -95,44 +95,12 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
             }
         })
 
-        mediaPlayerViewModel.skipTo.observe(this, Observer {
-            mediaPlayer?.seekTo(it.toInt() * 1000)
-        })
-
-        mediaPlayer.start()
     }
 
-    private fun observeMedia() {
-        mediaPlayerScope.launch {
-            while (isObserveMedia) {
-                Log.v("MediaPlayerFragment", "Coroutine is running")
-                val currentPosition = (mediaPlayer.currentPosition) / 1000
-                binding.songSeekBar.progress = (currentPosition)
-                if (sectionUpdater != null) {
-                    updateSection();
-                }
-                delay(500)
-            }
-        }
-    }
-
-    private fun updateSection() {
-        if (sectionUpdateTime == mediaPlayer.currentPosition / 1000) {
-            sectionUpdater?.updateSection()
-        }
-    }
-
-    fun getTime(): Int {
-        return mediaPlayer.currentPosition / 1000
-    }
+    fun getTime(): Int = mediaPlayerViewModel.currentTime.value ?: 0
 
     fun skipTo(time: Int) {
-        mediaPlayer.seekTo(time)
-        binding.songSeekBar.progress = time / 1000
-    }
-
-    fun setSectionUpdateTime(time: Int) {
-        this.sectionUpdateTime = time
+        mediaPlayerViewModel.skipTo(time)
     }
 
     override fun onResume() {
@@ -143,9 +111,7 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
     override fun onPause() {
         super.onPause()
         Log.v("Lifecycle", "MediaPlayer On pause")
-        if (mediaPlayer.isPlaying) {
-            mediaPlayerViewModel.setIsPlaying(false)
-        }
+        mediaPlayerViewModel.pause()
     }
 
     override fun onStop() {
@@ -154,17 +120,14 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
     }
 
     override fun onDestroy() {
-        Log.v("Lifecycle", "Media player onDestoroy")
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-        }
-        mediaPlayerJob.cancel()
-        mediaPlayer.release()
-
         super.onDestroy()
+        Log.v("Lifecycle", "Media player on destroy")
+
     }
 
-
+    fun setTriggerTime(time: Int) {
+        mediaPlayerViewModel.setTriggerTime(time)
+    }
     inner class seekBarOnChangeListener : SeekBar.OnSeekBarChangeListener {
         var currentProgress = 0
         var wasPlaying = false

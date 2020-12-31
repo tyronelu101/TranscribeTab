@@ -25,8 +25,6 @@ class EditTabFragment : Fragment() {
     private lateinit var binding: FragmentEditTabBinding
     private lateinit var editTabViewModel: EditTabViewModel
 
-    lateinit var addSectionListener: OnAddSectionListener
-    //This is now referenced in the parent fragment
     private var tabId = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +79,7 @@ class EditTabFragment : Fragment() {
         }
 
         editTabViewModel.skipToVal.observe(this, Observer {
-//            mediaPlayerFragment.skipTo(it * 1000)
+            mediaPlayerFragment.skipTo(it * 1000)
         })
 
         for (view in binding.stringInputContainer.children.iterator()) {
@@ -99,11 +97,11 @@ class EditTabFragment : Fragment() {
 
 
         add_section_btn.setOnClickListener {
-            editTabViewModel.addSection(addSectionListener.getMediaTime())
+            editTabViewModel.addSection(mediaPlayerFragment.getTime())
         }
 
         btn_set_time.setOnClickListener {
-            editTabViewModel.onSetTime(addSectionListener.getMediaTime())
+            editTabViewModel.onSetTime(mediaPlayerFragment.getTime())
         }
     }
 

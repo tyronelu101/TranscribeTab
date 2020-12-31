@@ -13,8 +13,8 @@
             android:id="@+id/action_tabListFragment_to_songListFragment"
             app:destination="@id/songListFragment" />
         <action
-            android:id="@+id/action_tabListFragment_to_tabParentFragment"
-            app:destination="@id/tabParentFragment" />
+            android:id="@+id/action_tabListFragment_to_tabFragment"
+            app:destination="@id/tabFragment" />
     </fragment>
     <fragment
         android:id="@+id/songListFragment"
@@ -26,10 +26,9 @@
             app:popUpTo="@id/tabListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editTabParentFragment"
-        android:name="com.simplu.transcribetab.edittab.EditTabParentFragment"
-        android:label="fragment_edit_tab_parent"
-        tools:layout="@layout/fragment_edit_tab_parent" >
+        android:id="@+id/editTabFragment"
+        android:name="com.simplu.transcribetab.edittab.EditTabFragment"
+        android:label="EditTabFragment" >
         <argument
             android:name="songUri"
             app:argType="string" />
@@ -38,19 +37,18 @@
             app:argType="com.simplu.transcribetab.database.Tablature"
             app:nullable="true" />
         <action
-            android:id="@+id/action_editTabParentFragment_to_tabParentFragment"
-            app:destination="@id/tabParentFragment" />
+            android:id="@+id/action_editTabFragment_to_tabFragment"
+            app:destination="@id/tabFragment" />
     </fragment>
     <fragment
-        android:id="@+id/tabParentFragment"
-        android:name="com.simplu.transcribetab.tab.TabParentFragment"
-        android:label="fragment_tab_parent"
-        tools:layout="@layout/fragment_tab_parent" >
-        <action
-            android:id="@+id/action_tabParentFragment_to_editTabParentFragment"
-            app:destination="@id/editTabParentFragment" />
+        android:id="@+id/tabFragment"
+        android:name="com.simplu.transcribetab.tab.TabFragment"
+        android:label="TabFragment" >
         <argument
             android:name="tab"
             app:argType="com.simplu.transcribetab.database.Tablature" />
+        <action
+            android:id="@+id/action_tabFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment" />
     </fragment>
 </navigation>

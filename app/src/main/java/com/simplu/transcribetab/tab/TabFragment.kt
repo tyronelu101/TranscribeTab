@@ -3,11 +3,11 @@ package com.simplu.transcribetab.tab
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.databinding.FragmentTabBinding
@@ -18,7 +18,7 @@ class TabFragment : Fragment(),
 
     private lateinit var tabViewModel: TabViewModel
     private lateinit var binding: FragmentTabBinding
-    private lateinit var mediaPlayerFragment: MediaPlayerFragment
+    private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment(this)
 
     private lateinit var tablature: Tablature
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,11 +56,35 @@ class TabFragment : Fragment(),
         })
 
         tabViewModel.sectionUpdateTime.observe(this, Observer {
-            mediaPlayerFragment.setSectionUpdateTime(it)
+            mediaPlayerFragment.setTriggerTime(it)
         })
 
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val tab = arguments?.getParcelable<Tablature>("tab")
+
+        var songUri = ""
+        if (tab != null) {
+            songUri = tab.songUri
+        } else {
+            Toast.makeText(context, "This tab does not have a tab object", Toast.LENGTH_SHORT).show()
+        }
+
+        val mediaArgs = Bundle()
+        mediaArgs.putString("songUri", songUri)
+        mediaPlayerFragment.arguments = mediaArgs
+
+        //Child fragment manager handles child fragment lifecycle
+        //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
+        childFragmentManager.beginTransaction().apply {
+            replace(R.id.tab_media_player, mediaPlayerFragment)
+            commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -97,10 +121,6 @@ class TabFragment : Fragment(),
     override fun onDestroy() {
         super.onDestroy()
         Log.i("Lifecycle", "TabFragment destroyed")
-
-        val fragmentManager = getFragmentManager()
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-        fragmentTransaction?.remove(mediaPlayerFragment)?.commit()
     }
 
     override fun updateSection() {
