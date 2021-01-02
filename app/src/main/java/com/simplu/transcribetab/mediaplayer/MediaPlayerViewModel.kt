@@ -55,10 +55,6 @@ class MediaPlayerViewModel : ViewModel() {
         _currentTime.value = newTime
     }
 
-    fun setDuration(duration: Long) {
-        _duration.value = duration
-    }
-
     fun setSkipTo() {
         skipToVal = currentTime?.value ?: 0L
     }

@@ -26,7 +26,6 @@ class TabViewModel(val tablature: Tablature) : ViewModel() {
         DateUtils.formatElapsedTime(it.sectionTime.toLong()).removeRange(0, 1)
     }
 
-
     private var _sectionUpdateTime = MutableLiveData<Int>()
     var sectionUpdateTime: LiveData<Int> = _sectionUpdateTime
 
@@ -62,6 +61,7 @@ class TabViewModel(val tablature: Tablature) : ViewModel() {
         val sectionsTimeToWatch = tablature.sections.get(currentPlayingSectionNum + 1)
         if (sectionsTimeToWatch != null) {
             _sectionUpdateTime.value = sectionsTimeToWatch.sectionTime
+            Log.v("TabViewModel", "Section update time is ${sectionUpdateTime.value}")
         }
     }
 
@@ -95,6 +95,7 @@ class TabViewModel(val tablature: Tablature) : ViewModel() {
     fun updateSectionTo(times: Int) {
 
         val currentSection = getNearestSectionBelow(times)
+        currentPlayingSectionNum = getNearestSectionBelow(times)
 
         //EVEN: Update bottom and top+1
         if (currentSection % 2 == 0) {
