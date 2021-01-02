@@ -1,6 +1,7 @@
 package com.simplu.transcribetab.edittab
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.LinearLayout
@@ -14,6 +15,7 @@ import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
+import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 import kotlinx.android.synthetic.main.fragment_edit_tab.*
 
 class EditTabFragment : Fragment() {
@@ -24,6 +26,7 @@ class EditTabFragment : Fragment() {
 
     private lateinit var binding: FragmentEditTabBinding
     private lateinit var editTabViewModel: EditTabViewModel
+    private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment()
 
     private var tabId = -1L
 
@@ -61,12 +64,40 @@ class EditTabFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val tab = arguments?.getParcelable<Tablature>("tab")
+        var songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
         if (tab != null) {
             tabId = tab.tabId
+            songUri = tab.songUri
         }
 
         initEditTabView(tab)
 
+        val mediaArgs = Bundle()
+        mediaArgs.putString("songUri", songUri)
+        mediaPlayerFragment.arguments = mediaArgs
+
+        //Child fragment manager handles child fragment lifecycle
+        //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
+        childFragmentManager.beginTransaction().apply {
+            replace(R.id.edit_media_fragment_container, mediaPlayerFragment)
+            commit()
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.v(javaClass.simpleName, "On resume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.v(javaClass.simpleName, "On pause")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.v(javaClass.simpleName, "On destroy")
     }
 
     private fun initEditTabView(tab: Tablature?) {

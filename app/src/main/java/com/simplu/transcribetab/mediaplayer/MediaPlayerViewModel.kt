@@ -1,15 +1,26 @@
 package com.simplu.transcribetab.mediaplayer
 
+import android.content.Context
+import android.media.MediaPlayer
+import android.net.Uri
 import android.text.format.DateUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import com.simplu.transcribetab.tab.SectionUpdater
+import kotlinx.coroutines.*
 
-class MediaPlayerViewModel : ViewModel() {
+class MediaPlayerViewModel(
+    context: Context,
+    uri: Uri,
+    private val sectionUpdater: SectionUpdater?
+) : ViewModel() {
+
+    private val mediaPlayer: MediaPlayer = MediaPlayer().apply {
+        setDataSource(context, uri)
+        prepare()
+    }
 
     private val _songUri = MutableLiveData<String>()
     val songUri: LiveData<String> = _songUri
@@ -17,51 +28,91 @@ class MediaPlayerViewModel : ViewModel() {
     private val _isPlaying = MutableLiveData<Boolean>()
     val isPlaying: LiveData<Boolean> = _isPlaying
 
-    private val _currentTime = MutableLiveData<Long>()
-    val currentTime: LiveData<Long> = _currentTime
+    private val _currentTime = MutableLiveData<Int>()
+    val currentTime: LiveData<Int> = _currentTime
     val currentTimeString: LiveData<String> = Transformations.map(currentTime) { time ->
 
         //Remove range so format of string is 0:00 instead of 00:00
-        DateUtils.formatElapsedTime(time).removeRange(0, 1)
+        DateUtils.formatElapsedTime(time.toLong()).removeRange(0, 1)
     }
 
-    private val _duration = MutableLiveData<Long>()
-    val duration: LiveData<Long> = _duration
+    private val _duration = MutableLiveData<Int>()
+    val duration: LiveData<Int> = _duration
     val durationString: LiveData<String> = Transformations.map(duration) { time ->
+
         //Remove range so format of string is 0:00 instead of 00:00
-        DateUtils.formatElapsedTime(time).removeRange(0, 1)
+        DateUtils.formatElapsedTime(time.toLong()).removeRange(0, 1)
     }
 
-    private var skipToVal: Long
+    private val mediaPlayerViewModelJob = Job()
+    private val mediaPlayerViewModelScope =
+        CoroutineScope(mediaPlayerViewModelJob + Dispatchers.Main)
 
-    private val _skipTo = MutableLiveData<Long>()
-    val skipTo: LiveData<Long> = _skipTo
+    private var skipToVal: Int = 0
+    private var triggerTime: Int = 0
 
     init {
-        skipToVal = 0
         _currentTime.value = 0
-        _duration.value = 0
+        _duration.value = mediaPlayer.durationSecs()
+    }
+
+    fun play() {
+        _isPlaying.value = true
+        mediaPlayer.start()
+        startMedia()
+    }
+
+    fun pause() {
         _isPlaying.value = false
+        mediaPlayer.pause()
     }
 
-    fun onTogglePlayPause() {
-        _isPlaying.value = isPlaying.value != true
+    fun onPlayPause() {
+        if (mediaPlayer.isPlaying) {
+            _isPlaying.value = false
+            mediaPlayer.pause()
+        } else {
+            _isPlaying.value = true
+            startMedia()
+        }
     }
 
-    fun setIsPlaying(isPlaying: Boolean) {
-        _isPlaying.value = isPlaying
-    }
-    fun updateTime(newTime: Long) {
+    fun skipTo(newTime: Int) {
+        mediaPlayer.seekTo(newTime * 1000)
+        sectionUpdater?.updateSectionTo(newTime)
         _currentTime.value = newTime
     }
 
     fun setSkipTo() {
-        skipToVal = currentTime?.value ?: 0L
+        skipToVal = mediaPlayer.currentPositionSecs() ?: 0
     }
 
     fun onGoTo() {
         _currentTime.value = skipToVal
-        _skipTo.value = skipToVal
+        mediaPlayer.seekTo(skipToVal)
+    }
+
+    fun isPlaying() = mediaPlayer.isPlaying
+
+    private fun MediaPlayer.durationSecs() = mediaPlayer.duration/1000
+
+    private fun MediaPlayer.currentPositionSecs() = mediaPlayer.currentPosition/1000
+
+    private fun startMedia() {
+        mediaPlayer.start()
+        mediaPlayerViewModelScope.launch {
+            while (mediaPlayer.isPlaying) {
+                _currentTime.value = (mediaPlayer.currentPositionSecs())
+                if(mediaPlayer.currentPositionSecs() == triggerTime) {
+                    sectionUpdater?.updateSection()
+                }
+                delay(500)
+            }
+        }
+    }
+
+    fun setTriggerTime(time: Int) {
+        this.triggerTime = time
     }
 
 }

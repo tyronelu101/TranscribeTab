@@ -1,6 +1,5 @@
 package com.simplu.transcribetab.mediaplayer
 
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,39 +13,29 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
-import com.simplu.transcribetab.edittab.EditTabFragment
 import com.simplu.transcribetab.tab.SectionUpdater
-import kotlinx.coroutines.*
 
-class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment(), EditTabFragment.OnAddSectionListener {
+class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
+    Fragment() {
 
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
-    private lateinit var mediaPlayer: MediaPlayer
     private lateinit var binding: FragmentMediaPlayerBinding
-
-    private val mediaPlayerJob = Job()
-    private val mediaPlayerScope = CoroutineScope(mediaPlayerJob + Dispatchers.Main)
-
-    private var isObserveMedia: Boolean = false
-
-    //Time to watch where next section update occurs
-    //Only use in tab fragment
-    private var sectionUpdateTime: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val bundle = arguments
         var songUri = ""
         if (bundle != null) {
             songUri = bundle.getString("songUri")
         }
-        mediaPlayerViewModel = ViewModelProvider(this).get(MediaPlayerViewModel::class.java)
-        Log.v("MediaPlayerFragment", "MediaPlayerFragment created")
         val uri = Uri.parse(songUri)
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(context, uri)
-            prepare()
-        }
+
+        val mediaPlayerViewModelFactory = MediaPlayerViewModelFactory(requireContext(), uri, sectionUpdater)
+        mediaPlayerViewModel = ViewModelProvider(
+            this,
+            mediaPlayerViewModelFactory
+        ).get(MediaPlayerViewModel::class.java)
 
     }
 
@@ -62,21 +51,21 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         binding.mediaPlayerViewModel = mediaPlayerViewModel
         binding.lifecycleOwner = this
 
-        mediaPlayerViewInit()
-
         // Inflate the layout for this fragment
         return binding.root
     }
 
-    private fun mediaPlayerViewInit() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.songSeekBar.max = mediaPlayer.duration / 1000
         binding.songSeekBar.setOnSeekBarChangeListener(seekBarOnChangeListener())
 
-        mediaPlayerViewModel.setDuration(mediaPlayer.duration / 1000L)
+        mediaPlayerViewModel.duration.observe(this, Observer { duration ->
+            binding.songSeekBar.max = duration
+        })
 
-        mediaPlayerViewModel.currentTimeString.observe(this, Observer {
-            binding.songCurrentTime.text = it
+        mediaPlayerViewModel.currentTime.observe(this, Observer { currentTime ->
+            binding.songSeekBar.progress = currentTime.toInt()
         })
 
         mediaPlayerViewModel.durationString.observe(this, Observer {
@@ -85,13 +74,10 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
 
         mediaPlayerViewModel.isPlaying.observe(this, Observer { play ->
             if (play) {
-                mediaPlayer.start()
-                isObserveMedia = true
-                observeMedia()
+                binding.playPauseBtn.text = "Pl"
 
             } else {
-                mediaPlayer.pause()
-                isObserveMedia = false
+                binding.playPauseBtn.text = "Pa"
             }
         })
 
@@ -129,38 +115,34 @@ class MediaPlayerFragment(var sectionUpdater: SectionUpdater? = null) : Fragment
         mediaPlayerViewModel.setTriggerTime(time)
     }
     inner class seekBarOnChangeListener : SeekBar.OnSeekBarChangeListener {
+
         var currentProgress = 0
         var wasPlaying = false
+
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
             if (fromUser) {
-                Log.v("MediaPlayerFragment", "Was playing ${wasPlaying}")
 
-                if (mediaPlayer.isPlaying) {
+                if (mediaPlayerViewModel.isPlaying()) {
                     wasPlaying = true
-                    mediaPlayer.pause()
+                    mediaPlayerViewModel.pause()
                 }
 
                 currentProgress = progress
-                sectionUpdater?.updateSectionTo(currentProgress)
-
+                mediaPlayerViewModel.skipTo(progress)
             }
-            mediaPlayerViewModel.updateTime(progress.toLong())
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
         }
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             if (wasPlaying) {
-                mediaPlayer.start()
+                mediaPlayerViewModel.play()
                 wasPlaying = false
             }
-            mediaPlayer?.seekTo(currentProgress * 1000)
+            mediaPlayerViewModel.skipTo(currentProgress)
         }
-
     }
-
-    override fun getMediaTime(): Int = mediaPlayer.currentPosition / 1000
-
 }

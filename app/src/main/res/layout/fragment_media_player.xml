@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable
@@ -33,20 +32,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{mediaPlayerViewModel.currentTimeString}"></TextView>
+                android:text="@{mediaPlayerViewModel.currentTimeString}" />
 
             <SeekBar
                 android:id="@+id/song_seek_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="12"></SeekBar>
+                android:layout_weight="12" />
 
             <TextView
                 android:id="@+id/song_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{mediaPlayerViewModel.durationString}"></TextView>
+                android:text="@{mediaPlayerViewModel.durationString}" />
 
         </LinearLayout>
 
@@ -60,22 +59,22 @@
                 android:id="@+id/play_pause_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> mediaPlayerViewModel.onTogglePlayPause()}"
-                android:text="P"></Button>
+                android:onClick="@{() -> mediaPlayerViewModel.onPlayPause()}"
+                android:text="P" />
 
             <Button
                 android:id="@+id/set_skip_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> mediaPlayerViewModel.setSkipTo()}"
-                android:text="S"></Button>
+                android:text="S" />
 
             <Button
                 android:id="@+id/go_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> mediaPlayerViewModel.onGoTo()}"
-                android:text="Go"></Button>
+                android:text="Go" />
         </LinearLayout>
     </LinearLayout>
 </layout>

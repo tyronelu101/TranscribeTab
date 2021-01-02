@@ -21,8 +21,8 @@
         android:name="com.simplu.transcribetab.SongListFragment"
         android:label="SongListFragment" >
         <action
-            android:id="@+id/action_songListFragment_to_editTabParentFragment"
-            app:destination="@id/editTabParentFragment"
+            android:id="@+id/action_songListFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment"
             app:popUpTo="@id/tabListFragment" />
     </fragment>
     <fragment
