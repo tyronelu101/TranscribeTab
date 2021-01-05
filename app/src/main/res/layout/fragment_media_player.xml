@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -32,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                tools:text="0:00"
                 android:text="@{mediaPlayerViewModel.currentTimeString}" />
 
             <SeekBar
@@ -55,12 +58,12 @@
             android:layout_gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/play_pause_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> mediaPlayerViewModel.onPlayPause()}"
-                android:text="P" />
+                app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
 
             <Button
                 android:id="@+id/set_skip_to"
