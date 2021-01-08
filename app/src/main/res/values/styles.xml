@@ -12,7 +12,13 @@
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">12dp</item>
+<!--        <item name="android:background">@drawable/button_background</item>-->
+    </style>
 
+    <style name="MediaPlayerButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:padding">8dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 
 </resources>

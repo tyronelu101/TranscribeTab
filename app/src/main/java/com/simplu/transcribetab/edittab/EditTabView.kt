@@ -9,7 +9,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.simplu.transcribetab.DrawableColumn
+import com.simplu.transcribetab.R
 
 class EditTabView @JvmOverloads constructor(
     context: Context,
@@ -53,7 +55,7 @@ class EditTabView @JvmOverloads constructor(
 
     //Set up the objects for drawing
     private val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
+        color = ContextCompat.getColor(context, R.color.tab_lines_color)
         style = Paint.Style.FILL
     }
 
