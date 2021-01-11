@@ -89,7 +89,7 @@ class MediaPlayerViewModel(
 
     fun onGoTo() {
         _currentTime.value = skipToVal
-        mediaPlayer.seekTo(skipToVal)
+        mediaPlayer.seekTo(skipToVal * 1000)
     }
 
     fun isPlaying() = mediaPlayer.isPlaying
