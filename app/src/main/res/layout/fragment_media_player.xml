@@ -18,8 +18,7 @@
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="16dp"
         android:background="#424242"
-        android:orientation="vertical"
-        android:paddingBottom="8dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 tools:text="0:00"
-                android:textColor="@color/white"
+                android:textColor="@color/text_color"
                 android:text="@{mediaPlayerViewModel.currentTimeString}" />
 
             <SeekBar
@@ -49,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/text_color"
                 android:text="@{mediaPlayerViewModel.durationString}" />
 
         </LinearLayout>
@@ -61,54 +61,52 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/prev_btn"
+                style="@style/ButtonStyle"
+                android:id="@+id/media_back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/MediaPlayerButton"
-                android:src="@drawable/ic_fast_rewind_white_24dp"/>
+                app:srcCompat="@drawable/ic_fast_rewind_white_24dp"/>
 
             <ImageButton
+                style="@style/ButtonStyle"
                 android:id="@+id/play_pause_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> mediaPlayerViewModel.onPlayPause()}"
-                app:srcCompat="@drawable/ic_play_arrow_white_24dp"
-                style="@style/MediaPlayerButton" />
+                app:srcCompat="@drawable/ic_play_arrow_white_24dp" />
 
             <ImageButton
-                android:layout_marginLeft="@+id/forw_btn"
-                android:id="@+id/prev_button"
+                style="@style/ButtonStyle"
+                android:id="@+id/media_forw_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/MediaPlayerButton"
                 app:srcCompat="@drawable/ic_fast_forward_white_24dp">
-
             </ImageButton>
 
             <Button
+                style="@style/ButtonStyle"
                 android:id="@+id/set_skip_to"
-                style="@style/MediaPlayerButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:onClick="@{() -> mediaPlayerViewModel.setSkipTo()}"
                 android:text="S"
-                android:textColor="@color/white" />
+                android:textColor="@color/text_color" />
 
             <Button
+                style="@style/ButtonStyle"
                 android:id="@+id/go_to"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:onClick="@{() -> mediaPlayerViewModel.onGoTo()}"
                 android:text="Go"
-                android:textColor="@color/white"
-                style="@style/MediaPlayerButton"/>
+                android:textColor="@color/text_color" />
             <Button
+                style="@style/ButtonStyle"
                 android:id="@+id/song_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1x"
-                android:textColor="@color/white"
-                style="@style/MediaPlayerButton"/>
+                android:textColor="@color/text_color" />
         </LinearLayout>
     </LinearLayout>
 </layout>

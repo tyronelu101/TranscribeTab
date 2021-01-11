@@ -74,10 +74,10 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
 
         mediaPlayerViewModel.isPlaying.observe(this, Observer { play ->
             if (play) {
-                binding.playPauseBtn.setImageResource(R.drawable.ic_pause_black_24dp)
+                binding.playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp)
 
             } else {
-                binding.playPauseBtn.setImageResource(R.drawable.ic_play_arrow_black_24dp)
+                binding.playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp)
             }
         })
 

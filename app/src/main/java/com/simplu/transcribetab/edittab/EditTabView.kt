@@ -55,23 +55,23 @@ class EditTabView @JvmOverloads constructor(
 
     //Set up the objects for drawing
     private val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = ContextCompat.getColor(context, R.color.tab_lines_color)
+        color = ContextCompat.getColor(context, R.color.tab_color)
         style = Paint.Style.FILL
     }
 
     private val columnBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
+        color = Color.WHITE
         alpha = 50
     }
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
+        color = Color.WHITE
         textSize = 12f * resources.displayMetrics.scaledDensity
         textAlign = Paint.Align.CENTER
     }
 
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
+        color = Color.WHITE
         strokeWidth = 1.5f
 
     }
