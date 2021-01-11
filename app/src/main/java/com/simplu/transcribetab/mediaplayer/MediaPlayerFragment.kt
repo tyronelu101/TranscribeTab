@@ -60,10 +60,6 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
 
         binding.songSeekBar.setOnSeekBarChangeListener(seekBarOnChangeListener())
 
-        mediaPlayerViewModel.duration.observe(this, Observer { duration ->
-            binding.songSeekBar.max = duration
-        })
-
         mediaPlayerViewModel.durationString.observe(this, Observer {
             binding.songDuration.text = it
         })
