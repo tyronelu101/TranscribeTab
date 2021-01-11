@@ -41,6 +41,7 @@
                 android:id="@+id/song_seek_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:progress="@{mediaPlayerViewModel.currentTime}"
                 android:layout_weight="12" />
 
             <TextView
