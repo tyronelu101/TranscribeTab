@@ -125,7 +125,7 @@
                 android:layout_height="match_parent"
                 android:onClick="@{() -> editTabViewModel.onSkipTo()}"
                 android:text="@{editTabViewModel.currentSectionTime}"
-                android:textColor="@color/white"
+                android:textColor="@color/text_color"
                 tools:text="0:00"/>
 
         </LinearLayout>
@@ -177,7 +177,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/set_time_btn"
+                    android:id="@+id/btn_set_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_alarm_white_24dp"/>
@@ -201,10 +201,8 @@
                     app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />/>
 
             </LinearLayout>
-
-
-
         </LinearLayout>
+
         <FrameLayout
             android:id="@+id/edit_media_fragment_container"
             android:layout_width="wrap_content"
