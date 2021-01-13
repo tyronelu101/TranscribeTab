@@ -76,6 +76,13 @@ class EditTabFragment : Fragment() {
         mediaArgs.putString("songUri", songUri)
         mediaPlayerFragment.arguments = mediaArgs
 
+        binding.prevColumnButton.setOnClickListener {
+            binding.editTablature.prevColumn()
+        }
+
+        binding.nextColumnBtn.setOnClickListener {
+            binding.editTablature.nextColumn()
+        }
         //Child fragment manager handles child fragment lifecycle
         //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
         childFragmentManager.beginTransaction().apply {

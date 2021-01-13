@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#373737</color>
     <color name="colorAccent">#fafafa</color>
 
+    <color name="main_background">#272727</color>
     <color name="text_color">#ffffff</color>
     <color name="tab_color">#ffffff</color>
     <color name="media_player_background">#424242</color>
+    <color name="tab_input_background">#424242</color>
 </resources>

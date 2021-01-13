@@ -305,6 +305,7 @@ class EditTabView @JvmOverloads constructor(
             val nextColumn = columnNotesList[currentColIndex + 1]
             currentSelectedColumn = nextColumn
         }
+        invalidate()
     }
 
     fun prevColumn() {
@@ -313,6 +314,7 @@ class EditTabView @JvmOverloads constructor(
             val prevColumn = columnNotesList[currentColIndex - 1]
             currentSelectedColumn = prevColumn
         }
+        invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -331,11 +333,11 @@ class EditTabView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    public fun getSelectedColumnNumber(): Int {
-        return columnNotesList.indexOf(currentSelectedColumn);
+    fun getSelectedColumnNumber(): Int {
+        return columnNotesList.indexOf(currentSelectedColumn)
     }
 
-    public fun updateTablature(columnValues: ArrayList<Array<String>>) {
+    fun updateTablature(columnValues: ArrayList<Array<String>>) {
 
         for (i in 0..NUMBER_OF_COLUMNS) {
             columnNotesList[i].setNoteValues(columnValues[i])
