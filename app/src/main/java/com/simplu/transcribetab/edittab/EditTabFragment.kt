@@ -3,6 +3,7 @@ package com.simplu.transcribetab.edittab
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -82,6 +83,13 @@ class EditTabFragment : Fragment() {
 
         binding.nextColumnBtn.setOnClickListener {
             binding.editTablature.nextColumn()
+        }
+        binding.tuning.setOnEditorActionListener { v, actionId, event ->
+
+            if(actionId == EditorInfo.IME_ACTION_DONE) {
+                binding.tuning.clearFocus()
+            }
+            false
         }
         //Child fragment manager handles child fragment lifecycle
         //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
