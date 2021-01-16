@@ -17,7 +17,7 @@
         android:layout_marginLeft="48dp"
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="16dp"
-        android:background="#424242"
+        android:background="@color/primaryLightColor"
         android:orientation="vertical">
 
         <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 tools:text="0:00"
-                android:textColor="@color/text_color"
+                android:textColor="@color/primaryTextColor"
                 android:text="@{mediaPlayerViewModel.currentTimeString}" />
 
             <SeekBar
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/text_color"
+                android:textColor="@color/primaryTextColor"
                 android:text="@{mediaPlayerViewModel.durationString}" />
 
         </LinearLayout>
@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:onClick="@{() -> mediaPlayerViewModel.setSkipTo()}"
                 android:text="S"
-                android:textColor="@color/text_color" />
+                android:textColor="@color/primaryTextColor" />
 
             <Button
                 style="@style/ButtonStyle"
@@ -101,14 +101,14 @@
                 android:layout_height="match_parent"
                 android:onClick="@{() -> mediaPlayerViewModel.onGoTo()}"
                 android:text="Go"
-                android:textColor="@color/text_color" />
+                android:textColor="@color/primaryTextColor" />
             <Button
                 style="@style/ButtonStyle"
                 android:id="@+id/song_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1x"
-                android:textColor="@color/text_color" />
+                android:textColor="@color/primaryTextColor" />
         </LinearLayout>
     </LinearLayout>
 </layout>

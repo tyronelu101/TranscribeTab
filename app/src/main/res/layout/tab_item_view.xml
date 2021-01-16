@@ -12,30 +12,41 @@
     </data>
 
     <LinearLayout
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:padding="16dp"
-        android:onClick="@{() -> clickListener.onClick(tablature)}">
+        android:layout_margin="16dp"
+        android:onClick="@{() -> clickListener.onClick(tablature)}"
+        android:background="@drawable/button_background">
 
         <TextView
             android:id="@+id/tab_item_title"
-            android:layout_width="match_parent"
+            android:textColor="@color/primaryTextColor"
+            android:hint="Song"
+            android:textColorHint="@color/primaryTextColor"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{tablature.title.toString()}"></TextView>
+            android:text="@{tablature.title.toString()}" />
 
         <TextView
             android:id="@+id/tab_item_artist"
+            android:textColor="@color/primaryTextColor"
+            android:hint="Artist"
+            android:textColorHint="@color/primaryTextColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{tablature.artist.toString()}"
-            ></TextView>
+            android:text="@{tablature.artist.toString()}" />
 
         <TextView
             android:id="@+id/tab_item_arranger"
+            android:textColor="@color/primaryTextColor"
+            android:hint="arranger"
+            android:textColorHint="@color/primaryTextColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{tablature.arranger.toString()}"></TextView>
+            android:text="@{tablature.arranger.toString()}" />
     </LinearLayout>
 </layout>
