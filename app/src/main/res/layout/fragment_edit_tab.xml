@@ -13,16 +13,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/main_background">
+        android:background="@color/backgroundColor">
 
         <EditText
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/title"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color"
-            android:backgroundTint="@color/text_color"
+            android:textColor="@color/primaryTextColor"
+            android:textColorHint="@color/primaryTextColor"
+            android:backgroundTint="@color/primaryTextColor"
             android:textSize="24sp"
             android:singleLine="true"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -34,9 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/artist"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color"
-            android:backgroundTint="@color/text_color"
+            android:textColor="@color/primaryTextColor"
+            android:textColorHint="@color/primaryTextColor"
+            android:backgroundTint="@color/primaryTextColor"
             android:gravity="center_horizontal"
             android:textSize="12sp"
             android:singleLine="true"
@@ -49,9 +49,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Arranged By"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color"
-            android:backgroundTint="@color/text_color"
+            android:textColor="@color/primaryTextColor"
+            android:textColorHint="@color/primaryTextColor"
+            android:backgroundTint="@color/primaryTextColor"
             android:textSize="12sp"
             android:singleLine="true"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -67,10 +67,10 @@
             android:hint="tuning"
             android:singleLine="true"
             android:imeOptions="actionDone"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color"
-            android:backgroundTint="@color/text_color"
-            android:textSize="16sp"
+            android:textColor="@color/primaryTextColor"
+            android:textColorHint="@color/primaryTextColor"
+            android:backgroundTint="@color/primaryTextColor"
+            android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/arranger" />
 
@@ -106,8 +106,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:textColor="@color/text_color"
-                android:backgroundTint="@color/text_color"
+                android:textColor="@color/primaryTextColor"
+                android:backgroundTint="@color/primaryTextColor"
                 android:text="@{editTabViewModel.currentSectionNum}"
                 android:textStyle="bold" />
 
@@ -115,7 +115,7 @@
                 android:id="@+id/total_section_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_color"
+                android:textColor="@color/primaryTextColor"
                 android:text="@{editTabViewModel.totalSectionsNum.toString()}"
                 android:textSize="12sp" />
 
@@ -145,7 +145,7 @@
                 android:padding="0dp"
                 android:onClick="@{() -> editTabViewModel.onSkipTo()}"
                 android:text="@{editTabViewModel.currentSectionTime}"
-                android:textColor="@color/text_color"
+                android:textColor="@color/primaryTextColor"
                 tools:text="0:00"/>
 
         </LinearLayout>
@@ -155,7 +155,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@color/tab_input_background"
+            android:background="@color/primaryLightColor"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@id/edit_media_fragment_container"

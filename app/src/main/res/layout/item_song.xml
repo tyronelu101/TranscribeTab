@@ -3,18 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/backgroundColor">
 
     <TextView
         android:id="@+id/song_title"
+        android:textColor="@color/primaryTextColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Title"></TextView>
+        tools:text="Title" />
 
     <TextView
         android:id="@+id/song_duration"
+        android:textColor="@color/primaryTextColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="1:00"></TextView>
+        tools:text="1:00" />
 
 </LinearLayout>
