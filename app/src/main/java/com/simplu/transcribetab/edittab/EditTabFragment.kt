@@ -228,23 +228,26 @@ class EditTabFragment : Fragment() {
             when (event?.action) {
                 MotionEvent.ACTION_DOWN -> {
                     initialY = event.y
+                    Log.i("EditTabFragment", "Button View down")
                     true
                 }
 
                 MotionEvent.ACTION_UP -> {
                     val currentY = event.y
-
+                    Log.i("EditTabFragment", "Button View Up")
                     //Swipe up
                     if (initialY > currentY + 50) {
+                        Log.i("EditTabFragment", "swipe up $initialY, $currentY")
                         isSwipeUp = true
                     }
                     //Swipe down
-                    else if (initialY < currentY) {
+                    else if (initialY < currentY - 50) {
+                        Log.i("EditTabFragment", "swipe down $initialY, $currentY")
                         isSwipeUp = false
                     }
                     //Do nothing
                     else {
-                        false
+                        return false
                     }
                     stringToUpdate = when (parent.id) {
                         R.id.input_row_1 -> if (isSwipeUp) 0 else 1
@@ -258,7 +261,7 @@ class EditTabFragment : Fragment() {
                     } else {
                         editTabViewModel.insertAt(columnToUpdate, stringToUpdate, note)
                     }
-                    false
+                    true
                 }
             }
 
