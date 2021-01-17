@@ -78,12 +78,15 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
 
         if (sectionColumns != null) {
 
-            if (value == "") {
+            if (value == "X") {
                 sectionColumns.get(column)[string] = value
             } else {
                 var sb = StringBuilder(sectionColumns.get(column)[string])
+                if(sb.toString() == "X") {
+                    sb.setLength(0)
+                }
                 if (sb.toString().length == 2) {
-                    sb = StringBuilder("")
+                    sb.setLength(0)
                 }
                 sectionColumns.get(column)[string] = sb.append(value).toString()
             }

@@ -258,8 +258,8 @@ class EditTabFragment : Fragment() {
                         else -> -1
                     }
                     val columnToUpdate = binding.editTablature.getSelectedColumnNumber()
-                    if (note.equals("c", ignoreCase = true)) {
-                        editTabViewModel.insertAt(columnToUpdate, stringToUpdate, "")
+                    if (note.equals("X")) {
+                        editTabViewModel.insertAt(columnToUpdate, stringToUpdate, "X")
                     } else {
                         editTabViewModel.insertAt(columnToUpdate, stringToUpdate, note)
                     }

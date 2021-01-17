@@ -48,6 +48,6 @@
 
     <Button
         style="@style/InputButtonStyle"
-        android:text="x" />
+        android:text="X" />
 
 </LinearLayout>
