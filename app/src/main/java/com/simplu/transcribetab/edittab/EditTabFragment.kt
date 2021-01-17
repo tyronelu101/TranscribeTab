@@ -31,6 +31,8 @@ class EditTabFragment : Fragment() {
 
     private var tabId = -1L
 
+    private var horizontalScrollEnabled = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -223,7 +225,7 @@ class EditTabFragment : Fragment() {
             val note = button.text.toString()
             var stringToUpdate: Int
 
-            var isSwipeUp = false
+            var isSwipeUp: Boolean
 
             when (event?.action) {
                 MotionEvent.ACTION_DOWN -> {

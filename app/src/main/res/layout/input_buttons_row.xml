@@ -1,73 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/primaryLightColor"
     android:orientation="horizontal">
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="0" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="1" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="2" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="3" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="4" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="5" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="6" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="7" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="8" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="9" />
 
     <Button
         style="@style/InputButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="x" />
 
 </LinearLayout>
