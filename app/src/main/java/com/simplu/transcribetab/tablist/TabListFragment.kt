@@ -10,9 +10,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.databinding.FragmentTabListBinding
+
 
 class TabListFragment : Fragment() {
 
@@ -45,6 +47,7 @@ class TabListFragment : Fragment() {
         })
 
         binding.tabList.adapter = adapter
+        binding.tabList.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         tabListViewModel.tabs.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -54,4 +57,6 @@ class TabListFragment : Fragment() {
 
         return binding.root
     }
+
+
 }

@@ -1,52 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
             name="tablature"
             type="com.simplu.transcribetab.database.Tablature" />
-        
+
         <variable
             name="clickListener"
             type="com.simplu.transcribetab.tablist.TablatureListener" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        android:padding="8dp"
         android:onClick="@{() -> clickListener.onClick(tablature)}"
-        android:background="@drawable/button_background">
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="@drawable/list_item_background"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp">
+
+        <ImageView
+            android:id="@+id/tab_item_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="0dp"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_more_vert_white_24dp" />
 
         <TextView
             android:id="@+id/tab_item_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:textColor="@color/primaryTextColor"
-            android:hint="Song"
+            tools:text="Some song number 1"
+            android:textStyle="bold"
+            android:textSize="18sp"
             android:textColorHint="@color/primaryTextColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tablature.title.toString()}" />
 
         <TextView
+            android:id="@+id/tab_item_artist_text"
+            app:layout_constraintTop_toBottomOf="@id/tab_item_title"
+            android:textColor="@color/mediaInfoTextColor"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artist: " />
+
+        <TextView
             android:id="@+id/tab_item_artist"
-            android:textColor="@color/primaryTextColor"
-            android:hint="Artist"
-            android:textColorHint="@color/primaryTextColor"
+            app:layout_constraintTop_toBottomOf="@id/tab_item_title"
+            app:layout_constraintLeft_toRightOf="@id/tab_item_artist_text"
+            android:textColor="@color/mediaInfoTextColor"
+            tools:text="Some Dude Named Jack"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tablature.artist.toString()}" />
 
         <TextView
+            android:id="@+id/tab_item_arranged_by_text"
+            app:layout_constraintTop_toBottomOf="@id/tab_item_artist"
+            android:textColor="@color/mediaInfoTextColor"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arranged by: " />
+
+        <TextView
             android:id="@+id/tab_item_arranger"
-            android:textColor="@color/primaryTextColor"
-            android:hint="arranger"
-            android:textColorHint="@color/primaryTextColor"
+            app:layout_constraintTop_toBottomOf="@id/tab_item_artist"
+            app:layout_constraintLeft_toRightOf="@id/tab_item_arranged_by_text"
+            android:textColor="@color/mediaInfoTextColor"
+            tools:text="Some Guy"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tablature.arranger.toString()}" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

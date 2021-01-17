@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/backgroundColor">
+    android:background="@color/primaryLightColor"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/song_title"
