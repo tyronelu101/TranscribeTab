@@ -82,7 +82,7 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
                 sectionColumns.get(column)[string] = value
             } else {
                 var sb = StringBuilder(sectionColumns.get(column)[string])
-                if(sb.toString() == "X") {
+                if (sb.toString() == "X") {
                     sb.setLength(0)
                 }
                 if (sb.toString().length == 2) {
@@ -134,6 +134,11 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
             currentSection.sectionTime = time
             this._currentSection.value = currentSection
         }
+    }
+
+    fun clearColumn(column: Int) {
+        currentSection.value?.clearColumn(column)
+        _currentSection.value = currentSection.value
     }
 
     fun onSkipTo() {

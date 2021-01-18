@@ -14,4 +14,8 @@ data class TabSection(
             sectionCol.add(Array(6) { "" })
         }
     }
+
+    fun clearColumn(column: Int) {
+        sectionCol[column] = Array(6) { "" }
+    }
 }

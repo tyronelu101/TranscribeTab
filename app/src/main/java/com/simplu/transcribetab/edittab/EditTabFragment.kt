@@ -93,6 +93,11 @@ class EditTabFragment : Fragment() {
             }
             false
         }
+
+        binding.btnClrColumn.setOnClickListener {
+            editTabViewModel.clearColumn(binding.editTablature.getCurrentSelectedColumn())
+        }
+
         //Child fragment manager handles child fragment lifecycle
         //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
         childFragmentManager.beginTransaction().apply {
@@ -255,7 +260,7 @@ class EditTabFragment : Fragment() {
                         else -> -1
                     }
                     val note = button.text.toString()
-                    val columnToUpdate = binding.editTablature.getSelectedColumnNumber()
+                    val columnToUpdate = binding.editTablature.getCurrentSelectedColumn()
                     if (note.equals("X")) {
                         editTabViewModel.insertAt(columnToUpdate, stringToUpdate, "X")
                     } else {

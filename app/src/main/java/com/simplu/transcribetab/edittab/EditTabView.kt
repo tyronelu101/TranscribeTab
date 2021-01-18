@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.simplu.transcribetab.DrawableColumn
@@ -282,7 +283,9 @@ class EditTabView @JvmOverloads constructor(
     }
 
     fun clearColumn() {
+        val index = columnNotesList.indexOf(currentSelectedColumn)
         currentSelectedColumn.clearColumn()
+        columnNotesList[index]
         invalidate()
     }
 
@@ -316,7 +319,22 @@ class EditTabView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun getSelectedColumnNumber(): Int {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+
+        for (column in columnNotesList) {
+
+            if (column.inColumnBound(x, y)) {
+                currentSelectedColumn = column
+                invalidate()
+            }
+        }
+
+        return super.onTouchEvent(event)
+    }
+
+    fun getCurrentSelectedColumn(): Int {
         return columnNotesList.indexOf(currentSelectedColumn)
     }
 
