@@ -88,7 +88,7 @@ class EditTabFragment : Fragment() {
         }
         binding.tuning.setOnEditorActionListener { v, actionId, event ->
 
-            if(actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 binding.tuning.clearFocus()
             }
             false
@@ -218,14 +218,9 @@ class EditTabFragment : Fragment() {
 
         var initialY = 0f
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-            val button = v as Button
-
-            val parent = button.parent as LinearLayout
-
-            val note = button.text.toString()
-            var stringToUpdate: Int
 
             var isSwipeUp: Boolean
+            val offset = 25f
 
             when (event?.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -238,12 +233,12 @@ class EditTabFragment : Fragment() {
                     val currentY = event.y
                     Log.i("EditTabFragment", "Button View Up")
                     //Swipe up
-                    if (initialY > currentY + 50) {
+                    if (initialY > currentY + offset) {
                         Log.i("EditTabFragment", "swipe up $initialY, $currentY")
                         isSwipeUp = true
                     }
                     //Swipe down
-                    else if (initialY < currentY - 50) {
+                    else if (initialY < currentY - offset) {
                         Log.i("EditTabFragment", "swipe down $initialY, $currentY")
                         isSwipeUp = false
                     }
@@ -251,12 +246,15 @@ class EditTabFragment : Fragment() {
                     else {
                         return false
                     }
-                    stringToUpdate = when (parent.id) {
+                    val button = v as Button
+                    val parent = button.parent as LinearLayout
+                    val stringToUpdate = when (parent.id) {
                         R.id.input_row_1 -> if (isSwipeUp) 0 else 1
                         R.id.input_row_2 -> if (isSwipeUp) 2 else 3
                         R.id.input_row_3 -> if (isSwipeUp) 4 else 5
                         else -> -1
                     }
+                    val note = button.text.toString()
                     val columnToUpdate = binding.editTablature.getSelectedColumnNumber()
                     if (note.equals("X")) {
                         editTabViewModel.insertAt(columnToUpdate, stringToUpdate, "X")
