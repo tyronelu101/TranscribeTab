@@ -29,7 +29,7 @@ class TabListViewModel(private val tablatureRepository: TablatureRepository) : V
     fun deleteTab(tab: Tablature) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                tablatureRepository.deleteTab(tab)
+                tablatureRepository.delete(tab)
             }
         }
     }

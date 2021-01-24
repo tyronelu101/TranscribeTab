@@ -10,19 +10,19 @@ class TablatureRepository(private val tabDb: TablatureDatabase) {
         return tabDb.dao.getAllTabs()
     }
 
-    suspend fun insertTab(tab: Tablature) {
+    suspend fun insert(tab: Tablature) {
         withContext(Dispatchers.IO) {
             tabDb.dao.insert(tab)
         }
     }
 
-    suspend fun updateTab(tab: Tablature) {
+    suspend fun update(tab: Tablature) {
         withContext(Dispatchers.IO) {
             tabDb.dao.update(tab)
         }
     }
 
-    suspend fun deleteTab(tab: Tablature) {
+    suspend fun delete(tab: Tablature) {
         withContext(Dispatchers.IO) {
             tabDb.dao.delete(tab)
         }

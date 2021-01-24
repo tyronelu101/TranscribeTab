@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
+import com.simplu.transcribetab.database.TablatureRepository
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
 import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 import kotlinx.android.synthetic.main.fragment_edit_tab.*
@@ -33,14 +34,13 @@ class EditTabFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val application = requireNotNull(this.activity).application
-        val dataSource =
-            TablatureDatabase.getInstance(application).dao
+        val repository = TablatureRepository(TablatureDatabase.getInstance(application))
 
         val bundle = arguments
         var tab = bundle?.getParcelable<Tablature>("tab")
 
         val viewModelFactory =
-            EditTabViewModelFactory(dataSource, tab)
+            EditTabViewModelFactory(repository, tab)
         editTabViewModel =
             ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
     }

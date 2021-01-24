@@ -1,16 +1,15 @@
 package com.simplu.transcribetab.edittab
 
 import android.text.format.DateUtils
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.simplu.transcribetab.TabSection
 import com.simplu.transcribetab.database.Tablature
-import com.simplu.transcribetab.database.TablatureDatabaseDao
-import kotlinx.coroutines.*
+import com.simplu.transcribetab.database.TablatureRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablature? = null) :
+class EditTabViewModel(val repository: TablatureRepository, var tablature: Tablature? = null) :
     ViewModel() {
 
     private val _currentSection = MutableLiveData<TabSection>()
@@ -32,9 +31,6 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
 
     var sectionMap = LinkedHashMap<Int, TabSection>()
 
-    private var viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.IO + viewModelJob)
-
     init {
         initializeTablature()
     }
@@ -53,11 +49,6 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
             _currentSection.value = section
             sectionMap.put(section.sectionNum, section)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 
     fun addSection(time: Int) {
@@ -147,26 +138,18 @@ class EditTabViewModel(val database: TablatureDatabaseDao, var tablature: Tablat
 
     fun onSave(tab: Tablature) {
         storeCurrentSection()
-        uiScope.launch {
-            insert(tab)
-        }
-    }
-
-    private suspend fun insert(tab: Tablature) {
-        withContext(Dispatchers.IO) {
-            database.insert(tab)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.insert(tab)
+            }
         }
     }
 
     fun onUpdate(tab: Tablature) {
-        uiScope.launch {
-            update(tab)
-        }
-    }
-
-    private suspend fun update(tab: Tablature) {
-        withContext(Dispatchers.IO) {
-            database.update(tab)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.update(tab)
+            }
         }
     }
 }
