@@ -167,49 +167,43 @@ class EditTabFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val tabTitle = binding.title.text.toString()
-        val tabArtist = binding.artist.text.toString()
-        val tabArranger = binding.arranger.text.toString()
-        val tuning = binding.tuning.text.toString()
-        val songUri = arguments!!.getString("songUri")
         val tab = Tablature(
-            title = tabTitle,
-            artist = tabArtist,
-            arranger = tabArranger,
-            tuning = tuning,
+            title = binding.title.text.toString(),
+            artist = binding.artist.text.toString(),
+            arranger = binding.arranger.text.toString(),
+            tuning = binding.tuning.text.toString(),
             sections = editTabViewModel.sectionMap,
-            songUri = songUri
+            songUri = arguments!!.getString("songUri")
         )
 
         when (item?.itemId) {
 
             R.id.save -> {
-                if (editTabViewModel.sectionMap.size < 2) {
-                    Toast.makeText(
-                        context,
-                        "Please create at least two sections before saving.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    false
-                }
-
-
                 if (this.tabId != -1L) {
                     tab.tabId = tabId
                     editTabViewModel.onUpdate(tab)
                     Toast.makeText(context, "Tablature updated", Toast.LENGTH_SHORT).show()
 
                 } else {
-                    editTabViewModel.onSave(tab)
-                    Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
+                    if (editTabViewModel.sectionMap.size < 2) {
+                        Toast.makeText(
+                            context,
+                            "Please create at least two sections before saving.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        editTabViewModel.onSave(tab)
+                        Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                false
+                return true
             }
 
             R.id.confirm -> {
                 if (tab != null) {
 
                 }
+                return true
             }
         }
         return super.onOptionsItemSelected(item)

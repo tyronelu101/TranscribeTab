@@ -56,13 +56,13 @@ class TabView @JvmOverloads constructor(
     }
 
     val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
+        color = Color.WHITE
         textSize = 12f * resources.displayMetrics.scaledDensity
         textAlign = Paint.Align.CENTER
     }
 
     val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
+        color = Color.WHITE
         strokeWidth = 1.5f
 
     }

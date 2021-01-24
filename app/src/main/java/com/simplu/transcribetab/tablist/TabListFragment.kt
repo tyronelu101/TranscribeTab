@@ -85,7 +85,7 @@ class TabListFragment : Fragment() {
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         val inflater = MenuInflater(v.context)
-        inflater.inflate(R.menu.tab_iem_context_menu, menu)
+        inflater.inflate(R.menu.tab_item_context_menu, menu)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

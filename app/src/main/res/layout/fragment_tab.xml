@@ -14,6 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
         tools:context=".tab.TabFragment">
 
         <TextView
@@ -24,6 +25,7 @@
             android:padding="0dp"
             android:text="@{viewModel.tablature.title}"
             android:textSize="24sp"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -36,6 +38,7 @@
             android:padding="0dp"
             android:text="@{viewModel.tablature.artist}"
             android:textSize="16sp"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
@@ -48,6 +51,7 @@
             android:padding="0dp"
             android:text="@{viewModel.tablature.arranger}"
             android:textSize="16sp"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/artist"
@@ -61,6 +65,7 @@
             android:layout_marginLeft="8dp"
             android:text="@{viewModel.tablature.tuning}"
             android:textSize="16sp"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/arranger"
             tools:text="tuning" />
@@ -90,7 +95,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="@{Integer.toString(viewModel.topSection.sectionNum)}"
+                    android:textColor="@color/primaryTextColor"
+                    android:text=""
                     android:textStyle="bold"
                     tools:text="1" />
 
@@ -99,6 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
+                    android:textColor="@color/primaryTextColor"
                     android:layout_marginLeft="6dp"
                     android:text="@{viewModel.topSectionTime}"
                     tools:text="0:00" />
@@ -123,13 +130,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="@{Integer.toString(viewModel.bottomSection.sectionNum)}"
-                    tools:text="1" />
+                    android:textColor="@color/primaryTextColor"
+                    android:text=""
+                    tools:text="2" />
 
                 <TextView
                     android:id="@+id/tab_section2_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/primaryTextColor"
                     android:text="@{viewModel.bottomSectionTime}"
                     tools:text="1:56" />
 

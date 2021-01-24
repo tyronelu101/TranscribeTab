@@ -26,10 +26,10 @@ class TabFragment : Fragment(),
 
         val bundle = arguments
 
-        tablature = requireNotNull(bundle?.getParcelable<Tablature>("tab"))
+        tablature = requireNotNull(bundle?.getParcelable("tab"))
 
         tablature.let {
-            val viewModelFactory = TabViewModelFactory(tablature)
+            val viewModelFactory = TabViewModelFactory(it)
             tabViewModel =
                 ViewModelProvider(this, viewModelFactory).get(TabViewModel::class.java)
 
@@ -49,15 +49,19 @@ class TabFragment : Fragment(),
 
         tabViewModel.topSection.observe(this, Observer {
             binding.tabSection1.updateTablature(it.sectionCol)
+            binding.tabSection1Num.text = Integer.toString(it.sectionTime)
         })
 
         tabViewModel.bottomSection.observe(this, Observer {
             binding.tabSection2.updateTablature(it.sectionCol)
+            binding.tabSection2Num.text = Integer.toString(it.sectionTime)
+
         })
 
         tabViewModel.sectionUpdateTime.observe(this, Observer {
             mediaPlayerFragment.setTriggerTime(it)
         })
+
 
         // Inflate the layout for this fragment
         return binding.root

@@ -10,7 +10,9 @@ import com.simplu.transcribetab.TabSection
 import com.simplu.transcribetab.database.Tablature
 
 
-class TabViewModel(val tablature: Tablature) : ViewModel() {
+class TabViewModel(tablature: Tablature) : ViewModel() {
+
+    val tablature = tablature
 
     private val _topSection: MutableLiveData<TabSection> = MutableLiveData()
     val topSection: LiveData<TabSection> = _topSection
