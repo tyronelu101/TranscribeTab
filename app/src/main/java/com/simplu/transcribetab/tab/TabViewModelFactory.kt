@@ -3,7 +3,6 @@ package com.simplu.transcribetab.tab
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.database.Tablature
-import com.simplu.transcribetab.database.TablatureDatabaseDao
 
 class TabViewModelFactory(private val tablature: Tablature
 ) : ViewModelProvider.Factory {

@@ -1,10 +1,7 @@
 package com.simplu.transcribetab.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface TablatureDatabaseDao {
@@ -14,6 +11,9 @@ interface TablatureDatabaseDao {
 
     @Update
     fun update(tab: Tablature)
+
+    @Delete
+    fun delete(tab: Tablature)
 
     @Query("SELECT * from tablature_table WHERE tabId =:key")
     fun get(key: Long): Tablature

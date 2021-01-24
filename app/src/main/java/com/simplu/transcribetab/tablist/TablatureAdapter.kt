@@ -9,7 +9,7 @@ import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.databinding.TabItemViewBinding
 
 
-class TablatureAdapter(val clickListener: TablatureListener) :
+class TablatureAdapter(val clickListener: TabClickListener, val longClickListener: TabItemContextMenuListener) :
     ListAdapter<Tablature, TablatureAdapter.ViewHolder>(TablatureDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -18,15 +18,16 @@ class TablatureAdapter(val clickListener: TablatureListener) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, clickListener)
+        holder.bind(item, clickListener, longClickListener)
     }
 
     class ViewHolder private constructor(val binding: TabItemViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Tablature, clickListener: TablatureListener) {
+        fun bind(item: Tablature, clickListener: TabClickListener, longClickListener: TabItemContextMenuListener) {
             binding.tablature = item
             binding.clickListener = clickListener
+            binding.longClickListener = longClickListener
         }
 
         companion object {
@@ -49,6 +50,10 @@ class TablatureDiffUtilCallback : DiffUtil.ItemCallback<Tablature>() {
     }
 }
 
-class TablatureListener(val clickListener: (tab: Tablature) -> Unit) {
+class TabClickListener(val clickListener: (tab: Tablature) -> Unit) {
     fun onClick(tab: Tablature) = clickListener(tab)
+}
+
+class TabItemContextMenuListener(val longClickListener: (tab: Tablature) -> Boolean){
+    fun onLongClick(tab: Tablature): Boolean = longClickListener(tab)
 }

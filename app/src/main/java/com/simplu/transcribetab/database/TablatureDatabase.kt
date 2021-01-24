@@ -11,7 +11,7 @@ import androidx.room.TypeConverters
 @TypeConverters(Converter::class)
 abstract class TablatureDatabase: RoomDatabase() {
 
-    abstract val tablatureDatabaseDao: TablatureDatabaseDao
+    abstract val dao: TablatureDatabaseDao
 
     companion object {
 

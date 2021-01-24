@@ -21,10 +21,6 @@ import kotlinx.android.synthetic.main.fragment_edit_tab.*
 
 class EditTabFragment : Fragment() {
 
-    interface OnAddSectionListener {
-        fun getMediaTime(): Int
-    }
-
     private lateinit var binding: FragmentEditTabBinding
     private lateinit var editTabViewModel: EditTabViewModel
     private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment()
@@ -38,7 +34,7 @@ class EditTabFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
         val dataSource =
-            TablatureDatabase.getInstance(application).tablatureDatabaseDao
+            TablatureDatabase.getInstance(application).dao
 
         val bundle = arguments
         var tab = bundle?.getParcelable<Tablature>("tab")
