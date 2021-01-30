@@ -11,7 +11,8 @@
         tools:layout="@layout/fragment_tab_list" >
         <action
             android:id="@+id/action_tabListFragment_to_songListFragment"
-            app:destination="@id/songListFragment" />
+            app:destination="@id/songListFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_tabListFragment_to_tabFragment"
             app:destination="@id/tabFragment" />
@@ -38,7 +39,9 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_editTabFragment_to_tabFragment"
-            app:destination="@id/tabFragment" />
+            app:destination="@id/tabFragment"
+            app:popUpTo="@id/tabFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/tabFragment"
