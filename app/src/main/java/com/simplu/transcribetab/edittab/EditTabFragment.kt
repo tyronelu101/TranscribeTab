@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
@@ -27,9 +28,6 @@ class EditTabFragment : Fragment() {
     private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment()
 
     private var tabId = -1L
-
-    private var horizontalScrollEnabled = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -103,21 +101,6 @@ class EditTabFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.v(javaClass.simpleName, "On resume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.v(javaClass.simpleName, "On pause")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.v(javaClass.simpleName, "On destroy")
-    }
-
     private fun initEditTabView(tab: Tablature?) {
 
         if (tab != null) {
@@ -188,7 +171,7 @@ class EditTabFragment : Fragment() {
                     if (editTabViewModel.sectionMap.size < 2) {
                         Toast.makeText(
                             context,
-                            "Please create at least two sections before saving.",
+                            "Requires at least two sections to save.",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
@@ -201,7 +184,13 @@ class EditTabFragment : Fragment() {
 
             R.id.confirm -> {
                 if (tab != null) {
-
+                    editTabViewModel.loadTab()?.observe(this, Observer {
+                        findNavController().navigate(
+                            EditTabFragmentDirections.actionEditTabFragmentToTabFragment(
+                                it
+                            )
+                        )
+                    })
                 }
                 return true
             }

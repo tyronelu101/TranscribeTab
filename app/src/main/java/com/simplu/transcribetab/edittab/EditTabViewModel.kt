@@ -9,7 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class EditTabViewModel(val repository: TablatureRepository, var tablature: Tablature? = null) :
+class EditTabViewModel(
+    private val repository: TablatureRepository,
+    var tablature: Tablature? = null
+) :
     ViewModel() {
 
     private val _currentSection = MutableLiveData<TabSection>()
@@ -134,6 +137,13 @@ class EditTabViewModel(val repository: TablatureRepository, var tablature: Tabla
 
     fun onSkipTo() {
         _skipToVal.value = currentSection.value?.sectionTime
+    }
+
+    fun loadTab(): LiveData<Tablature>? {
+        if(tablature!= null) {
+            return repository.get(tablature!!)
+        }
+        return null
     }
 
     fun onSave(tab: Tablature) {

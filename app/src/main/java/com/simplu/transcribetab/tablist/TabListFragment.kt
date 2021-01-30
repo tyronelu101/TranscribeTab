@@ -92,6 +92,7 @@ class TabListFragment : Fragment() {
 
         return when (item.itemId) {
 
+            //todo tablist to edit tab
             R.id.context_tab_item_edit -> {
                 true
             }

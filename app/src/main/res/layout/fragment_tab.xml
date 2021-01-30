@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:padding="0dp"
-            android:text="@{viewModel.tablature.title}"
+            android:text="@{viewModel.tab.title}"
             android:textSize="24sp"
             android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="0dp"
-            android:text="@{viewModel.tablature.artist}"
+            android:text="@{viewModel.tab.artist}"
             android:textSize="16sp"
             android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="0dp"
-            android:text="@{viewModel.tablature.arranger}"
+            android:text="@{viewModel.tab.arranger}"
             android:textSize="16sp"
             android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="@{viewModel.tablature.tuning}"
+            android:text="@{viewModel.tab.tuning}"
             android:textSize="16sp"
             android:textColor="@color/primaryTextColor"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -96,7 +96,6 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@color/primaryTextColor"
-                    android:text=""
                     android:textStyle="bold"
                     tools:text="1" />
 
@@ -131,7 +130,6 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textColor="@color/primaryTextColor"
-                    android:text=""
                     tools:text="2" />
 
                 <TextView

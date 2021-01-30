@@ -6,6 +6,10 @@ import kotlinx.coroutines.withContext
 
 class TablatureRepository(private val tabDb: TablatureDatabase) {
 
+    fun get(tab: Tablature): LiveData<Tablature> {
+        return tabDb.dao.get(tab.tabId)
+    }
+
     fun getAllTab(): LiveData<List<Tablature>> {
         return tabDb.dao.getAllTabs()
     }

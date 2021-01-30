@@ -16,7 +16,7 @@ interface TablatureDatabaseDao {
     fun delete(tab: Tablature)
 
     @Query("SELECT * from tablature_table WHERE tabId =:key")
-    fun get(key: Long): Tablature
+    fun get(key: Long): LiveData<Tablature>
 
     @Query("SELECT * from tablature_table ORDER BY tabId DESC")
     fun getAllTabs(): LiveData<List<Tablature>>
