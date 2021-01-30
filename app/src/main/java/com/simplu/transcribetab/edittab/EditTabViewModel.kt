@@ -56,14 +56,15 @@ class EditTabViewModel(
 
     fun addSection(time: Int) {
 
-        storeCurrentSection()
+        if (validAddTime(time)) {
+            storeCurrentSection()
 
-        _totalSectionNum.value = totalSectionsNum.value?.plus(1)
-        val newSection = TabSection(totalSectionsNum.value!!, time)
-        sectionMap.put(newSection.sectionNum, newSection)
+            _totalSectionNum.value = totalSectionsNum.value?.plus(1)
+            val newSection = TabSection(totalSectionsNum.value!!, time)
+            sectionMap.put(newSection.sectionNum, newSection)
 
-        _currentSection.value = newSection
-
+            _currentSection.value = newSection
+        }
     }
 
     fun insertAt(column: Int, string: Int, value: String) {
@@ -124,10 +125,45 @@ class EditTabViewModel(
 
         val currentSection = this.currentSection.value
 
-        if (currentSection != null) {
+        if (currentSection != null && currentSection.sectionNum > 1 && validSetTime(time)) {
             currentSection.sectionTime = time
             this._currentSection.value = currentSection
         }
+    }
+
+    private fun validAddTime(time: Int): Boolean {
+        val lastSection = sectionMap.get(totalSectionsNum.value)
+        lastSection?.sectionTime.let {
+            if (it != null && it < time) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun validSetTime(time: Int): Boolean {
+        val currentSection = this.currentSection.value
+        var isTimeBetweenSection = false
+        var isTimeAfterSection = false
+        if (currentSection != null && currentSection.sectionNum > 1) {
+
+            //previous section should always be not null because of currentSection.sectionNum > 1
+            val previousSection = sectionMap[currentSection.sectionNum - 1]
+            val nextSection = sectionMap[currentSection.sectionNum + 1]
+            isTimeBetweenSection =
+                if (previousSection != null && nextSection != null) {
+                    (previousSection.sectionTime < time && time < nextSection.sectionTime)
+                } else
+                    false
+
+            isTimeAfterSection =
+                if (previousSection != null && nextSection == null) {
+                    (previousSection.sectionNum < time)
+                } else
+                    false
+
+        }
+        return isTimeBetweenSection || isTimeAfterSection
     }
 
     fun clearColumn(column: Int) {
@@ -140,7 +176,7 @@ class EditTabViewModel(
     }
 
     fun loadTab(): LiveData<Tablature>? {
-        if(tablature!= null) {
+        if (tablature != null) {
             return repository.get(tablature!!)
         }
         return null
