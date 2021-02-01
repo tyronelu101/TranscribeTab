@@ -17,16 +17,18 @@
         android:background="@color/backgroundColor">
 
         <EditText
+            android:layout_margin="8dp"
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/primaryTextColor"
             android:hint="@string/title"
             android:maxLines="2"
+            android:padding="0dp"
             android:singleLine="true"
             android:textColor="@color/primaryTextColor"
             android:textColorHint="@color/primaryTextColor"
-            android:textSize="24sp"
+            android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,6 +40,7 @@
             android:backgroundTint="@color/primaryTextColor"
             android:gravity="center_horizontal"
             android:hint="@string/artist"
+            android:padding="0dp"
             android:singleLine="true"
             android:textColor="@color/primaryTextColor"
             android:textColorHint="@color/primaryTextColor"
@@ -52,6 +55,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/primaryTextColor"
             android:hint="Arranged By"
+            android:padding="0dp"
             android:singleLine="true"
             android:textColor="@color/primaryTextColor"
             android:textColorHint="@color/primaryTextColor"
@@ -69,6 +73,7 @@
             android:backgroundTint="@color/primaryTextColor"
             android:hint="tuning"
             android:imeOptions="actionDone"
+            android:padding="0dp"
             android:singleLine="true"
             android:textColor="@color/primaryTextColor"
             android:textColorHint="@color/primaryTextColor"
@@ -160,10 +165,9 @@
             android:background="@drawable/input_container_background"
             android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@id/edit_media_fragment_container"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/time_container">
+            app:layout_constraintRight_toRightOf="parent">
 
             <HorizontalScrollView
                 android:id="@+id/input_container_horizontal_scroll"
@@ -173,7 +177,7 @@
                 <LinearLayout
                     android:id="@+id/string_input_container"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -241,15 +245,16 @@
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
             </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/edit_media_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/edit_media_fragment_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
