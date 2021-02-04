@@ -27,7 +27,7 @@ class EditTabFragment : Fragment() {
     private lateinit var editTabViewModel: EditTabViewModel
     private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment()
 
-    private var tabId = -1L
+    private var tab: Tablature? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,7 +63,6 @@ class EditTabFragment : Fragment() {
         val tab = arguments?.getParcelable<Tablature>("tab")
         var songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
         if (tab != null) {
-            tabId = tab.tabId
             songUri = tab.songUri
         }
 
@@ -141,8 +140,8 @@ class EditTabFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.edittab_menu, menu)
 
-        //If tabId is -1, means creating tab
-        if (tabId != -1L) {
+        //If tabId is not null, show confirm
+        if (tab != null) {
             val confirmItem = menu?.findItem(R.id.confirm)
             confirmItem?.isVisible = true
         }
@@ -162,8 +161,7 @@ class EditTabFragment : Fragment() {
         when (item?.itemId) {
 
             R.id.save -> {
-                if (this.tabId != -1L) {
-                    tab.tabId = tabId
+                if (this.tab != null) {
                     editTabViewModel.onUpdate(tab)
                     Toast.makeText(context, "Tablature updated", Toast.LENGTH_SHORT).show()
 
