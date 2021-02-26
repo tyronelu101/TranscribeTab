@@ -6,72 +6,91 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
-
 import android.view.View
 import com.simplu.transcribetab.DrawableColumn
+import com.simplu.transcribetab.R
+import com.simplu.transcribetab.ScreenUtil
 
-class TabView @JvmOverloads constructor(
+open class TabView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    fun dpToPixel(dp: Int): Int {
-        val px = (resources.displayMetrics.density * dp).toInt()
-        return px
+    companion object {
+        var numberOfColumns: Int = 1
     }
 
-    val NUMBER_OF_STRINGS = 6
+    private val COLUMN_BORDER_HEIGHT_EXTRA = ScreenUtil.dpToPixel(4, context)
+    private val COLUMN_BORDER_WIDTH_EXTRA = ScreenUtil.dpToPixel(4, context)
 
-    //Starting coordinates to draw the first column
-    val STARTING_LEFT = dpToPixel(0)
-    val STARTING_TOP = dpToPixel(0)
+    protected val NUMBER_OF_STRINGS = 6
 
     //Vertical spacing of each note boundary
-    val VERTICAL_SPACE = dpToPixel(8)
+    protected var noteVerticalSpace = ScreenUtil.dpToPixel(8, context)
 
     //Horizontal spacing between each column
-    val HORIZONTAL_SPACE = dpToPixel(12)
+    protected var columnHorizontalSpace = ScreenUtil.dpToPixel(8, context)
 
     //Size of each note boundary
-    val NOTE_BORDER_SIZE = dpToPixel(16)
+    protected var noteBorderSize = ScreenUtil.dpToPixel(16, context)
 
-    val PADDING = dpToPixel(16)
+    protected val PADDING = ScreenUtil.dpToPixel(8, context)
 
     //width of column border
-    val COLUMN_BORDER_WIDTH = NOTE_BORDER_SIZE + HORIZONTAL_SPACE
-    val COLUMN_BORDER_HEIGHT =
-        (NUMBER_OF_STRINGS * NOTE_BORDER_SIZE) + ((NUMBER_OF_STRINGS - 1) * VERTICAL_SPACE) + (PADDING)
-    val BAR_NUMBER_PADDING = dpToPixel(8)
+    private val COLUMN_BORDER_HEIGHT =
+        (NUMBER_OF_STRINGS * noteBorderSize) + ((NUMBER_OF_STRINGS - 1) * noteVerticalSpace) + (PADDING)
 
     //Set up the objects for drawing
-    val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
+    protected val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.GRAY
         style = Paint.Style.FILL
-    }
-
-    val columnBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
         alpha = 50
     }
 
-    val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    protected val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
-        textSize = 12f * resources.displayMetrics.scaledDensity
         textAlign = Paint.Align.CENTER
     }
 
-    val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    protected val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         strokeWidth = 1.5f
 
     }
 
-    lateinit var currentSelectedColumn: DrawableColumn
-    val columnNotesList = ArrayList<DrawableColumn>()
-
+    protected val columnNotesList = ArrayList<DrawableColumn>()
 
     init {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.TablatureView,
+            0, 0
+        ).apply {
+            try {
+                numberOfColumns = getInteger(R.styleable.TablatureView_numberColumns, 5)
+                textPaint.textSize = getFloat(
+                    R.styleable.TablatureView_textSize,
+                    12f
+                ) * resources.displayMetrics.scaledDensity
+                noteBorderSize =
+                    ScreenUtil.dpToPixel(
+                        getFloat(R.styleable.TablatureView_textSize, 12f).toInt(),
+                        context
+                    )
+                noteVerticalSpace = ScreenUtil.dpToPixel(
+                    getInt(R.styleable.TablatureView_verticalSpacing, 8),
+                    context
+                )
+                columnHorizontalSpace = ScreenUtil.dpToPixel(
+                    getInt(R.styleable.TablatureView_horizontalSpacing, 8),
+                    context
+                )
+
+            } finally {
+                recycle()
+            }
+        }
         initializeColumns()
     }
 
@@ -83,9 +102,10 @@ class TabView @JvmOverloads constructor(
         //Width will change dynamically so recalculate the width
         if (columnNotesList.size != 0) {
             val rightMostNote = columnNotesList[columnNotesList.size - 1].getNoteRightBound()
-            desiredWidth = rightMostNote + HORIZONTAL_SPACE + PADDING
+            desiredWidth = rightMostNote + PADDING
+            desiredHeight = columnNotesList[0].columnBound.height() + COLUMN_BORDER_HEIGHT_EXTRA
         } else {
-            desiredWidth = NOTE_BORDER_SIZE + (2 * HORIZONTAL_SPACE) + PADDING
+            desiredWidth = noteBorderSize + (2 * columnHorizontalSpace) + PADDING
         }
         setMeasuredDimension(
             desiredWidth,
@@ -99,20 +119,21 @@ class TabView @JvmOverloads constructor(
         drawLines(canvas)
         drawNotes(canvas)
     }
+
     private fun drawNotes(canvas: Canvas) {
 
         for (column in columnNotesList) {
             for (i in 0..5) {
-//            canvas.drawRect(note.bound, noteBorderPaint)
                 val noteVal = column.notes[i]
                 val noteBound = column.noteBound[i]
+                canvas.drawRect(noteBound, noteBorderPaint)
                 drawCenterTextRect(canvas, noteVal, noteBound)
             }
         }
     }
 
     //Draws text centered inside a rect
-    private fun drawCenterTextRect(canvas: Canvas, text: String, rect: Rect) {
+    protected fun drawCenterTextRect(canvas: Canvas, text: String, rect: Rect) {
         var textBound = Rect()
         textPaint.getTextBounds(text, 0, text.length, textBound)
         val offSet = (rect.height() - textBound.height()) / 2f
@@ -124,17 +145,17 @@ class TabView @JvmOverloads constructor(
         )
     }
 
-    private fun initializeColumns() {
+    fun initializeColumns() {
 
-        val left = STARTING_LEFT + PADDING + HORIZONTAL_SPACE
-        val top = STARTING_TOP + PADDING
+        val left = 0 + PADDING
+        val top = 0 + PADDING
         //Create a column of notes at starting coordinates
         val column = createColumnNotes(
             left, top
         )
-        currentSelectedColumn = column
+
         columnNotesList.add(column)
-        for (i in 0..8) {
+        for (i in 1 until 15) {
             addColumnToEnd()
         }
     }
@@ -154,8 +175,10 @@ class TabView @JvmOverloads constructor(
 
         for (i in 0 until NUMBER_OF_STRINGS) {
 
-            val startingX = columnNotesList[firstColumnIndex].getNoteLeftBound() - HORIZONTAL_SPACE
-            val endingX = columnNotesList[lastColumnIndex].getNoteRightBound() + HORIZONTAL_SPACE
+            val startingX =
+                columnNotesList[firstColumnIndex].getNoteLeftBound() - columnHorizontalSpace
+            val endingX =
+                columnNotesList[lastColumnIndex].getNoteRightBound() + columnHorizontalSpace
             val startingY = columnNotesList[firstColumnIndex].noteBound[i].exactCenterY()
             val endingY = startingY
             canvas.drawLine(startingX.toFloat(), startingY, endingX.toFloat(), endingY, linePaint)
@@ -172,7 +195,7 @@ class TabView @JvmOverloads constructor(
         val firstColumnIndex = 0
         val firstNoteBound = columnNotesList.get(firstColumnIndex).noteBound[0]
         val lastNoteBound = columnNotesList.get(firstColumnIndex).noteBound[lastStringIndex]
-        val x = firstNoteBound.left - HORIZONTAL_SPACE.toFloat()
+        val x = firstNoteBound.left - columnHorizontalSpace.toFloat()
         val startingY = firstNoteBound.exactCenterY()
         val endingY = lastNoteBound.exactCenterY()
 
@@ -188,7 +211,7 @@ class TabView @JvmOverloads constructor(
         val firstNoteBound = columnNotesList.get(lastColumnIndex).noteBound[0]
         val lastNoteBound = columnNotesList.get(lastColumnIndex).noteBound[lastStringIndex]
 
-        val x = firstNoteBound.right + HORIZONTAL_SPACE.toFloat()
+        val x = firstNoteBound.right + columnHorizontalSpace.toFloat()
         val startingY = firstNoteBound.exactCenterY()
         val endingY = lastNoteBound.exactCenterY()
         canvas.drawLine(x, startingY, x, endingY, linePaint)
@@ -197,8 +220,8 @@ class TabView @JvmOverloads constructor(
     //Adds a column to the end of tab
     private fun addColumnToEnd() {
         //Left and top of column
-        val top = STARTING_TOP + PADDING //Top will be same
-        val left = columnNotesList.last().getColumnRightBound() + HORIZONTAL_SPACE
+        val top = 0 + PADDING //Top will be same
+        val left = columnNotesList.last().getColumnRightBound() + columnHorizontalSpace
         val newColumn = createColumnNotes(left, top)
         columnNotesList.add(newColumn)
     }
@@ -216,32 +239,28 @@ class TabView @JvmOverloads constructor(
 
             noteBorder.left = left
             noteBorder.top = currentTop
-            noteBorder.bottom = noteBorder.top + NOTE_BORDER_SIZE
-            noteBorder.right = noteBorder.left + NOTE_BORDER_SIZE
-            currentTop = noteBorder.bottom + VERTICAL_SPACE
+            noteBorder.bottom = noteBorder.top + noteBorderSize
+            noteBorder.right = noteBorder.left + noteBorderSize
+            currentTop = noteBorder.bottom + noteVerticalSpace
 
             noteBounds[i] = noteBorder
         }
-
         //The column bounds
-        val columnBoundLeft = left - HORIZONTAL_SPACE / 2
-        val columnBoundTop = top - VERTICAL_SPACE / 2
-        val columnBoundRight = columnBoundLeft + COLUMN_BORDER_WIDTH
-        val columnBoundBottom = columnBoundTop + COLUMN_BORDER_HEIGHT
-
-        val columnBounds =
-            Rect(columnBoundLeft, columnBoundTop, columnBoundRight, columnBoundBottom)
+        val columnBoundLeft = left - COLUMN_BORDER_WIDTH_EXTRA
+        val columnBoundTop = top - COLUMN_BORDER_HEIGHT_EXTRA
+        val columnBoundRight = noteBounds[5]!!.right + COLUMN_BORDER_WIDTH_EXTRA
+        val columnBoundBottom = noteBounds[5]!!.bottom + COLUMN_BORDER_HEIGHT_EXTRA
 
         return DrawableColumn(
-            columnBound = columnBounds,
-            noteBound = noteBounds.requireNoNulls()
+            noteBound = noteBounds.requireNoNulls(),
+            columnBound = Rect(columnBoundLeft, columnBoundTop, columnBoundRight,columnBoundBottom)
         )
 
     }
 
-    public fun updateTablature(columnValues: ArrayList<Array<String>>) {
+    fun updateTablature(columnValues: ArrayList<Array<String>>) {
 
-        for (i in 0..8) {
+        for (i in 0 until numberOfColumns) {
             columnNotesList[i].setNoteValues(columnValues[i])
         }
 

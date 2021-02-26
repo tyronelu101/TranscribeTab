@@ -1,16 +1,15 @@
 package com.simplu.transcribetab
 
-import com.simplu.transcribetab.edittab.EditTabView
 import java.io.Serializable
 
 
 data class TabSection(
     val sectionNum: Int,
     var sectionTime: Int,
-    val sectionCol: ArrayList<Array<String>> = ArrayList()
-) : Serializable {
+    val sectionCol: ArrayList<Array<String>> = ArrayList()) : Serializable {
     init {
-        for (i in 0..EditTabView.NUMBER_OF_COLUMNS) {
+        //todo get max number of columns to create from customview attribtute.
+        for (i in 0..14) {
             sectionCol.add(Array(6) { "" })
         }
     }

@@ -1,13 +1,16 @@
 package com.simplu.transcribetab
 
 import android.graphics.Rect
+
 class DrawableColumn(
     var notes: Array<String> = Array(6) { "" },
     var columnBound: Rect,
-    var noteBound: Array<Rect> = Array(6) { Rect(0, 0, 0, 0) })  {
+    var noteBound: Array<Rect> = Array(6) { Rect(0, 0, 0, 0) }
+) {
 
-    fun inColumnBound(x: Float, y: Float): Boolean =
-        (x > columnBound.left && x < columnBound.right && y > columnBound.top && y < columnBound.bottom)
+    fun inColumnBound(x: Float, y: Float): Boolean {
+        return (x > columnBound.left && x < columnBound.right && y > columnBound.top && y < columnBound.bottom)
+    }
 
     fun getColumnLeftBound(): Int {
         return columnBound.left
