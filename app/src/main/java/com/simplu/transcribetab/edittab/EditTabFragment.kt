@@ -28,20 +28,6 @@ class EditTabFragment : Fragment() {
     private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment()
 
     private var tab: Tablature? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val application = requireNotNull(this.activity).application
-        val repository = TablatureRepository(TablatureDatabase.getInstance(application))
-
-        val bundle = arguments
-        var tab = bundle?.getParcelable<Tablature>("tab")
-
-        val viewModelFactory =
-            EditTabViewModelFactory(repository, tab)
-        editTabViewModel =
-            ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +35,6 @@ class EditTabFragment : Fragment() {
     ): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_tab, container, false)
-        binding.editTabViewModel = editTabViewModel
         binding.lifecycleOwner = viewLifecycleOwner
         setHasOptionsMenu(true)
 
@@ -59,8 +44,18 @@ class EditTabFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val application = requireNotNull(this.activity).application
+        val repository = TablatureRepository(TablatureDatabase.getInstance(application))
 
-        val tab = arguments?.getParcelable<Tablature>("tab")
+        val bundle = arguments
+        var tab = bundle?.getParcelable<Tablature>("tab")
+
+        val viewModelFactory =
+            EditTabViewModelFactory(repository, tab, binding.editTablature.numberOfColumns)
+        editTabViewModel =
+            ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
+        binding.editTabViewModel = editTabViewModel
+
         var songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
         if (tab != null) {
             songUri = tab.songUri

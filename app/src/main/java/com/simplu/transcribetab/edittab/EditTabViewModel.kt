@@ -11,7 +11,8 @@ import kotlinx.coroutines.withContext
 
 class EditTabViewModel(
     private val repository: TablatureRepository,
-    var tablature: Tablature? = null
+    var tablature: Tablature? = null,
+    val numberOfColumns: Int
 ) :
     ViewModel() {
 
@@ -47,7 +48,7 @@ class EditTabViewModel(
         }
         //Creating new tablature
         else {
-            val section = TabSection(sectionNum = 1, sectionTime = 0)
+            val section = TabSection(numberOfColumns, sectionNum = 1, sectionTime = 0)
             _totalSectionNum.value = 1
             _currentSection.value = section
             sectionMap.put(section.sectionNum, section)
@@ -60,7 +61,7 @@ class EditTabViewModel(
             storeCurrentSection()
 
             _totalSectionNum.value = totalSectionsNum.value?.plus(1)
-            val newSection = TabSection(totalSectionsNum.value!!, time)
+            val newSection = TabSection(numberOfColumns, totalSectionsNum.value!!, time)
             sectionMap.put(newSection.sectionNum, newSection)
 
             _currentSection.value = newSection
@@ -102,7 +103,7 @@ class EditTabViewModel(
         }
     }
 
-    public fun previousSection() {
+    fun previousSection() {
 
         if (currentSection.value!!.sectionNum > 1) {
             storeCurrentSection()

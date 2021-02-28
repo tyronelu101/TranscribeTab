@@ -17,9 +17,7 @@ open class TabView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    companion object {
-        var numberOfColumns: Int = 1
-    }
+    var numberOfColumns: Int = 8
 
     private val COLUMN_BORDER_HEIGHT_EXTRA = ScreenUtil.dpToPixel(4, context)
     private val COLUMN_BORDER_WIDTH_EXTRA = ScreenUtil.dpToPixel(4, context)
@@ -155,7 +153,7 @@ open class TabView @JvmOverloads constructor(
         )
 
         columnNotesList.add(column)
-        for (i in 1 until 15) {
+        for (i in 1 until numberOfColumns) {
             addColumnToEnd()
         }
     }

@@ -4,12 +4,12 @@ import java.io.Serializable
 
 
 data class TabSection(
+    val numberOfColumns: Int,
     val sectionNum: Int,
     var sectionTime: Int,
     val sectionCol: ArrayList<Array<String>> = ArrayList()) : Serializable {
     init {
-        //todo get max number of columns to create from customview attribtute.
-        for (i in 0..14) {
+        for (i in 0..numberOfColumns) {
             sectionCol.add(Array(6) { "" })
         }
     }
