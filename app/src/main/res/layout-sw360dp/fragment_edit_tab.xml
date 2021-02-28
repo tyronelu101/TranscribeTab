@@ -86,7 +86,7 @@
             android:id="@+id/edit_tablature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tablature:numberColumns="16"
+            tablature:numberColumns="15"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tuning">

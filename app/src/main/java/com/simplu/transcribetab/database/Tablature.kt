@@ -16,7 +16,7 @@ data class Tablature(
     var tabId: Long = 0L,
 
     @ColumnInfo(name = "title")
-    val title: String = "",
+    var title: String = "",
 
     @ColumnInfo(name = "artist")
     var artist: String = "",

@@ -48,17 +48,22 @@ class EditTabFragment : Fragment() {
         val repository = TablatureRepository(TablatureDatabase.getInstance(application))
 
         val bundle = arguments
-        var tab = bundle?.getParcelable<Tablature>("tab")
+        val tabFromBundle: Tablature? = bundle?.getParcelable("tab")
 
         val viewModelFactory =
-            EditTabViewModelFactory(repository, tab, binding.editTablature.numberOfColumns)
+            EditTabViewModelFactory(
+                repository,
+                tabFromBundle,
+                binding.editTablature.numberOfColumns
+            )
         editTabViewModel =
             ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
         binding.editTabViewModel = editTabViewModel
 
         var songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
-        if (tab != null) {
-            songUri = tab.songUri
+        if (tabFromBundle != null) {
+            songUri = tabFromBundle.songUri
+            tab = tabFromBundle
         }
 
         initEditTabView(tab)
@@ -144,15 +149,26 @@ class EditTabFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val tab = Tablature(
-            title = binding.title.text.toString(),
-            artist = binding.artist.text.toString(),
-            arranger = binding.arranger.text.toString(),
-            tuning = binding.tuning.text.toString(),
-            sections = editTabViewModel.sectionMap,
-            songUri = arguments!!.getString("songUri")
-        )
+        var tab = this.tab
 
+        if (tab == null) {
+            tab = Tablature(
+                title = binding.title.text.toString(),
+                artist = binding.artist.text.toString(),
+                arranger = binding.arranger.text.toString(),
+                tuning = binding.tuning.text.toString(),
+                sections = editTabViewModel.sectionMap,
+                songUri = arguments!!.getString("songUri")
+            )
+        } else {
+            tab.title = binding.title.text.toString()
+            tab.artist = binding.artist.text.toString()
+            tab.arranger = binding.arranger.text.toString()
+            tab.tuning = binding.tuning.text.toString()
+            tab.sections = editTabViewModel.sectionMap
+            tab.songUri = arguments!!.getString("songUri")
+
+        }
         when (item?.itemId) {
 
             R.id.save -> {
@@ -187,6 +203,7 @@ class EditTabFragment : Fragment() {
                 }
                 return true
             }
+
         }
         return super.onOptionsItemSelected(item)
     }
