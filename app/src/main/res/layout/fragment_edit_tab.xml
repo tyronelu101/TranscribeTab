@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/primaryTextColor"
-            android:hint="@string/title"
+            android:hint="default"
             android:maxLines="2"
             android:padding="0dp"
             android:singleLine="true"
@@ -81,15 +81,20 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/arranger" />
 
-        <com.simplu.transcribetab.edittab.EditTabView
-            android:id="@+id/edit_tablature"
+        <LinearLayout
+            android:id="@+id/edit_tablature_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tuning">
-
-        </com.simplu.transcribetab.edittab.EditTabView>
+            app:layout_constraintTop_toBottomOf="@id/tuning"
+            android:gravity="center">
+            <com.simplu.transcribetab.edittab.EditTabView
+                android:id="@+id/edit_tablature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent">
+            </com.simplu.transcribetab.edittab.EditTabView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/section_number_container"
@@ -98,7 +103,7 @@
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_tablature">
+            app:layout_constraintTop_toBottomOf="@id/edit_tablature_container">
 
             <ImageButton
                 android:id="@+id/btn_prev_section"

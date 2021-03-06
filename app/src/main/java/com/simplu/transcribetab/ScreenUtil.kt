@@ -9,4 +9,9 @@ object ScreenUtil {
         return px
     }
 
+    fun pixelToDp(px: Int, context: Context): Int {
+        val dp = (px / (context.resources.displayMetrics.density))
+        return dp.toInt()
+    }
+
 }

@@ -31,7 +31,7 @@ open class TabView @JvmOverloads constructor(
     protected var columnHorizontalSpace = ScreenUtil.dpToPixel(8, context)
 
     //Size of each note boundary
-    protected var noteBorderSize = ScreenUtil.dpToPixel(16, context)
+    protected var noteBorderSize = 12
 
     protected val PADDING = ScreenUtil.dpToPixel(8, context)
 
@@ -66,7 +66,6 @@ open class TabView @JvmOverloads constructor(
             0, 0
         ).apply {
             try {
-                numberOfColumns = getInteger(R.styleable.TablatureView_numberColumns, 5)
                 textPaint.textSize = getFloat(
                     R.styleable.TablatureView_textSize,
                     12f
@@ -84,6 +83,7 @@ open class TabView @JvmOverloads constructor(
                     getInt(R.styleable.TablatureView_horizontalSpacing, 8),
                     context
                 )
+                numberOfColumns = calculateNumberOfColumns()
 
             } finally {
                 recycle()
@@ -92,6 +92,14 @@ open class TabView @JvmOverloads constructor(
         initializeColumns()
     }
 
+    //Calculates the number of columns that can fit on this screen based on screen width dp
+    private fun calculateNumberOfColumns(): Int {
+        val metrics = resources.displayMetrics
+        val screenWidthDp = ScreenUtil.pixelToDp(metrics.widthPixels, context)
+        val divisor = ScreenUtil.pixelToDp(noteBorderSize + (COLUMN_BORDER_WIDTH_EXTRA) + columnHorizontalSpace, context)
+        val numberOfColumns = (screenWidthDp-(ScreenUtil.pixelToDp(PADDING, context))) / divisor
+        return numberOfColumns
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -124,7 +132,6 @@ open class TabView @JvmOverloads constructor(
             for (i in 0..5) {
                 val noteVal = column.notes[i]
                 val noteBound = column.noteBound[i]
-                canvas.drawRect(noteBound, noteBorderPaint)
                 drawCenterTextRect(canvas, noteVal, noteBound)
             }
         }
