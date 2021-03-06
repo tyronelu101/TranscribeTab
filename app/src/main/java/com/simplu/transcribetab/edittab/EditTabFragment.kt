@@ -185,7 +185,7 @@ class EditTabFragment : Fragment() {
                         ).show()
                     } else {
                         editTabViewModel.onSave(tab)
-                        Toast.makeText(context, "Tablature saved", Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(EditTabFragmentDirections.actionEditTabFragmentToTabListFragment())
                     }
                 }
                 return true

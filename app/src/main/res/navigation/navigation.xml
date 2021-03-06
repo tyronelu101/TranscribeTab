@@ -42,6 +42,9 @@
             app:destination="@id/tabFragment"
             app:popUpTo="@id/tabFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_editTabFragment_to_tabListFragment"
+            app:destination="@id/tabListFragment" />
     </fragment>
     <fragment
         android:id="@+id/tabFragment"
