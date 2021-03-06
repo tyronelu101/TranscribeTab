@@ -1,4 +1,4 @@
-package com.simplu.transcribetab.tab
+package com.simplu.transcribetab.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,9 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
-import com.simplu.transcribetab.DrawableColumn
 import com.simplu.transcribetab.R
-import com.simplu.transcribetab.ScreenUtil
 
 open class TabView @JvmOverloads constructor(
     context: Context,
@@ -258,7 +256,7 @@ open class TabView @JvmOverloads constructor(
 
         return DrawableColumn(
             noteBound = noteBounds.requireNoNulls(),
-            columnBound = Rect(columnBoundLeft, columnBoundTop, columnBoundRight,columnBoundBottom)
+            columnBound = Rect(columnBoundLeft, columnBoundTop, columnBoundRight, columnBoundBottom)
         )
 
     }

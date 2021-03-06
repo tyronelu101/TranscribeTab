@@ -1,4 +1,4 @@
-package com.simplu.transcribetab
+package com.simplu.transcribetab.views
 
 import android.graphics.Rect
 

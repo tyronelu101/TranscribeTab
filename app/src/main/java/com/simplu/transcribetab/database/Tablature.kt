@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.simplu.transcribetab.TabSection
+import com.simplu.transcribetab.views.TabSection
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 

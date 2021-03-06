@@ -1,4 +1,4 @@
-package com.simplu.transcribetab.edittab
+package com.simplu.transcribetab.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,8 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
-import com.simplu.transcribetab.DrawableColumn
-import com.simplu.transcribetab.tab.TabView
 
 class EditTabView @JvmOverloads constructor(
     context: Context,

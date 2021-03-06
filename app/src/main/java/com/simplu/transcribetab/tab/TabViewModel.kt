@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.simplu.transcribetab.TabSection
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.database.TablatureRepository
+import com.simplu.transcribetab.views.TabSection
 import kotlin.collections.set
 
 

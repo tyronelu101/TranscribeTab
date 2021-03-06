@@ -2,9 +2,9 @@ package com.simplu.transcribetab.edittab
 
 import android.text.format.DateUtils
 import androidx.lifecycle.*
-import com.simplu.transcribetab.TabSection
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureRepository
+import com.simplu.transcribetab.views.TabSection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,7 +48,11 @@ class EditTabViewModel(
         }
         //Creating new tablature
         else {
-            val section = TabSection(numberOfColumns, sectionNum = 1, sectionTime = 0)
+            val section = TabSection(
+                numberOfColumns,
+                sectionNum = 1,
+                sectionTime = 0
+            )
             _totalSectionNum.value = 1
             _currentSection.value = section
             sectionMap.put(section.sectionNum, section)
@@ -61,7 +65,11 @@ class EditTabViewModel(
             storeCurrentSection()
 
             _totalSectionNum.value = totalSectionsNum.value?.plus(1)
-            val newSection = TabSection(numberOfColumns, totalSectionsNum.value!!, time)
+            val newSection = TabSection(
+                numberOfColumns,
+                totalSectionsNum.value!!,
+                time
+            )
             sectionMap.put(newSection.sectionNum, newSection)
 
             _currentSection.value = newSection

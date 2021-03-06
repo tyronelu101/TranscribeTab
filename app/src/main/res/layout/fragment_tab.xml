@@ -77,7 +77,7 @@
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/tuning">
 
-            <com.simplu.transcribetab.tab.TabView
+            <com.simplu.transcribetab.views.TabView
                 android:id="@+id/tab_section1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
 
             </LinearLayout>
 
-            <com.simplu.transcribetab.tab.TabView
+            <com.simplu.transcribetab.views.TabView
                 android:id="@+id/tab_section2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

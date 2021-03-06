@@ -3,7 +3,7 @@ package com.simplu.transcribetab.database
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.simplu.transcribetab.TabSection
+import com.simplu.transcribetab.views.TabSection
 import java.lang.reflect.Type
 
 
