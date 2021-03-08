@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.simplu.transcribetab.R
 
 open class TabView @JvmOverloads constructor(
@@ -39,7 +40,7 @@ open class TabView @JvmOverloads constructor(
 
     //Set up the objects for drawing
     protected val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.GRAY
+        color = ContextCompat.getColor(context, R.color.backgroundColor)
         style = Paint.Style.FILL
         alpha = 50
     }

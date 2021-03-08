@@ -7,6 +7,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -28,6 +30,32 @@ class EditTabFragment : Fragment() {
     private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment()
 
     private var tab: Tablature? = null
+
+    private var saveDialog: AlertDialog? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        saveDialog = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setMessage("Are you sure you want to exit? Tablature has not been saved yet.")
+                setPositiveButton(
+                    "Yes"
+                ) { dialog, id ->
+
+                    findNavController().popBackStack()
+                }
+                setNegativeButton(
+                    "Cancel"
+                ) { dialog, id ->
+                    //Do nothing
+                }
+            }
+
+            // Create the AlertDialog
+            builder.create()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,6 +126,19 @@ class EditTabFragment : Fragment() {
             commit()
         }
 
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (editTabViewModel.tabIsUpdated()) {
+                        findNavController().popBackStack()
+                    }
+                    else {
+                        saveDialog?.show()
+                    }
+                }
+            })
+
     }
 
     private fun initEditTabView(tab: Tablature?) {
@@ -136,7 +177,7 @@ class EditTabFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.edittab_menu, menu)
 
@@ -148,7 +189,7 @@ class EditTabFragment : Fragment() {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         var tab = this.tab
 
         if (tab == null) {

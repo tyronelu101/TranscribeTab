@@ -35,6 +35,8 @@ class EditTabViewModel(
 
     var sectionMap = LinkedHashMap<Int, TabSection>()
 
+    private var saveFlag = true
+
     init {
         initializeTablature()
     }
@@ -73,6 +75,7 @@ class EditTabViewModel(
             sectionMap.put(newSection.sectionNum, newSection)
 
             _currentSection.value = newSection
+            saveFlag = false
         }
     }
 
@@ -96,6 +99,7 @@ class EditTabViewModel(
             }
 
             _currentSection.value = _currentSection.value
+            saveFlag = false
         }
     }
 
@@ -137,6 +141,7 @@ class EditTabViewModel(
         if (currentSection != null && currentSection.sectionNum > 1 && validSetTime(time)) {
             currentSection.sectionTime = time
             this._currentSection.value = currentSection
+            saveFlag = false
         }
     }
 
@@ -175,9 +180,12 @@ class EditTabViewModel(
         return isTimeBetweenSection || isTimeAfterSection
     }
 
+    fun tabIsUpdated() = this.saveFlag
+
     fun clearColumn(column: Int) {
         currentSection.value?.clearColumn(column)
         _currentSection.value = currentSection.value
+        saveFlag = false
     }
 
     fun onSkipTo() {
@@ -191,11 +199,17 @@ class EditTabViewModel(
         return null
     }
 
+    fun needToSave() {
+        saveFlag = true;
+    }
+
+
     fun onSave(tab: Tablature) {
         storeCurrentSection()
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.insert(tab)
+                saveFlag = true
             }
         }
     }
@@ -204,6 +218,7 @@ class EditTabViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.update(tab)
+                saveFlag = true
             }
         }
     }
