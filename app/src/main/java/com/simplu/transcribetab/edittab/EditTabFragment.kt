@@ -179,11 +179,11 @@ class EditTabFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.edittab_menu, menu)
+        inflater.inflate(R.menu.edittab_menu, menu)
 
         //If tabId is not null, show confirm
         if (tab != null) {
-            val confirmItem = menu?.findItem(R.id.confirm)
+            val confirmItem = menu.findItem(R.id.confirm)
             confirmItem?.isVisible = true
         }
 
@@ -210,7 +210,7 @@ class EditTabFragment : Fragment() {
             tab.songUri = arguments!!.getString("songUri")
 
         }
-        when (item?.itemId) {
+        when (item.itemId) {
 
             R.id.save -> {
                 if (this.tab != null) {
@@ -233,15 +233,13 @@ class EditTabFragment : Fragment() {
             }
 
             R.id.confirm -> {
-                if (tab != null) {
-                    editTabViewModel.loadTab()?.observe(this, Observer {
-                        findNavController().navigate(
-                            EditTabFragmentDirections.actionEditTabFragmentToTabFragment(
-                                it
-                            )
+                editTabViewModel.loadTab()?.observe(this, Observer {
+                    findNavController().navigate(
+                        EditTabFragmentDirections.actionEditTabFragmentToTabFragment(
+                            it
                         )
-                    })
-                }
+                    )
+                })
                 return true
             }
 

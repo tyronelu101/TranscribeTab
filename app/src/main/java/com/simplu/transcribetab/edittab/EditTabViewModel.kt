@@ -200,7 +200,7 @@ class EditTabViewModel(
     }
 
     fun needToSave() {
-        saveFlag = true;
+        saveFlag = true
     }
 
 
