@@ -92,12 +92,11 @@ class TabListFragment : Fragment() {
 
         return when (item.itemId) {
 
-            //todo tablist to edit tab
             R.id.context_tab_item_edit -> {
                 tablatureSelected?.let {
                     findNavController().navigate(
-                        TabListFragmentDirections.actionTabListFragmentToTabFragment(
-                            it
+                        TabListFragmentDirections.actionTabListFragmentToEditTabFragment(
+                            it.songUri, it
                         )
                     )
                 }

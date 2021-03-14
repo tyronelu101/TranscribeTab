@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_tabListFragment_to_tabFragment"
             app:destination="@id/tabFragment" />
+        <action
+            android:id="@+id/action_tabListFragment_to_editTabFragment"
+            app:destination="@id/editTabFragment" />
     </fragment>
     <fragment
         android:id="@+id/songListFragment"

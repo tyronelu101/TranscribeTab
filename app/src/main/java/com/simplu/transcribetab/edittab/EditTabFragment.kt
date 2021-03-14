@@ -22,6 +22,9 @@ import com.simplu.transcribetab.database.TablatureRepository
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
 import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 import kotlinx.android.synthetic.main.fragment_edit_tab.*
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 class EditTabFragment : Fragment() {
 
@@ -33,6 +36,7 @@ class EditTabFragment : Fragment() {
 
     private var saveDialog: AlertDialog? = null
 
+    public val showcaseView = MaterialShowcaseView(context)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         saveDialog = activity?.let {
@@ -123,23 +127,25 @@ class EditTabFragment : Fragment() {
         //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
         childFragmentManager.beginTransaction().apply {
             replace(R.id.edit_media_fragment_container, mediaPlayerFragment)
-            commit()
+            commitNow()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    showcaseView.hide()
                     if (editTabViewModel.tabIsUpdated()) {
                         findNavController().popBackStack()
-                    }
-                    else {
+                    } else {
                         saveDialog?.show()
                     }
                 }
             })
 
+        presentShowcaseSequence()
     }
+
 
     private fun initEditTabView(tab: Tablature?) {
 
@@ -302,5 +308,66 @@ class EditTabFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MaterialShowcaseView.resetAll(context)
+    }
+
+    private fun presentShowcaseSequence() {
+        val config = ShowcaseConfig()
+        config.delay = 0 // half second between each showcase view
+        val sequence = MaterialShowcaseSequence(
+            this.requireActivity(),
+            javaClass.simpleName + " sequence"
+        )
+
+        sequence.setConfig(config)
+
+        sequence.addSequenceItem(binding.btnSetTime, "Sets this section's time", "NEXT")
+        sequence.addSequenceItem(
+            binding.addSectionBtn,
+            "Adds a new section with the current time",
+            "NEXT"
+        )
+        sequence.addSequenceItem(binding.prevColumnButton, "Previous column", "NEXT")
+        sequence.addSequenceItem(binding.nextColumnBtn, "Next column", "NEXT")
+        sequence.addSequenceItem(
+            MaterialShowcaseView.Builder(activity)
+                .setTarget(binding.inputRow1)
+                .setDismissText("NEXT")
+                .setContentText("Input button row 1")
+                .withRectangleShape(true)
+                .build()
+        )
+        sequence.addSequenceItem(
+            MaterialShowcaseView.Builder(activity)
+                .setTarget(binding.inputRow1)
+                .setDismissText("NEXT")
+                .setContentText("Input button row 2")
+                .withRectangleShape(true)
+                .build()
+        )
+        sequence.addSequenceItem(
+            MaterialShowcaseView.Builder(activity)
+                .setTarget(binding.inputRow1)
+                .setDismissText("NEXT")
+                .setContentText("Input button row 3")
+                .withRectangleShape(true)
+                .build()
+        )
+
+        sequence.addSequenceItem(binding.btnPrevSection, "Prev Section", "NEXT")
+        sequence.addSequenceItem(binding.btnNextSection, "Next Section", "NEXT")
+        sequence.addSequenceItem(binding.currentSectionNumber, "Skip to section number", "NEXT")
+        sequence.addSequenceItem(binding.txtSectionTime, "Skip audio to this time", "NEXT")
+        sequence.setOnItemDismissedListener { itemView, position ->
+            if (position == 10) {
+                mediaPlayerFragment.startShowCase()
+            }
+        }
+        sequence.start()
+
+
+    }
 }
 

@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
 import com.simplu.transcribetab.tab.SectionUpdater
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
     Fragment() {
@@ -136,5 +138,34 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
             }
             mediaPlayerViewModel.skipTo(currentProgress)
         }
+    }
+
+    public fun startShowCase() {
+        val config = ShowcaseConfig()
+        config.delay = 0 // half second between each showcase view
+        val sequence = MaterialShowcaseSequence(
+            activity,
+            javaClass.simpleName + " sequence"
+        )
+
+        sequence.setConfig(config)
+
+        sequence.addSequenceItem(
+            binding.setSkipTo,
+            "Saves the current time of audio ",
+            "NEXT"
+        )
+        sequence.addSequenceItem(
+            binding.goTo,
+            "Skips audio to the time we saved previously",
+            "NEXT"
+        )
+        sequence.addSequenceItem(
+            binding.songRate,
+            "Set playback rate of audio",
+            "FINISH"
+        )
+
+        sequence.start()
     }
 }
