@@ -36,7 +36,6 @@ class EditTabFragment : Fragment() {
 
     private var saveDialog: AlertDialog? = null
 
-    public val showcaseView = MaterialShowcaseView(context)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         saveDialog = activity?.let {
@@ -92,7 +91,7 @@ class EditTabFragment : Fragment() {
             ViewModelProvider(this, viewModelFactory).get(EditTabViewModel::class.java)
         binding.editTabViewModel = editTabViewModel
 
-        var songUri = EditTabFragmentArgs.fromBundle(arguments!!).songUri
+        var songUri = EditTabFragmentArgs.fromBundle(requireArguments()).songUri
         if (tabFromBundle != null) {
             songUri = tabFromBundle.songUri
             tab = tabFromBundle
@@ -131,14 +130,15 @@ class EditTabFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
-            this,
+            viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    showcaseView.hide()
-                    if (editTabViewModel.tabIsUpdated()) {
-                        findNavController().popBackStack()
-                    } else {
-                        saveDialog?.show()
+                    if (mediaPlayerFragment.flag) {
+                        if (editTabViewModel.tabIsUpdated()) {
+                            findNavController().popBackStack()
+                        } else {
+                            saveDialog?.show()
+                        }
                     }
                 }
             })
@@ -156,7 +156,7 @@ class EditTabFragment : Fragment() {
             binding.tuning.setText(tab.tuning)
         }
 
-        editTabViewModel.skipToVal.observe(this, Observer {
+        editTabViewModel.skipToVal.observe(viewLifecycleOwner, Observer {
             mediaPlayerFragment.skipTo(it * 1000)
         })
 
@@ -169,7 +169,7 @@ class EditTabFragment : Fragment() {
             }
         }
 
-        editTabViewModel.currentSection.observe(this, Observer {
+        editTabViewModel.currentSection.observe(viewLifecycleOwner, Observer {
             edit_tablature.updateTablature(it.sectionCol)
         })
 
@@ -205,7 +205,7 @@ class EditTabFragment : Fragment() {
                 arranger = binding.arranger.text.toString(),
                 tuning = binding.tuning.text.toString(),
                 sections = editTabViewModel.sectionMap,
-                songUri = arguments!!.getString("songUri")
+                songUri = requireArguments().getString("songUri")
             )
         } else {
             tab.title = binding.title.text.toString()
@@ -213,7 +213,7 @@ class EditTabFragment : Fragment() {
             tab.arranger = binding.arranger.text.toString()
             tab.tuning = binding.tuning.text.toString()
             tab.sections = editTabViewModel.sectionMap
-            tab.songUri = arguments!!.getString("songUri")
+            tab.songUri = requireArguments().getString("songUri")
 
         }
         when (item.itemId) {
@@ -308,8 +308,8 @@ class EditTabFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         MaterialShowcaseView.resetAll(context)
     }
 
@@ -335,39 +335,38 @@ class EditTabFragment : Fragment() {
             MaterialShowcaseView.Builder(activity)
                 .setTarget(binding.inputRow1)
                 .setDismissText("NEXT")
-                .setContentText("Input button row 1")
+                .setContentText("Swipe up to to input string 1, down for string 2")
                 .withRectangleShape(true)
                 .build()
         )
         sequence.addSequenceItem(
             MaterialShowcaseView.Builder(activity)
-                .setTarget(binding.inputRow1)
+                .setTarget(binding.inputRow2)
                 .setDismissText("NEXT")
-                .setContentText("Input button row 2")
+                .setContentText("Swipe up to to input string 3, down for string 4")
                 .withRectangleShape(true)
                 .build()
         )
         sequence.addSequenceItem(
             MaterialShowcaseView.Builder(activity)
-                .setTarget(binding.inputRow1)
+                .setTarget(binding.inputRow3)
                 .setDismissText("NEXT")
-                .setContentText("Input button row 3")
+                .setContentText("Swipe up to to input string 5, down for string 6")
                 .withRectangleShape(true)
                 .build()
         )
 
-        sequence.addSequenceItem(binding.btnPrevSection, "Prev Section", "NEXT")
-        sequence.addSequenceItem(binding.btnNextSection, "Next Section", "NEXT")
-        sequence.addSequenceItem(binding.currentSectionNumber, "Skip to section number", "NEXT")
-        sequence.addSequenceItem(binding.txtSectionTime, "Skip audio to this time", "NEXT")
+        sequence.addSequenceItem(binding.btnPrevSection, "Go to previous section", "NEXT")
+        sequence.addSequenceItem(binding.btnNextSection, "Go to next section", "NEXT")
+        sequence.addSequenceItem(binding.currentSectionNumber, "Type in section number to skip to it", "NEXT")
+        sequence.addSequenceItem(binding.txtSectionTime, "Section's time, Tapping this skips the audio to this time", "NEXT")
+
         sequence.setOnItemDismissedListener { itemView, position ->
-            if (position == 10) {
-                mediaPlayerFragment.startShowCase()
+                if (position == 10) {
+                    mediaPlayerFragment.startShowCase()
+                }
             }
-        }
         sequence.start()
-
-
     }
 }
 

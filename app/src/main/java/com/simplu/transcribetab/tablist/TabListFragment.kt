@@ -74,7 +74,7 @@ class TabListFragment : Fragment() {
                 adapter.submitList(it)
             }
         })
-
+        setHasOptionsMenu(true)
 
         return binding.root
     }
@@ -114,5 +114,22 @@ class TabListFragment : Fragment() {
             else -> super.onContextItemSelected(item)
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.tab_list_menu, menu)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.settings -> {
+                findNavController().navigate(TabListFragmentDirections.actionTabListFragmentToSettingsFragment())
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

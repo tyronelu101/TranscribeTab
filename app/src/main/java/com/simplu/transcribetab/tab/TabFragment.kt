@@ -48,22 +48,22 @@ class TabFragment : Fragment(),
         binding.lifecycleOwner = this
         setHasOptionsMenu(true)
 
-        tabViewModel.tab.observe(this, Observer {
+        tabViewModel.tab.observe(viewLifecycleOwner, Observer {
             tabViewModel.initializeTablature()
         })
 
-        tabViewModel.topSection.observe(this, Observer {
+        tabViewModel.topSection.observe(viewLifecycleOwner, Observer {
             binding.tabSection1.updateTablature(it.sectionCol)
             binding.tabSection1Num.text = Integer.toString(it.sectionNum)
         })
 
-        tabViewModel.bottomSection.observe(this, Observer {
+        tabViewModel.bottomSection.observe(viewLifecycleOwner, Observer {
             binding.tabSection2.updateTablature(it.sectionCol)
             binding.tabSection2Num.text = Integer.toString(it.sectionNum)
 
         })
 
-        tabViewModel.sectionUpdateTime.observe(this, Observer {
+        tabViewModel.sectionUpdateTime.observe(viewLifecycleOwner, Observer {
             mediaPlayerFragment.setTriggerTime(it)
         })
 

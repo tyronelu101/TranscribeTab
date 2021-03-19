@@ -22,7 +22,7 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
 
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
     private lateinit var binding: FragmentMediaPlayerBinding
-
+    var flag = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -157,7 +157,7 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
         )
         sequence.addSequenceItem(
             binding.goTo,
-            "Skips audio to the time we saved previously",
+            "Skips audio to the time saved previously",
             "NEXT"
         )
         sequence.addSequenceItem(
@@ -165,7 +165,11 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
             "Set playback rate of audio",
             "FINISH"
         )
-
+        sequence.setOnItemDismissedListener { itemView, position ->
+            if(position == 2) {
+                flag = true
+            }
+        }
         sequence.start()
     }
 }
