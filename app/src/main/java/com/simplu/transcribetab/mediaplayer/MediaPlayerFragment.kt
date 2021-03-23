@@ -1,5 +1,6 @@
 package com.simplu.transcribetab.mediaplayer
 
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
 import com.simplu.transcribetab.tab.SectionUpdater
@@ -23,6 +25,7 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
     private lateinit var binding: FragmentMediaPlayerBinding
     var flag = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,11 +65,11 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
 
         binding.songSeekBar.setOnSeekBarChangeListener(seekBarOnChangeListener())
 
-        mediaPlayerViewModel.durationString.observe(this, Observer {
+        mediaPlayerViewModel.durationString.observe(viewLifecycleOwner, Observer {
             binding.songDuration.text = it
         })
 
-        mediaPlayerViewModel.isPlaying.observe(this, Observer { play ->
+        mediaPlayerViewModel.isPlaying.observe(viewLifecycleOwner, Observer { play ->
             if (play) {
                 binding.playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp)
 
@@ -168,6 +171,9 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
         sequence.setOnItemDismissedListener { itemView, position ->
             if(position == 2) {
                 flag = true
+                val prefs: SharedPreferences = PreferenceManager
+                    .getDefaultSharedPreferences(context)
+                prefs.edit().putBoolean("pref_cb_showcase", false).commit()
             }
         }
         sequence.start()

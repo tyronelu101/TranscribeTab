@@ -1,5 +1,6 @@
 package com.simplu.transcribetab.edittab
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
@@ -25,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_edit_tab.*
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
+
 
 class EditTabFragment : Fragment() {
 
@@ -143,7 +146,17 @@ class EditTabFragment : Fragment() {
                 }
             })
 
-        presentShowcaseSequence()
+        val prefs: SharedPreferences = PreferenceManager
+            .getDefaultSharedPreferences(context)
+        val checkboxPreference = prefs.getBoolean("pref_cb_showcase", false)
+
+        if (checkboxPreference) {
+            MaterialShowcaseView.resetAll(context)
+            presentShowcaseSequence()
+        }
+        else {
+            mediaPlayerFragment.flag = true
+        }
     }
 
 
@@ -308,11 +321,6 @@ class EditTabFragment : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        MaterialShowcaseView.resetAll(context)
-    }
-
     private fun presentShowcaseSequence() {
         val config = ShowcaseConfig()
         config.delay = 0 // half second between each showcase view
@@ -358,14 +366,22 @@ class EditTabFragment : Fragment() {
 
         sequence.addSequenceItem(binding.btnPrevSection, "Go to previous section", "NEXT")
         sequence.addSequenceItem(binding.btnNextSection, "Go to next section", "NEXT")
-        sequence.addSequenceItem(binding.currentSectionNumber, "Type in section number to skip to it", "NEXT")
-        sequence.addSequenceItem(binding.txtSectionTime, "Section's time, Tapping this skips the audio to this time", "NEXT")
+        sequence.addSequenceItem(
+            binding.currentSectionNumber,
+            "Type in section number to skip to it",
+            "NEXT"
+        )
+        sequence.addSequenceItem(
+            binding.txtSectionTime,
+            "Section's time, Tapping this skips the audio to this time",
+            "NEXT"
+        )
 
         sequence.setOnItemDismissedListener { itemView, position ->
-                if (position == 10) {
-                    mediaPlayerFragment.startShowCase()
-                }
+            if (position == 10) {
+                mediaPlayerFragment.startShowCase()
             }
+        }
         sequence.start()
     }
 }
