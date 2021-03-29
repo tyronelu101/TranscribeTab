@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TablatureView">
-        <attr name="numberColumns" format="integer" />
+        <attr name="numberOfColumns" format="integer" />
         <attr name="textSize" format="float"/>
         <attr name="verticalSpacing" format="integer"/>
         <attr name="horizontalSpacing" format="integer"/>
