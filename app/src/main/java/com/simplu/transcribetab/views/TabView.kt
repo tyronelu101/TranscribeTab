@@ -30,7 +30,7 @@ open class TabView @JvmOverloads constructor(
     protected var columnHorizontalSpace = ScreenUtil.dpToPixel(8, context)
 
     //Size of each note boundary
-    protected var noteBorderSize = 12
+    protected var noteBorderSize = ScreenUtil.dpToPixel(12, context)
 
     protected val PADDING = ScreenUtil.dpToPixel(8, context)
 
@@ -94,8 +94,8 @@ open class TabView @JvmOverloads constructor(
     //Calculates the number of columns that can fit on this screen based on screen width dp
     private fun calculateNumberOfColumns(): Int {
         val metrics = resources.displayMetrics
-        val screenWidthDp = ScreenUtil.pixelToDp(metrics.widthPixels, context)
-        val divisor = ScreenUtil.pixelToDp(noteBorderSize + (COLUMN_BORDER_WIDTH_EXTRA) + columnHorizontalSpace, context)
+        val screenWidthDp  = ScreenUtil.pixelToDp(metrics.widthPixels, context)
+        val divisor = 12 + 4 + 8
         val numberOfColumns = (screenWidthDp-(ScreenUtil.pixelToDp(PADDING, context))) / divisor
         return numberOfColumns
     }
