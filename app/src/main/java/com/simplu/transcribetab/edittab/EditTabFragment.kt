@@ -31,7 +31,9 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 class EditTabFragment : Fragment() {
 
-    private lateinit var binding: FragmentEditTabBinding
+    private var _binding: FragmentEditTabBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var editTabViewModel: EditTabViewModel
     private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment()
 
@@ -68,7 +70,7 @@ class EditTabFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_tab, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_tab, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         setHasOptionsMenu(true)
 
@@ -321,6 +323,10 @@ class EditTabFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun presentShowcaseSequence() {
         val config = ShowcaseConfig()
         config.delay = 0 // half second between each showcase view

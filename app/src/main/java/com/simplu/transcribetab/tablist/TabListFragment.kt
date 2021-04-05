@@ -19,7 +19,9 @@ import com.simplu.transcribetab.databinding.FragmentTabListBinding
 
 class TabListFragment : Fragment() {
 
-    private lateinit var binding: FragmentTabListBinding
+    private var _binding: FragmentTabListBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var tabListViewModel: TabListViewModel
     private var tablatureSelected: Tablature? = null
 
@@ -38,7 +40,7 @@ class TabListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(
+        _binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_tab_list, container, false
         )
@@ -120,6 +122,11 @@ class TabListFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.tab_list_menu, menu)
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

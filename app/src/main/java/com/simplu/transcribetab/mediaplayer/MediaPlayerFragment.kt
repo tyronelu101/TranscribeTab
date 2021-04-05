@@ -22,8 +22,10 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
     Fragment() {
 
+    private var _binding: FragmentMediaPlayerBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
-    private lateinit var binding: FragmentMediaPlayerBinding
     var flag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +51,7 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(
+        _binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_media_player, container, false
         )
@@ -78,6 +80,11 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
             }
         })
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun getTime(): Int = mediaPlayerViewModel.currentTime.value ?: 0

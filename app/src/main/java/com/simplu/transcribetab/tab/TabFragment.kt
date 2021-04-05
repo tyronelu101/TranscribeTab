@@ -17,8 +17,10 @@ import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 class TabFragment : Fragment(),
     SectionUpdater {
 
+    private var _binding: FragmentTabBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var tabViewModel: TabViewModel
-    private lateinit var binding: FragmentTabBinding
     private var mediaPlayerFragment: MediaPlayerFragment = MediaPlayerFragment(this)
 
     private lateinit var tablature: Tablature
@@ -43,7 +45,7 @@ class TabFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab, container, false)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tab, container, false)
         binding.viewModel = tabViewModel
         binding.lifecycleOwner = this
         setHasOptionsMenu(true)
@@ -95,6 +97,11 @@ class TabFragment : Fragment(),
             replace(R.id.tab_media_player, mediaPlayerFragment)
             commit()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

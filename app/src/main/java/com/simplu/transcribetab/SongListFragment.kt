@@ -23,14 +23,15 @@ class SongListFragment : Fragment() {
 
     private val PERMISSION_REQUEST_READ_EXTERNAL = 1
 
-    private lateinit var binding: FragmentSongListBinding
+    private var _binding: FragmentSongListBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var cursorAdapter: SimpleCursorAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(
+        _binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_song_list, container, false
         )
@@ -66,10 +67,15 @@ class SongListFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun permissions() {
         when {
             ContextCompat.checkSelfPermission(
-                this.context!!,
+                this.requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
