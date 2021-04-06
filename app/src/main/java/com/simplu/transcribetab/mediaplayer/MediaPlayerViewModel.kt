@@ -63,8 +63,10 @@ class MediaPlayerViewModel(
     }
 
     fun pause() {
-        _isPlaying.value = false
-        mediaPlayer.pause()
+        if(mediaPlayer.isPlaying) {
+            _isPlaying.value = false
+            mediaPlayer.pause()
+        }
     }
 
     fun onPlayPause() {

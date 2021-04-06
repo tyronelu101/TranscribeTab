@@ -3,7 +3,6 @@ package com.simplu.transcribetab.mediaplayer
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,26 +92,9 @@ class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
         mediaPlayerViewModel.skipTo(time)
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.v("Lifecycle", "MediaPlayer onresume")
-    }
-
     override fun onPause() {
         super.onPause()
-        Log.v("Lifecycle", "MediaPlayer On pause")
         mediaPlayerViewModel.pause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.v("Lifecycle", "MediaPlayer On stop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.v("Lifecycle", "Media player on destroy")
-
     }
 
     fun setTriggerTime(time: Int) {
