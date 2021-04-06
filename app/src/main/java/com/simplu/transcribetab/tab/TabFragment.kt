@@ -50,26 +50,6 @@ class TabFragment : Fragment(),
         binding.lifecycleOwner = this
         setHasOptionsMenu(true)
 
-        tabViewModel.tab.observe(viewLifecycleOwner, Observer {
-            tabViewModel.initializeTablature()
-        })
-
-        tabViewModel.topSection.observe(viewLifecycleOwner, Observer {
-            binding.tabSection1.updateTablature(it.sectionCol)
-            binding.tabSection1Num.text = Integer.toString(it.sectionNum)
-        })
-
-        tabViewModel.bottomSection.observe(viewLifecycleOwner, Observer {
-            binding.tabSection2.updateTablature(it.sectionCol)
-            binding.tabSection2Num.text = Integer.toString(it.sectionNum)
-
-        })
-
-        tabViewModel.sectionUpdateTime.observe(viewLifecycleOwner, Observer {
-            mediaPlayerFragment.setTriggerTime(it)
-        })
-
-
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -97,6 +77,26 @@ class TabFragment : Fragment(),
             replace(R.id.tab_media_player, mediaPlayerFragment)
             commit()
         }
+
+        tabViewModel.tab.observe(viewLifecycleOwner, Observer {
+            tabViewModel.initializeTablature()
+        })
+
+        tabViewModel.topSection.observe(viewLifecycleOwner, Observer {
+            binding.tabSection1.updateTablature(it.sectionCol)
+            binding.tabSection1Num.text = Integer.toString(it.sectionNum)
+        })
+
+        tabViewModel.bottomSection.observe(viewLifecycleOwner, Observer {
+            binding.tabSection2.updateTablature(it.sectionCol)
+            binding.tabSection2Num.text = Integer.toString(it.sectionNum)
+
+        })
+
+        tabViewModel.sectionUpdateTime.observe(viewLifecycleOwner, Observer {
+            mediaPlayerFragment.setTriggerTime(it)
+        })
+
     }
 
     override fun onDestroyView() {
