@@ -127,6 +127,13 @@ class EditTabViewModel(
         }
     }
 
+    fun skipToSection(section: Int) {
+        sectionMap[section]?.let {
+            storeCurrentSection()
+            _currentSection.value = it
+        }
+    }
+
     private fun storeCurrentSection() {
         val currentSection = currentSection.value
         if (currentSection != null) {

@@ -2,6 +2,8 @@ package com.simplu.transcribetab.edittab
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -127,6 +129,21 @@ class EditTabFragment : Fragment() {
             editTabViewModel.clearColumn(binding.editTablature.getCurrentSelectedColumn())
         }
 
+        binding.currentSectionNumber.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                s.toString().toIntOrNull()?.let {
+                    editTabViewModel.skipToSection(it)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+        })
         //Child fragment manager handles child fragment lifecycle
         //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
         childFragmentManager.beginTransaction().apply {
@@ -187,6 +204,8 @@ class EditTabFragment : Fragment() {
         editTabViewModel.currentSection.observe(viewLifecycleOwner, Observer {
             edit_tablature.updateTablature(it.sectionCol)
         })
+
+
 
 
         add_section_btn.setOnClickListener {
