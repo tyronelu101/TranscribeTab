@@ -42,7 +42,6 @@ open class TabView @JvmOverloads constructor(
     protected val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = ContextCompat.getColor(context, R.color.backgroundColor)
         style = Paint.Style.FILL
-        alpha = 50
     }
 
     protected val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -131,7 +130,10 @@ open class TabView @JvmOverloads constructor(
             for (i in 0..5) {
                 val noteVal = column.notes[i]
                 val noteBound = column.noteBound[i]
-                drawCenterTextRect(canvas, noteVal, noteBound)
+                if (noteVal != "") {
+                    canvas.drawRect(noteBound, noteBorderPaint)
+                    drawCenterTextRect(canvas, noteVal, noteBound)
+                }
             }
         }
     }
