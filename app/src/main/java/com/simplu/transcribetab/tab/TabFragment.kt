@@ -12,10 +12,11 @@ import com.simplu.transcribetab.R
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.databinding.FragmentTabBinding
+import com.simplu.transcribetab.mediaplayer.MediaPlayerCallback
 import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 
 class TabFragment : Fragment(),
-    SectionUpdater {
+    MediaPlayerCallback {
 
     private var _binding: FragmentTabBinding? = null
     private val binding get() = _binding!!
@@ -125,13 +126,13 @@ class TabFragment : Fragment(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateSection() {
+    override fun trigger() {
         tabViewModel.updateSection()
     }
 
     //time is retrieved from mediaplayerfragment.
     //Check to see what section we have to jump to
-    override fun updateSectionTo(time: Int) {
+    override fun triggerAt(time: Int) {
         tabViewModel.updateSectionTo(time)
     }
 

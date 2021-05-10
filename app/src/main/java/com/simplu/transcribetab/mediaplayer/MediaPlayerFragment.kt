@@ -14,11 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
-import com.simplu.transcribetab.tab.SectionUpdater
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
-class MediaPlayerFragment(private val sectionUpdater: SectionUpdater? = null) :
+class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = null) :
     Fragment() {
 
     private var _binding: FragmentMediaPlayerBinding? = null

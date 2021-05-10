@@ -8,13 +8,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.simplu.transcribetab.tab.SectionUpdater
 import kotlinx.coroutines.*
 
 class MediaPlayerViewModel(
     context: Context,
     uri: Uri,
-    private val sectionUpdater: SectionUpdater?
+    private val mediaPlayerCallback: MediaPlayerCallback?
 ) : ViewModel() {
 
     private val mediaPlayer: MediaPlayer = MediaPlayer().apply {
@@ -53,7 +52,7 @@ class MediaPlayerViewModel(
 
     init {
         _currentTime.value = 0
-        _duration.value = mediaPlayer.durationSecs()
+        _duration.value = durationSecs()
     }
 
     fun play() {
@@ -80,12 +79,12 @@ class MediaPlayerViewModel(
 
     fun skipTo(newTime: Int) {
         mediaPlayer.seekTo(newTime * 1000)
-        sectionUpdater?.updateSectionTo(newTime)
+        mediaPlayerCallback?.triggerAt(newTime)
         _currentTime.value = newTime
     }
 
     fun setSkipTo() {
-        skipToVal = mediaPlayer.currentPositionSecs() ?: 0
+        skipToVal = currentPositionSecs()
     }
 
     fun onGoTo() {
@@ -95,17 +94,17 @@ class MediaPlayerViewModel(
 
     fun isPlaying() = mediaPlayer.isPlaying
 
-    private fun MediaPlayer.durationSecs() = mediaPlayer.duration/1000
+    private fun durationSecs() = mediaPlayer.duration/1000
 
-    private fun MediaPlayer.currentPositionSecs() = mediaPlayer.currentPosition/1000
+    private fun currentPositionSecs() = mediaPlayer.currentPosition/1000
 
     private fun startMedia() {
         mediaPlayer.start()
         mediaPlayerViewModelScope.launch {
             while (mediaPlayer.isPlaying) {
-                _currentTime.value = (mediaPlayer.currentPositionSecs())
-                if(mediaPlayer.currentPositionSecs() == triggerTime) {
-                    sectionUpdater?.updateSection()
+                _currentTime.value = (currentPositionSecs())
+                if(currentPositionSecs() == triggerTime) {
+                    mediaPlayerCallback?.trigger()
                 }
                 delay(500)
             }
