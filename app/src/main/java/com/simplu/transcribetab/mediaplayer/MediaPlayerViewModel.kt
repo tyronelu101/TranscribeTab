@@ -58,7 +58,6 @@ class MediaPlayerViewModel(
 
     fun play() {
         _isPlaying.value = true
-        mediaPlayer.start()
         startMedia()
     }
 

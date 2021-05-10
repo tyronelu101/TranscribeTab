@@ -1,4 +1,4 @@
-package com.simplu.transcribetab.views
+package com.simplu.transcribetab.database
 
 import java.io.Serializable
 

@@ -2,9 +2,9 @@ package com.simplu.transcribetab.edittab
 
 import android.text.format.DateUtils
 import androidx.lifecycle.*
+import com.simplu.transcribetab.database.TabSection
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureRepository
-import com.simplu.transcribetab.views.TabSection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
