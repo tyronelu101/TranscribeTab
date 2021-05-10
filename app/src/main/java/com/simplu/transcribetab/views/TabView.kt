@@ -42,6 +42,7 @@ open class TabView @JvmOverloads constructor(
     protected val noteBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = ContextCompat.getColor(context, R.color.backgroundColor)
         style = Paint.Style.FILL
+        alpha = 50
     }
 
     protected val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -94,10 +95,8 @@ open class TabView @JvmOverloads constructor(
     private fun calculateNumberOfColumns(): Int {
         val metrics = resources.displayMetrics
         val screenWidthDp = ScreenUtil.pixelToDp(metrics.widthPixels, context)
-        val divisor = ScreenUtil.pixelToDp(noteBorderSize, context) +
-                ScreenUtil.pixelToDp(columnHorizontalSpace, context) +
-                ScreenUtil.pixelToDp(COLUMN_BORDER_WIDTH_EXTRA, context)
-        val numberOfColumns = (screenWidthDp - (ScreenUtil.pixelToDp(PADDING, context))) / divisor
+        val divisor = ScreenUtil.pixelToDp(noteBorderSize + (COLUMN_BORDER_WIDTH_EXTRA) + columnHorizontalSpace, context)
+        val numberOfColumns = (screenWidthDp-(ScreenUtil.pixelToDp(PADDING, context))) / divisor
         return numberOfColumns
     }
 
@@ -132,10 +131,7 @@ open class TabView @JvmOverloads constructor(
             for (i in 0..5) {
                 val noteVal = column.notes[i]
                 val noteBound = column.noteBound[i]
-                if (noteVal != "") {
-                    canvas.drawRect(noteBound, noteBorderPaint)
-                    drawCenterTextRect(canvas, noteVal, noteBound)
-                }
+                drawCenterTextRect(canvas, noteVal, noteBound)
             }
         }
     }
