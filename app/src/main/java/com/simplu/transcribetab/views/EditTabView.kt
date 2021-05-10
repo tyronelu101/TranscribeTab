@@ -17,7 +17,7 @@ class EditTabView @JvmOverloads constructor(
         color = Color.WHITE
         alpha = 50
     }
-    val test = 0;
+
     private var currentSelectedColumn: DrawableColumn
 
     init {
