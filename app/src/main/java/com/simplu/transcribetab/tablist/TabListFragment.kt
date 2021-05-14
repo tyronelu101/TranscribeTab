@@ -2,7 +2,6 @@ package com.simplu.transcribetab.tablist
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -108,7 +107,6 @@ class TabListFragment : Fragment() {
             R.id.context_tab_item_delete -> {
                 //Remove the selected match from the database
                 tablatureSelected?.let {
-                    Toast.makeText(context, "Delete tab ${it.tabId}", Toast.LENGTH_SHORT).show()
                     tabListViewModel.deleteTab(it)
                 }
                 true
