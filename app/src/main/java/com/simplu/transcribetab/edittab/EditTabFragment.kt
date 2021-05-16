@@ -331,6 +331,15 @@ class EditTabFragment : Fragment() {
         ShowcaseHelper.cleanUp()
     }
 
+    override fun onStart() {
+        super.onStart()
+        ShowcaseHelper.addView(mediaPlayerFragment.binding.setSkipTo,"Saves the current time of audio ")
+        ShowcaseHelper.addView(mediaPlayerFragment.binding.goTo,"Skips audio to the time saved previously")
+        ShowcaseHelper.addView(mediaPlayerFragment.binding.songRate, "Set playback rate of audio", getString(R.string.next))
+        ShowcaseHelper.startSequence()
+
+    }
+
     private fun initShowCase() {
 
         ShowcaseHelper.init(requireContext(), requireActivity(), "sequence " + javaClass.name)

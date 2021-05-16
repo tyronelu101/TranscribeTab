@@ -62,6 +62,7 @@ object ShowcaseHelper {
             .getDefaultSharedPreferences(context)
         val checkboxPreference = prefs.getBoolean("pref_cb_showcase", false)
         if (checkboxPreference) {
+            MaterialShowcaseView.resetAll(context)
             isShowing = true
             sequence.start()
         }
@@ -70,6 +71,5 @@ object ShowcaseHelper {
     fun cleanUp() {
         count = 0
         isShowing = false
-        MaterialShowcaseView.resetAll(context)
     }
 }

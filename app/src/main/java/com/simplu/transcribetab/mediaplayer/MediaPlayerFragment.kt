@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.R
-import com.simplu.transcribetab.ShowcaseHelper
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
 
 class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = null) :
@@ -21,7 +20,6 @@ class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = nul
     val binding get() = _binding!!
 
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
-    var flag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +72,6 @@ class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = nul
                 binding.playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp)
             }
         })
-        startShowcase()
     }
 
     override fun onDestroyView() {
@@ -126,14 +123,5 @@ class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = nul
             }
             mediaPlayerViewModel.skipTo(currentProgress)
         }
-    }
-
-    private fun startShowcase() {
-
-        //todo dont start the showcase in this fragment. Is also called in TabFragment. Only want to show in EditTabFragment.
-        ShowcaseHelper.addView(binding.setSkipTo,"Saves the current time of audio ")
-        ShowcaseHelper.addView(binding.goTo,"Skips audio to the time saved previously")
-        ShowcaseHelper.addView(binding.songRate, "Set playback rate of audio", getString(R.string.next))
-        ShowcaseHelper.startSequence()
     }
 }
