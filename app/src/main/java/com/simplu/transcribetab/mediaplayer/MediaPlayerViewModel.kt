@@ -61,7 +61,7 @@ class MediaPlayerViewModel(
     }
 
     fun pause() {
-        if(mediaPlayer.isPlaying) {
+        if (mediaPlayer.isPlaying) {
             _isPlaying.value = false
             mediaPlayer.pause()
         }
@@ -92,18 +92,28 @@ class MediaPlayerViewModel(
         mediaPlayer.seekTo(skipToVal * 1000)
     }
 
+    fun skipForward(secs: Int) {
+        val current = mediaPlayer.currentPosition
+        mediaPlayer.seekTo(current + (secs * 1000))
+    }
+
+    fun rewind(secs: Int) {
+        val current = mediaPlayer.currentPosition
+        mediaPlayer.seekTo(current - (secs * 1000))
+    }
+
     fun isPlaying() = mediaPlayer.isPlaying
 
-    private fun durationSecs() = mediaPlayer.duration/1000
+    private fun durationSecs() = mediaPlayer.duration / 1000
 
-    private fun currentPositionSecs() = mediaPlayer.currentPosition/1000
+    private fun currentPositionSecs() = mediaPlayer.currentPosition / 1000
 
     private fun startMedia() {
         mediaPlayer.start()
         mediaPlayerViewModelScope.launch {
             while (mediaPlayer.isPlaying) {
                 _currentTime.value = (currentPositionSecs())
-                if(currentPositionSecs() == triggerTime) {
+                if (currentPositionSecs() == triggerTime) {
                     mediaPlayerCallback?.trigger()
                 }
                 delay(500)

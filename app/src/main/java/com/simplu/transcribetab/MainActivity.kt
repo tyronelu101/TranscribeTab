@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+
+        //todo override this in EditTabFragment to show dialog when back button is pressed
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 

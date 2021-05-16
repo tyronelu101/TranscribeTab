@@ -1,6 +1,5 @@
 package com.simplu.transcribetab.mediaplayer
 
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,17 +10,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import com.simplu.transcribetab.R
+import com.simplu.transcribetab.ShowcaseHelper
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = null) :
     Fragment() {
 
     private var _binding: FragmentMediaPlayerBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     private lateinit var mediaPlayerViewModel: MediaPlayerViewModel
     var flag = false
@@ -77,7 +74,7 @@ class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = nul
                 binding.playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp)
             }
         })
-
+        startShowcase()
     }
 
     override fun onDestroyView() {
@@ -131,39 +128,12 @@ class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = nul
         }
     }
 
-    public fun startShowCase() {
-        val config = ShowcaseConfig()
-        config.delay = 0 // half second between each showcase view
-        val sequence = MaterialShowcaseSequence(
-            activity,
-            javaClass.simpleName + " sequence"
-        )
+    private fun startShowcase() {
 
-        sequence.setConfig(config)
-
-        sequence.addSequenceItem(
-            binding.setSkipTo,
-            "Saves the current time of audio ",
-            "NEXT"
-        )
-        sequence.addSequenceItem(
-            binding.goTo,
-            "Skips audio to the time saved previously",
-            "NEXT"
-        )
-        sequence.addSequenceItem(
-            binding.songRate,
-            "Set playback rate of audio",
-            "FINISH"
-        )
-        sequence.setOnItemDismissedListener { itemView, position ->
-            if(position == 2) {
-                flag = true
-                val prefs: SharedPreferences = PreferenceManager
-                    .getDefaultSharedPreferences(context)
-                prefs.edit().putBoolean("pref_cb_showcase", false).commit()
-            }
-        }
-        sequence.start()
+        //todo dont start the showcase in this fragment. Is also called in TabFragment. Only want to show in EditTabFragment.
+        ShowcaseHelper.addView(binding.setSkipTo,"Saves the current time of audio ")
+        ShowcaseHelper.addView(binding.goTo,"Skips audio to the time saved previously")
+        ShowcaseHelper.addView(binding.songRate, "Set playback rate of audio", getString(R.string.next))
+        ShowcaseHelper.startSequence()
     }
 }

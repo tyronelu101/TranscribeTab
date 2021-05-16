@@ -1,6 +1,5 @@
 package com.simplu.transcribetab.edittab
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,20 +17,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
 import com.simplu.transcribetab.R
+import com.simplu.transcribetab.ShowcaseHelper
 import com.simplu.transcribetab.database.Tablature
 import com.simplu.transcribetab.database.TablatureDatabase
 import com.simplu.transcribetab.database.TablatureRepository
 import com.simplu.transcribetab.databinding.FragmentEditTabBinding
 import com.simplu.transcribetab.mediaplayer.MediaPlayerFragment
 import kotlinx.android.synthetic.main.fragment_edit_tab.*
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 
 class EditTabFragment : Fragment() {
+
 
     private var _binding: FragmentEditTabBinding? = null
     private val binding get() = _binding!!
@@ -109,7 +106,12 @@ class EditTabFragment : Fragment() {
         val mediaArgs = Bundle()
         mediaArgs.putString("songUri", songUri)
         mediaPlayerFragment.arguments = mediaArgs
-
+        //Child fragment manager handles child fragment lifecycle
+        //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
+        childFragmentManager.beginTransaction().apply {
+            replace(R.id.edit_media_fragment_container, mediaPlayerFragment)
+            commitNow()
+        }
         binding.prevColumnButton.setOnClickListener {
             binding.editTablature.prevColumn()
         }
@@ -144,18 +146,12 @@ class EditTabFragment : Fragment() {
 
             }
         })
-        //Child fragment manager handles child fragment lifecycle
-        //Future not to self: Don't use fragmentManager(for activities) when adding fragment inside a fragment
-        childFragmentManager.beginTransaction().apply {
-            replace(R.id.edit_media_fragment_container, mediaPlayerFragment)
-            commitNow()
-        }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (mediaPlayerFragment.flag) {
+                    if (!ShowcaseHelper.isShowing) {
                         if (editTabViewModel.tabIsUpdated()) {
                             findNavController().popBackStack()
                         } else {
@@ -165,17 +161,7 @@ class EditTabFragment : Fragment() {
                 }
             })
 
-        val prefs: SharedPreferences = PreferenceManager
-            .getDefaultSharedPreferences(context)
-        val checkboxPreference = prefs.getBoolean("pref_cb_showcase", false)
-
-        if (checkboxPreference) {
-            MaterialShowcaseView.resetAll(context)
-            presentShowcaseSequence()
-        }
-        else {
-            mediaPlayerFragment.flag = true
-        }
+        initShowCase()
     }
 
 
@@ -204,9 +190,6 @@ class EditTabFragment : Fragment() {
         editTabViewModel.currentSection.observe(viewLifecycleOwner, Observer {
             edit_tablature.updateTablature(it.sectionCol)
         })
-
-
-
 
         add_section_btn.setOnClickListener {
             editTabViewModel.addSection(mediaPlayerFragment.getTime())
@@ -345,69 +328,23 @@ class EditTabFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        ShowcaseHelper.cleanUp()
     }
-    private fun presentShowcaseSequence() {
-        val config = ShowcaseConfig()
-        config.delay = 0 // half second between each showcase view
-        val sequence = MaterialShowcaseSequence(
-            this.requireActivity(),
-            javaClass.simpleName + " sequence"
-        )
 
-        sequence.setConfig(config)
+    private fun initShowCase() {
 
-        sequence.addSequenceItem(binding.btnSetTime, "Sets this section's time", "NEXT")
-        sequence.addSequenceItem(
-            binding.addSectionBtn,
-            "Adds a new section with the current time",
-            "NEXT"
-        )
-        sequence.addSequenceItem(binding.prevColumnButton, "Previous column", "NEXT")
-        sequence.addSequenceItem(binding.nextColumnBtn, "Next column", "NEXT")
-        sequence.addSequenceItem(
-            MaterialShowcaseView.Builder(activity)
-                .setTarget(binding.inputRow1)
-                .setDismissText("NEXT")
-                .setContentText("Swipe up to to input string 1, down for string 2")
-                .withRectangleShape(true)
-                .build()
-        )
-        sequence.addSequenceItem(
-            MaterialShowcaseView.Builder(activity)
-                .setTarget(binding.inputRow2)
-                .setDismissText("NEXT")
-                .setContentText("Swipe up to to input string 3, down for string 4")
-                .withRectangleShape(true)
-                .build()
-        )
-        sequence.addSequenceItem(
-            MaterialShowcaseView.Builder(activity)
-                .setTarget(binding.inputRow3)
-                .setDismissText("NEXT")
-                .setContentText("Swipe up to to input string 5, down for string 6")
-                .withRectangleShape(true)
-                .build()
-        )
-
-        sequence.addSequenceItem(binding.btnPrevSection, "Go to previous section", "NEXT")
-        sequence.addSequenceItem(binding.btnNextSection, "Go to next section", "NEXT")
-        sequence.addSequenceItem(
-            binding.currentSectionNumber,
-            "Type in section number to skip to it",
-            "NEXT"
-        )
-        sequence.addSequenceItem(
-            binding.txtSectionTime,
-            "Section's time, Tapping this skips the audio to this time",
-            "NEXT"
-        )
-
-        sequence.setOnItemDismissedListener { itemView, position ->
-            if (position == 10) {
-                mediaPlayerFragment.startShowCase()
-            }
-        }
-        sequence.start()
+        ShowcaseHelper.init(requireContext(), requireActivity(), "sequence " + javaClass.name)
+        ShowcaseHelper.addView(binding.btnSetTime, "Sets this section's time", getString(R.string.next));
+        ShowcaseHelper.addView(binding.addSectionBtn, "Adds a new section with the current time", getString(R.string.next))
+        ShowcaseHelper.addView(binding.prevColumnButton, "Previous column", getString(R.string.next))
+        ShowcaseHelper.addView(binding.nextColumnBtn, "Next column", getString(R.string.next))
+        ShowcaseHelper.addView(binding.inputRow1, "Swipe up to to input string 1, down for string 2", getString(R.string.next), rectangle = true)
+        ShowcaseHelper.addView(binding.inputRow2, "Swipe up to to input string 3, down for string 4", getString(R.string.next), rectangle = true)
+        ShowcaseHelper.addView(binding.inputRow3, "Swipe up to to input string 5, down for string 6", getString(R.string.next), rectangle = true)
+        ShowcaseHelper.addView(binding.btnPrevSection, "Go to previous section", getString(R.string.next))
+        ShowcaseHelper.addView(binding.btnNextSection, "Go to next section", getString(R.string.next))
+        ShowcaseHelper.addView(binding.currentSectionNumber, "Type in section number to skip to it", getString(R.string.next))
+        ShowcaseHelper.addView(binding.txtSectionTime, "Section's time, Tapping this skips the audio to this time", getString(R.string.next))
     }
 }
 

@@ -2,6 +2,7 @@
     <string name="app_name">TranscribeTab</string>
     <string name="title">Title</string>
     <string name="artist">Artist</string>
+    <string name="next">NEXT</string>
 
 
 </resources>
