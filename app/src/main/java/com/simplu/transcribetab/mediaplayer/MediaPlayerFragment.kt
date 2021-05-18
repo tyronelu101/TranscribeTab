@@ -61,7 +61,7 @@ class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = nul
         binding.songSeekBar.setOnSeekBarChangeListener(seekBarOnChangeListener())
 
         mediaPlayerViewModel.durationString.observe(viewLifecycleOwner, Observer {
-            binding.songDuration.text = it
+            binding.mediaSongDuration.text = it
         })
 
         mediaPlayerViewModel.isPlaying.observe(viewLifecycleOwner, Observer { play ->
