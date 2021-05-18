@@ -13,6 +13,7 @@ import android.widget.FilterQueryProvider
 import android.widget.SimpleCursorAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.cursoradapter.widget.CursorAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -27,6 +28,8 @@ class SongListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var cursorAdapter: SimpleCursorAdapter
+    private lateinit var songCursorAdapter: SongCursorAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,6 +38,7 @@ class SongListFragment : Fragment() {
             inflater,
             R.layout.fragment_song_list, container, false
         )
+
         permissions()
 
         binding.songList.onItemClickListener = object : AdapterView.OnItemClickListener {
@@ -148,9 +152,13 @@ class SongListFragment : Fragment() {
             projection, selection, selectionArgs, sortOrder
         )
 
+        //todo unset the current Cursor from the adapter to avoid leaks due to its registered observers
+        songCursorAdapter = SongCursorAdapter(context, cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
+
+
         val listItems = intArrayOf(
-            R.id.song_title,
-            R.id.song_duration
+            R.id.item_song_title,
+            R.id.item_song_duration
         )
         val listColumn: Array<String> =
             arrayOf(
@@ -164,7 +172,7 @@ class SongListFragment : Fragment() {
             )
 
 
-        binding.songList.adapter = cursorAdapter
+        binding.songList.adapter = songCursorAdapter
 
         binding.songList.isTextFilterEnabled = true
 
