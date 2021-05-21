@@ -17,6 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.simplu.transcribetab.databinding.FragmentSongListBinding
+import com.simplu.transcribetab.songlist.SongCursorAdapter
 
 
 class SongListFragment : Fragment() {
@@ -137,6 +138,7 @@ class SongListFragment : Fragment() {
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION
         )
 
