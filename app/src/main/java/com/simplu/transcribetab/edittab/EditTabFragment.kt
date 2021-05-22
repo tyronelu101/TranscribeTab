@@ -175,7 +175,7 @@ class EditTabFragment : Fragment() {
         }
 
         editTabViewModel.skipToVal.observe(viewLifecycleOwner, Observer {
-            mediaPlayerFragment.skipTo(it * 1000)
+            mediaPlayerFragment.skipTo(it)
         })
 
         for (view in binding.stringInputContainer.children.iterator()) {
