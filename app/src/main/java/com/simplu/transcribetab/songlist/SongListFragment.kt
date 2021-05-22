@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.simplu.transcribetab.databinding.FragmentSongListBinding
 import com.simplu.transcribetab.songlist.SongCursorAdapter
+import com.simplu.transcribetab.songlist.SongListFragmentDirections
 
 
 class SongListFragment : Fragment() {
