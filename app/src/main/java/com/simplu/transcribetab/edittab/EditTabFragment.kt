@@ -333,8 +333,8 @@ class EditTabFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        ShowcaseHelper.addView(mediaPlayerFragment.binding.setSkipTo,"Saves the current time of audio ")
-        ShowcaseHelper.addView(mediaPlayerFragment.binding.goTo,"Skips audio to the time saved previously")
+        ShowcaseHelper.addView(mediaPlayerFragment.binding.setSkipTo,"Saves the current time of audio")
+        ShowcaseHelper.addView(mediaPlayerFragment.binding.goTo,"Skips audio to the time saved")
         ShowcaseHelper.startSequence()
 
     }
@@ -344,15 +344,15 @@ class EditTabFragment : Fragment() {
         ShowcaseHelper.init(requireContext(), requireActivity(), "sequence " + javaClass.name)
         ShowcaseHelper.addView(binding.btnSetTime, "Sets this section's time", getString(R.string.next));
         ShowcaseHelper.addView(binding.addSectionBtn, "Adds a new section with the current time", getString(R.string.next))
-        ShowcaseHelper.addView(binding.prevColumnButton, "Previous column", getString(R.string.next))
-        ShowcaseHelper.addView(binding.nextColumnBtn, "Next column", getString(R.string.next))
+        ShowcaseHelper.addView(binding.prevColumnButton, "Go to previous column", getString(R.string.next))
+        ShowcaseHelper.addView(binding.nextColumnBtn, "Go to next column", getString(R.string.next))
         ShowcaseHelper.addView(binding.inputRow1, "Swipe up to to input string 1, down for string 2", getString(R.string.next), rectangle = true)
         ShowcaseHelper.addView(binding.inputRow2, "Swipe up to to input string 3, down for string 4", getString(R.string.next), rectangle = true)
         ShowcaseHelper.addView(binding.inputRow3, "Swipe up to to input string 5, down for string 6", getString(R.string.next), rectangle = true)
         ShowcaseHelper.addView(binding.btnPrevSection, "Go to previous section", getString(R.string.next))
         ShowcaseHelper.addView(binding.btnNextSection, "Go to next section", getString(R.string.next))
         ShowcaseHelper.addView(binding.currentSectionNumber, "Type in section number to skip to it", getString(R.string.next))
-        ShowcaseHelper.addView(binding.txtSectionTime, "Section's time, Tapping this skips the audio to this time", getString(R.string.next))
+        ShowcaseHelper.addView(binding.txtSectionTime, "The current section's time. Tapping this skips the audio to this time", getString(R.string.next))
     }
 }
 
