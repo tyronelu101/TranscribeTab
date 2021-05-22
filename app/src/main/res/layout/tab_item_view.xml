@@ -23,15 +23,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/listItemTopPadding"
-        android:paddingBottom="@dimen/listItemLeftPadding"
         android:onClick="@{() -> clickListener.onClick(tablature)}"
         android:longClickable="true"
         android:onLongClick="@{() -> longClickListener.onLongClick(tablature)}"
         android:foreground="?android:attr/selectableItemBackground"
         android:background="@drawable/list_item_background"
-        android:paddingLeft="16dp"
-        android:paddingStart="16dp">
+        android:padding="@dimen/itemListPadding"
+        android:paddingLeft="56dp"
+        android:paddingStart="56dp">
 
         <TextView
             android:id="@+id/tab_item_title"
@@ -40,28 +39,18 @@
             android:textColor="@color/primaryTextColor"
             tools:text="Some song number 1"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColorHint="@color/primaryTextColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tablature.title.toString()}" />
 
         <TextView
-            android:id="@+id/tab_item_artist_text"
-            app:layout_constraintTop_toBottomOf="@id/tab_item_title"
-            android:textColor="@color/mediaInfoTextColor"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Artist: " />
-
-        <TextView
             android:id="@+id/tab_item_artist"
             app:layout_constraintTop_toBottomOf="@id/tab_item_title"
-            app:layout_constraintLeft_toRightOf="@id/tab_item_artist_text"
-            android:textColor="@color/mediaInfoTextColor"
-            tools:text="Some Dude Named Jack"
-            android:textSize="12sp"
+            android:textColor="@color/itemListSecondaryTextColor"
+            tools:text="Artist"
+            android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tablature.artist.toString()}" />
@@ -69,8 +58,8 @@
         <TextView
             android:id="@+id/tab_item_arranged_by_text"
             app:layout_constraintTop_toBottomOf="@id/tab_item_artist"
-            android:textColor="@color/mediaInfoTextColor"
-            android:textSize="12sp"
+            android:textColor="@color/itemListSecondaryTextColor"
+            android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Arranged by: " />
@@ -79,9 +68,9 @@
             android:id="@+id/tab_item_arranger"
             app:layout_constraintTop_toBottomOf="@id/tab_item_artist"
             app:layout_constraintLeft_toRightOf="@id/tab_item_arranged_by_text"
-            android:textColor="@color/mediaInfoTextColor"
+            android:textColor="@color/itemListSecondaryTextColor"
             tools:text="Some Guy"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tablature.arranger.toString()}" />

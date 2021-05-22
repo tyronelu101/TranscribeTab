@@ -9,6 +9,6 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="backgroundColor">#11181B</color>
-    <color name="mediaInfoTextColor">#99ffffff</color>
 
+    <color name="itemListSecondaryTextColor">#99FFFFFF</color>
 </resources>

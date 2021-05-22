@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="wrap_content"
     android:background="@color/primaryLightColor"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/item_song_title"
@@ -19,26 +19,24 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/item_song_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12sp"
-            android:textColor="@color/primaryTextColor"
+            android:text="14sp"
+            android:textColor="@color/itemListSecondaryTextColor"
             tools:text="Artist" />
 
         <TextView
-            android:gravity="end"
             android:id="@+id/item_song_duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="12sp"
-            android:textColor="@color/primaryTextColor"
+            android:gravity="end"
+            android:text="14sp"
+            android:textColor="@color/itemListSecondaryTextColor"
             tools:text="1:00" />
-
     </LinearLayout>
 
 
