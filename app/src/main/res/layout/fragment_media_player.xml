@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:onClick="@{() -> mediaPlayerViewModel.setSkipTo()}"
-                android:text="S"
+                android:text="Set"
                 android:textColor="@color/primaryTextColor" />
 
             <Button
@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:onClick="@{() -> mediaPlayerViewModel.onGoTo()}"
-                android:text="Go"
+                android:text="sk"
                 android:textColor="@color/primaryTextColor" />
 
         </LinearLayout>
