@@ -1,4 +1,4 @@
-        package com.simplu.transcribetab
+package com.simplu.transcribetab
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -24,14 +24,14 @@ object ShowcaseHelper {
         val config = ShowcaseConfig()
         config.delay = 0
         sequence.setConfig(config)
+
+        sequence.setOnItemShownListener { itemView, position ->
+            isShowing = true
+        }
+
         sequence.setOnItemDismissedListener { itemView, position ->
-            //position starts at 0
-            if ((position+1) == count) {
-                val prefs: SharedPreferences = PreferenceManager
-                    .getDefaultSharedPreferences(ShowcaseHelper.context)
-                prefs.edit().putBoolean("pref_cb_showcase", false).apply()
-                isShowing = false
-            }
+            isShowing = false
+
         }
 
     }
@@ -40,6 +40,7 @@ object ShowcaseHelper {
         view: View,
         contentText: String = "",
         dismissText: String = "",
+        skipText: String = "Skip",
         title: String = "",
         rectangle: Boolean = false
     ) {
@@ -49,6 +50,7 @@ object ShowcaseHelper {
             .setDismissText(dismissText)
             .setContentText(contentText)
             .setTitleText(title)
+            .setSkipText(skipText)
         if (rectangle) {
             builder.withRectangleShape()
         } else {
@@ -63,7 +65,7 @@ object ShowcaseHelper {
         val checkboxPreference = prefs.getBoolean("pref_cb_showcase", false)
         if (checkboxPreference) {
             MaterialShowcaseView.resetAll(context)
-            isShowing = true
+            prefs.edit().putBoolean("pref_cb_showcase", false).apply()
             sequence.start()
         }
     }

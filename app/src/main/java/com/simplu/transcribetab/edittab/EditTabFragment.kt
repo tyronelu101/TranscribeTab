@@ -333,8 +333,8 @@ class EditTabFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        ShowcaseHelper.addView(mediaPlayerFragment.binding.setSkipTo,"Saves the current time of audio")
-        ShowcaseHelper.addView(mediaPlayerFragment.binding.goTo,"Skips audio to the time saved")
+        ShowcaseHelper.addView(mediaPlayerFragment.binding.setSkipTo,"Saves the current time of audio", getString(R.string.next))
+        ShowcaseHelper.addView(mediaPlayerFragment.binding.goTo,"Skips audio to the time saved", dismissText = "Finish", skipText = "")
         ShowcaseHelper.startSequence()
 
     }
