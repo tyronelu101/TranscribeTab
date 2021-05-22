@@ -92,14 +92,20 @@ class MediaPlayerViewModel(
         mediaPlayer.seekTo(skipToVal * 1000)
     }
 
-    fun skipForward(secs: Int) {
+    fun forward(secs: Int) {
         val current = mediaPlayer.currentPosition
-        mediaPlayer.seekTo(current + (secs * 1000))
+        if (current <= mediaPlayer.duration ) {
+            _currentTime.value = current/1000 + secs
+            mediaPlayer.seekTo(current + (secs * 1000))
+        }
     }
 
     fun rewind(secs: Int) {
         val current = mediaPlayer.currentPosition
-        mediaPlayer.seekTo(current - (secs * 1000))
+        if (current - (secs * 1000) >= 0) {
+            _currentTime.value = current/1000 - secs
+            mediaPlayer.seekTo(current - (secs * 1000))
+        }
     }
 
     fun isPlaying() = mediaPlayer.isPlaying
