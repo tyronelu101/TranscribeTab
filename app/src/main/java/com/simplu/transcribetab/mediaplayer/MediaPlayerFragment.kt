@@ -26,9 +26,10 @@ class MediaPlayerFragment(private val mediaPlayerCallback: MediaPlayerCallback? 
 
         val bundle = arguments
         var songUri = ""
-        if (bundle != null) {
-            songUri = bundle.getString("songUri")
+        bundle?.let {
+            songUri = it.getString("songUri")
         }
+
         val uri = Uri.parse(songUri)
 
         val mediaPlayerViewModelFactory = MediaPlayerViewModelFactory(requireContext(), uri, mediaPlayerCallback)
