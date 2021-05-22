@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.simplu.transcribetab.R
 import com.simplu.transcribetab.databinding.FragmentMediaPlayerBinding
 
-class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = null) :
+class MediaPlayerFragment(private val mediaPlayerCallback: MediaPlayerCallback? = null) :
     Fragment() {
 
     private var _binding: FragmentMediaPlayerBinding? = null
@@ -31,7 +31,7 @@ class MediaPlayerFragment(private val sectionUpdater: MediaPlayerCallback? = nul
         }
         val uri = Uri.parse(songUri)
 
-        val mediaPlayerViewModelFactory = MediaPlayerViewModelFactory(requireContext(), uri, sectionUpdater)
+        val mediaPlayerViewModelFactory = MediaPlayerViewModelFactory(requireContext(), uri, mediaPlayerCallback)
         mediaPlayerViewModel = ViewModelProvider(
             this,
             mediaPlayerViewModelFactory
