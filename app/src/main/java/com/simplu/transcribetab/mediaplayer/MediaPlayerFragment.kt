@@ -91,6 +91,7 @@ class MediaPlayerFragment(private val mediaPlayerCallback: MediaPlayerCallback? 
         mediaPlayerViewModel.pause()
     }
 
+    //todo possible to forget to set this. Find a way to make this more clear
     fun setTriggerTime(time: Int) {
         mediaPlayerViewModel.setTriggerTime(time)
     }
