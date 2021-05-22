@@ -38,9 +38,9 @@ object ShowcaseHelper {
 
     fun addView(
         view: View,
-        contentText: String = "content text",
-        dismissText: String = "dismiss text",
-        title: String = "title text",
+        contentText: String = "",
+        dismissText: String = "",
+        title: String = "",
         rectangle: Boolean = false
     ) {
         ++count
