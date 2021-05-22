@@ -97,13 +97,7 @@
                 android:onClick="@{() -> mediaPlayerViewModel.onGoTo()}"
                 android:text="Go"
                 android:textColor="@color/primaryTextColor" />
-            <Button
-                style="@style/ButtonStyle"
-                android:id="@+id/song_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="1x"
-                android:textColor="@color/primaryTextColor" />
+
         </LinearLayout>
     </LinearLayout>
 </layout>
