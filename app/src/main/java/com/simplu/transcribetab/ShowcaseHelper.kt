@@ -15,7 +15,7 @@ object ShowcaseHelper {
     private var count = 0
     private lateinit var activity: FragmentActivity
     private lateinit var context: Context
-    private lateinit var sequence: MaterialShowcaseSequence
+    private var sequence: MaterialShowcaseSequence? = null
 
     fun init(context: Context, activity: FragmentActivity, sequenceId: String) {
         this.context = context
@@ -23,13 +23,13 @@ object ShowcaseHelper {
         this.sequence = MaterialShowcaseSequence(activity, sequenceId)
         val config = ShowcaseConfig()
         config.delay = 0
-        sequence.setConfig(config)
+        sequence?.setConfig(config)
 
-        sequence.setOnItemShownListener { itemView, position ->
+        sequence?.setOnItemShownListener { itemView, position ->
             isShowing = true
         }
 
-        sequence.setOnItemDismissedListener { itemView, position ->
+        sequence?.setOnItemDismissedListener { itemView, position ->
             isShowing = false
 
         }
@@ -56,7 +56,7 @@ object ShowcaseHelper {
         } else {
             builder.withCircleShape()
         }
-        sequence.addSequenceItem(builder.build())
+        sequence?.addSequenceItem(builder.build())
     }
 
     fun startSequence() {
@@ -66,12 +66,13 @@ object ShowcaseHelper {
         if (checkboxPreference) {
             MaterialShowcaseView.resetAll(context)
             prefs.edit().putBoolean("pref_cb_showcase", false).apply()
-            sequence.start()
+            sequence?.start()
         }
     }
 
     fun cleanUp() {
         count = 0
         isShowing = false
+        sequence = null
     }
 }
