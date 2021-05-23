@@ -22,6 +22,17 @@ class EditTabViewModel(
     private val _totalSectionNum = MutableLiveData<Int>()
     val totalSectionsNum: LiveData<Int> = _totalSectionNum
 
+    private val _tabLine = MutableLiveData<Int>()
+    val tabLine: LiveData<Int> = _tabLine
+
+    val currentInputMode = Transformations.map(tabLine) {
+        if (it == 1) {
+            "M"
+        }
+        else
+            "B"
+    }
+
     val currentSectionNum: LiveData<String> = Transformations.map(currentSection) {
         it.sectionNum.toString()
     }
@@ -38,6 +49,7 @@ class EditTabViewModel(
     private var saveFlag = true
 
     init {
+        _tabLine.value = 1
         initializeTablature()
     }
 
@@ -79,9 +91,19 @@ class EditTabViewModel(
         }
     }
 
-    fun insertAt(column: Int, string: Int, value: String) {
+    fun insertAt(column: Int, row: Int, value: String) {
 
         val sectionColumns = currentSection.value?.sectionCol
+        var string: Int = 0
+
+        tabLine.value?.let {
+            if (it == 1) {
+                string = row
+            }
+            else {
+                string = row + 3
+            }
+        }
 
         if (sectionColumns != null) {
 
@@ -210,6 +232,16 @@ class EditTabViewModel(
         saveFlag = true
     }
 
+    fun toggleInputMode() {
+        tabLine.value?.let {
+            if(it == 0) {
+                _tabLine.value = 1
+            }
+            else {
+                _tabLine.value = 0
+            }
+        }
+    }
 
     fun onSave(tab: Tablature) {
         storeCurrentSection()

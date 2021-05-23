@@ -3,7 +3,6 @@ package com.simplu.transcribetab.edittab
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -183,7 +182,7 @@ class EditTabFragment : Fragment() {
             val currentRow = view as LinearLayout
             //get the children which are buttons and set each button to a touch listner
             for (button in currentRow.children.iterator()) {
-                button.setOnTouchListener(tabInputOnTouchListener())
+                button.setOnClickListener(tabInputOnTouchListener())
             }
         }
 
@@ -269,58 +268,22 @@ class EditTabFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private inner class tabInputOnTouchListener : View.OnTouchListener {
+    private inner class tabInputOnTouchListener : View.OnClickListener {
 
-        var initialY = 0f
-        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        override fun onClick(v: View?) {
 
-            var isSwipeUp: Boolean
-            val offset = 25f
-
-            when (event?.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    initialY = event.y
-                    Log.i("EditTabFragment", "Button View down")
-                    true
-                }
-
-                MotionEvent.ACTION_UP -> {
-                    val currentY = event.y
-                    Log.i("EditTabFragment", "Button View Up")
-                    //Swipe up
-                    if (initialY > currentY + offset) {
-                        Log.i("EditTabFragment", "swipe up $initialY, $currentY")
-                        isSwipeUp = true
-                    }
-                    //Swipe down
-                    else if (initialY < currentY - offset) {
-                        Log.i("EditTabFragment", "swipe down $initialY, $currentY")
-                        isSwipeUp = false
-                    }
-                    //Do nothing
-                    else {
-                        return false
-                    }
-                    val button = v as Button
-                    val parent = button.parent as LinearLayout
-                    val stringToUpdate = when (parent.id) {
-                        R.id.input_row_1 -> if (isSwipeUp) 0 else 1
-                        R.id.input_row_2 -> if (isSwipeUp) 2 else 3
-                        R.id.input_row_3 -> if (isSwipeUp) 4 else 5
-                        else -> -1
-                    }
-                    val note = button.text.toString()
-                    val columnToUpdate = binding.editTablature.getCurrentSelectedColumn()
-                    if (note.equals("X")) {
-                        editTabViewModel.insertAt(columnToUpdate, stringToUpdate, "X")
-                    } else {
-                        editTabViewModel.insertAt(columnToUpdate, stringToUpdate, note)
-                    }
-                    true
-                }
+            val button = v as Button
+            val parent = button.parent as LinearLayout
+            val row = when (parent.id) {
+                R.id.input_row_1 -> 0
+                R.id.input_row_2 -> 1
+                R.id.input_row_3 -> 2
+                else -> -1
             }
+            val note = button.text.toString()
+            val columnToUpdate = binding.editTablature.getCurrentSelectedColumn()
+            editTabViewModel.insertAt(columnToUpdate, row, note)
 
-            return false
         }
     }
 

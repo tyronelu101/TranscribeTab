@@ -253,6 +253,13 @@
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_arrow_forward_white_24dp" />
+                <Button
+                    android:id="@+id/btn_input_mode"
+                    style="@style/ButtonStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:onClick="@{() -> editTabViewModel.toggleInputMode()}"
+                    android:text="@{editTabViewModel.currentInputMode}" />
             </LinearLayout>
 
             <FrameLayout
