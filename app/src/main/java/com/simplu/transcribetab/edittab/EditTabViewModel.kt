@@ -109,6 +109,9 @@ class EditTabViewModel(
 
             if (value == "X") {
                 sectionColumns.get(column)[string] = value
+            }
+            else if(value.equals("DEL", true)) {
+                sectionColumns.get(column)[string] = ""
             } else {
                 var sb = StringBuilder(sectionColumns.get(column)[string])
                 if (sb.toString() == "X") {

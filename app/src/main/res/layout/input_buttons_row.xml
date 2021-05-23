@@ -50,5 +50,8 @@
     <Button
         style="@style/InputButtonStyle"
         android:text="X" />
+    <Button
+        style="@style/InputButtonStyle"
+        android:text="DEL" />
 
 </LinearLayout>
