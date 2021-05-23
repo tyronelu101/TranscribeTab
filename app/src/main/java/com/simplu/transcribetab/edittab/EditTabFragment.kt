@@ -221,7 +221,7 @@ class EditTabFragment : Fragment() {
                 arranger = binding.arranger.text.toString(),
                 tuning = binding.tuning.text.toString(),
                 sections = editTabViewModel.sectionMap,
-                songUri = requireArguments().getString("songUri")
+                songUri = requireArguments().getString("songUri").toString()
             )
         } else {
             tab.title = binding.title.text.toString()
@@ -229,7 +229,7 @@ class EditTabFragment : Fragment() {
             tab.arranger = binding.arranger.text.toString()
             tab.tuning = binding.tuning.text.toString()
             tab.sections = editTabViewModel.sectionMap
-            tab.songUri = requireArguments().getString("songUri")
+            tab.songUri = requireArguments().getString("songUri").toString()
 
         }
         when (item.itemId) {

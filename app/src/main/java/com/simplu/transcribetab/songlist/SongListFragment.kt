@@ -163,7 +163,7 @@ class SongListFragment : Fragment() {
         binding.songList.isTextFilterEnabled = true
 
         songCursorAdapter?.filterQueryProvider = object : FilterQueryProvider {
-            override fun runQuery(constraint: CharSequence?): Cursor {
+            override fun runQuery(constraint: CharSequence?): Cursor? {
                 var selection = "title like ?"
                 var selectionArgs = arrayOf("${constraint}%")
                 var sortOrder = null

@@ -27,7 +27,7 @@ class MediaPlayerFragment(private val mediaPlayerCallback: MediaPlayerCallback? 
         val bundle = arguments
         var songUri = ""
         bundle?.let {
-            songUri = it.getString("songUri")
+            songUri = it.getString("songUri").toString()
         }
 
         val uri = Uri.parse(songUri)
