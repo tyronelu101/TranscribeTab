@@ -27,7 +27,7 @@ class SongListFragment : Fragment() {
     private var _binding: FragmentSongListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var songCursorAdapter: SongCursorAdapter
+    private var songCursorAdapter: SongCursorAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,6 +73,11 @@ class SongListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        songCursorAdapter = null
     }
 
     private fun permissions() {
@@ -152,13 +157,12 @@ class SongListFragment : Fragment() {
             projection, selection, selectionArgs, sortOrder
         )
 
-        //todo unset the current Cursor from the adapter to avoid leaks due to its registered observers
         songCursorAdapter = SongCursorAdapter(context, cursor, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
 
         binding.songList.adapter = songCursorAdapter
         binding.songList.isTextFilterEnabled = true
 
-        songCursorAdapter.filterQueryProvider = object : FilterQueryProvider {
+        songCursorAdapter?.filterQueryProvider = object : FilterQueryProvider {
             override fun runQuery(constraint: CharSequence?): Cursor {
                 var selection = "title like ?"
                 var selectionArgs = arrayOf("${constraint}%")
@@ -188,8 +192,8 @@ class SongListFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                songCursorAdapter.filter.filter(newText)
-                songCursorAdapter.notifyDataSetChanged()
+                songCursorAdapter?.filter?.filter(newText)
+                songCursorAdapter?.notifyDataSetChanged()
                 return false
             }
 
