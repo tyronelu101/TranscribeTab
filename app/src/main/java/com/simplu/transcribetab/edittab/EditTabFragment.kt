@@ -329,21 +329,22 @@ class EditTabFragment : Fragment() {
             getString(R.string.next)
         )
         ShowcaseHelper.addView(binding.nextColumnBtn, "Go to next column", getString(R.string.next))
+        ShowcaseHelper.addView(binding.btnInputMode, "Changes the input mode. 'M' for the top 3 strings, 'B' for the bottom 3 strings.", getString(R.string.next))
         ShowcaseHelper.addView(
             binding.inputRow1,
-            "Swipe up to to input string 1, down for string 2",
+            "Input value for either 1st or 3rd string depending on input mode.",
             getString(R.string.next),
             rectangle = true
         )
         ShowcaseHelper.addView(
             binding.inputRow2,
-            "Swipe up to to input string 3, down for string 4",
+            "Input value for either 2nd or 4th string depending on input mode.",
             getString(R.string.next),
             rectangle = true
         )
         ShowcaseHelper.addView(
             binding.inputRow3,
-            "Swipe up to to input string 5, down for string 6",
+            "Input value for either 3rd or 5th string depending on input mode.",
             getString(R.string.next),
             rectangle = true
         )
