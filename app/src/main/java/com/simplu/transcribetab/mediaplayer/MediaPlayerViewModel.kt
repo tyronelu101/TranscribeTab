@@ -52,7 +52,7 @@ class MediaPlayerViewModel(
 
     init {
         _currentTime.value = 0
-        _duration.value = durationSecs()
+        _duration.value = mediaPlayer.durationSec()
     }
 
     fun play() {
@@ -84,7 +84,7 @@ class MediaPlayerViewModel(
     }
 
     fun setSkipTo() {
-        skipToVal = currentPositionSecs()
+        skipToVal = mediaPlayer.currentPositionSec()
     }
 
     fun onGoTo() {
@@ -101,25 +101,25 @@ class MediaPlayerViewModel(
     }
 
     fun rewind(secs: Int) {
-        val current = mediaPlayer.currentPosition
-        if (current - (secs * 1000) >= 0) {
-            _currentTime.value = current/1000 - secs
-            mediaPlayer.seekTo(current - (secs * 1000))
+        val current = mediaPlayer.currentPositionSec()
+        if (current - secs >= 0) {
+            _currentTime.value = current - secs
+            mediaPlayer.seekTo((current * 1000) - (secs * 1000))
         }
     }
 
     fun isPlaying() = mediaPlayer.isPlaying
 
-    private fun durationSecs() = mediaPlayer.duration / 1000
+    private fun MediaPlayer.currentPositionSec() = this.currentPosition / 1000
 
-    private fun currentPositionSecs() = mediaPlayer.currentPosition / 1000
+    private fun MediaPlayer.durationSec() = this.duration / 1000
 
     private fun startMedia() {
         mediaPlayer.start()
         mediaPlayerViewModelScope.launch {
             while (mediaPlayer.isPlaying) {
-                _currentTime.value = (currentPositionSecs())
-                if (currentPositionSecs() == triggerTime) {
+                _currentTime.value = (mediaPlayer.currentPositionSec())
+                if (mediaPlayer.currentPositionSec() == triggerTime) {
                     mediaPlayerCallback?.trigger()
                 }
                 delay(500)
