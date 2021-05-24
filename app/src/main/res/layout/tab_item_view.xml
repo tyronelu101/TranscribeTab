@@ -6,15 +6,15 @@
     <data>
         <variable
             name="tablature"
-            type="com.simplu.transcribetab.database.Tablature" />
+            type="com.tlinq.transcribetab.database.Tablature" />
 
         <variable
             name="clickListener"
-            type="com.simplu.transcribetab.tablist.TabClickListener" />
+            type="com.tlinq.transcribetab.tablist.TabClickListener" />
 
         <variable
             name="longClickListener"
-            type="com.simplu.transcribetab.tablist.TabItemContextMenuListener" />
+            type="com.tlinq.transcribetab.tablist.TabItemContextMenuListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

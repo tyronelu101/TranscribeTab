@@ -6,7 +6,7 @@
     app:startDestination="@id/tabListFragment">
     <fragment
         android:id="@+id/tabListFragment"
-        android:name="com.simplu.transcribetab.tablist.TabListFragment"
+        android:name="com.tlinq.transcribetab.tablist.TabListFragment"
         android:label="Tablatures"
         tools:layout="@layout/fragment_tab_list" >
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/songListFragment"
-        android:name="com.simplu.transcribetab.songlist.SongListFragment"
+        android:name="com.tlinq.transcribetab.songlist.SongListFragment"
         android:label="Songs" >
         <action
             android:id="@+id/action_songListFragment_to_editTabFragment"
@@ -34,14 +34,14 @@
     </fragment>
     <fragment
         android:id="@+id/editTabFragment"
-        android:name="com.simplu.transcribetab.edittab.EditTabFragment"
+        android:name="com.tlinq.transcribetab.edittab.EditTabFragment"
         android:label="EditTablature" >
         <argument
             android:name="songUri"
             app:argType="string" />
         <argument
             android:name="tab"
-            app:argType="com.simplu.transcribetab.database.Tablature"
+            app:argType="com.tlinq.transcribetab.database.Tablature"
             app:nullable="true" />
         <action
             android:id="@+id/action_editTabFragment_to_tabFragment"
@@ -54,17 +54,17 @@
     </fragment>
     <fragment
         android:id="@+id/tabFragment"
-        android:name="com.simplu.transcribetab.tab.TabFragment"
+        android:name="com.tlinq.transcribetab.tab.TabFragment"
         android:label="Tablature" >
         <argument
             android:name="tab"
-            app:argType="com.simplu.transcribetab.database.Tablature" />
+            app:argType="com.tlinq.transcribetab.database.Tablature" />
         <action
             android:id="@+id/action_tabFragment_to_editTabFragment"
             app:destination="@id/editTabFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.simplu.transcribetab.SettingsFragment"
+        android:name="com.tlinq.transcribetab.SettingsFragment"
         android:label="Settings" />
 </navigation>

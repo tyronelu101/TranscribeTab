@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.simplu.transcribetab.tab.TabViewModel" />
+            type="com.tlinq.transcribetab.tab.TabViewModel" />
 
     </data>
 
@@ -80,7 +80,7 @@
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/tuning">
 
-            <com.simplu.transcribetab.views.TabView
+            <com.tlinq.transcribetab.views.TabView
                 android:id="@+id/tab_section1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
 
             </LinearLayout>
 
-            <com.simplu.transcribetab.views.TabView
+            <com.tlinq.transcribetab.views.TabView
                 android:layout_marginTop="16dp"
                 android:id="@+id/tab_section2"
                 android:layout_width="match_parent"
