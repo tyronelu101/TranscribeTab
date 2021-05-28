@@ -22,14 +22,14 @@ class TabViewModel(tablature: Tablature, database: TablatureDatabase) : ViewMode
     private val _topSection: MutableLiveData<TabSection> = MutableLiveData()
     val topSection: LiveData<TabSection> = _topSection
 
-    val topSectionTime = Transformations.map(topSection) {
+    val topSectionTime: LiveData<String> = Transformations.map(topSection) {
         DateUtils.formatElapsedTime(it.sectionTime.toLong()).removeRange(0, 1)
     }
 
     private val _bottomSection: MutableLiveData<TabSection> = MutableLiveData()
     val bottomSection: LiveData<TabSection> = _bottomSection
 
-    val bottomSectionTime = Transformations.map(bottomSection) {
+    val bottomSectionTime: LiveData<String> = Transformations.map(bottomSection) {
         DateUtils.formatElapsedTime(it.sectionTime.toLong()).removeRange(0, 1)
     }
 
