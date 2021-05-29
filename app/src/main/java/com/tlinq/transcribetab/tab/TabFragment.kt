@@ -85,12 +85,12 @@ class TabFragment : Fragment(),
 
         tabViewModel.topSection.observe(viewLifecycleOwner, Observer {
             binding.tabSection1.updateTablature(it.sectionCol)
-            binding.tabSection1Num.text = Integer.toString(it.sectionNum)
+            binding.tabSection1Num.text = it.sectionNum.toString()
         })
 
         tabViewModel.bottomSection.observe(viewLifecycleOwner, Observer {
             binding.tabSection2.updateTablature(it.sectionCol)
-            binding.tabSection2Num.text = Integer.toString(it.sectionNum)
+            binding.tabSection2Num.text = it.sectionNum.toString()
 
         })
 
@@ -107,12 +107,12 @@ class TabFragment : Fragment(),
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.tab_menu, menu)
+        inflater.inflate(R.menu.tab_menu, menu)
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
+        when (item.itemId) {
             R.id.edit_tab_option -> {
                 findNavController().navigate(
                     TabFragmentDirections.actionTabFragmentToEditTabFragment(

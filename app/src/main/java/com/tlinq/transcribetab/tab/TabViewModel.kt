@@ -78,7 +78,7 @@ class TabViewModel(tablature: Tablature, database: TablatureDatabase) : ViewMode
 
     }
 
-    //used when audio plays normally
+    //used when audio plays normally forward
     fun updateSection() {
 
         val tablature = tab.value
@@ -105,7 +105,7 @@ class TabViewModel(tablature: Tablature, database: TablatureDatabase) : ViewMode
 
     }
 
-    //use when user touches seekbar
+    //use for all other cases
     fun updateSectionTo(times: Int) {
 
         val tablature = tab.value

@@ -90,13 +90,18 @@ class MediaPlayerViewModel(
     fun onGoTo() {
         _currentTime.value = skipToVal
         mediaPlayer.seekTo(skipToVal * 1000)
+        mediaPlayerCallback?.triggerAt(skipToVal)
+
     }
 
     fun forward(secs: Int) {
         val current = mediaPlayer.currentPosition
-        if (current <= mediaPlayer.duration ) {
-            _currentTime.value = current/1000 + secs
+        if (current <= mediaPlayer.duration) {
+            _currentTime.value = current / 1000 + secs
             mediaPlayer.seekTo(current + (secs * 1000))
+            if (mediaPlayer.currentPositionSec() == triggerTime) {
+                mediaPlayerCallback?.trigger()
+            }
         }
     }
 
@@ -105,6 +110,7 @@ class MediaPlayerViewModel(
         if (current - secs >= 0) {
             _currentTime.value = current - secs
             mediaPlayer.seekTo((current * 1000) - (secs * 1000))
+            mediaPlayerCallback?.triggerAt(current - secs)
         }
     }
 
