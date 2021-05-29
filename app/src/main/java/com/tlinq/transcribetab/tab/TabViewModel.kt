@@ -110,26 +110,35 @@ class TabViewModel(tablature: Tablature, database: TablatureDatabase) : ViewMode
 
         val tablature = tab.value
 
+        tablature?.let { tablature ->
 
-        if (tablature != null) {
             val currentSection = getNearestSectionBelow(times)
-            currentPlayingSectionNum = getNearestSectionBelow(times)
-            //EVEN: Update bottom and top+1
-            if (currentSection % 2 == 0) {
+            currentPlayingSectionNum = currentSection
 
-                if (tablature.sections[currentSection + 1] != null) {
-                    _topSection.value = tablature.sections[currentSection + 1]
-                }
+            if(currentSection == tablature.sections.count()) {
 
-
+                _topSection.value = tablature.sections[currentSection-1]
                 _bottomSection.value = tablature.sections[currentSection]
-            }
-            //ODD: Update top and bottom+1
-            else {
-                _topSection.value = tablature.sections[currentSection]
 
-                if (tablature.sections[currentSection + 1] != null) {
-                    _bottomSection.value = tablature.sections[currentSection + 1]
+
+            } else {
+                //EVEN: Update bottom and top+1
+                if (currentSection % 2 == 0) {
+
+                    if (tablature.sections[currentSection + 1] != null) {
+                        _topSection.value = tablature.sections[currentSection + 1]
+                    }
+
+
+                    _bottomSection.value = tablature.sections[currentSection]
+                }
+                //ODD: Update top and bottom+1
+                else {
+                    _topSection.value = tablature.sections[currentSection]
+
+                    if (tablature.sections[currentSection + 1] != null) {
+                        _bottomSection.value = tablature.sections[currentSection + 1]
+                    }
                 }
             }
 
