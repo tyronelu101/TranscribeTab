@@ -96,7 +96,7 @@ class MediaPlayerViewModel(
 
     fun forward(secs: Int) {
         val current = mediaPlayer.currentPosition
-        if (current <= mediaPlayer.duration) {
+        if (current < mediaPlayer.duration) {
             _currentTime.value = current / 1000 + secs
             mediaPlayer.seekTo(current + (secs * 1000))
             if (mediaPlayer.currentPositionSec() == triggerTime) {
